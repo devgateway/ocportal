@@ -41,7 +41,7 @@ public class Supplier extends Category {
     @org.springframework.data.annotation.Transient
     private Set<PrequalifiedSupplier> prequalifiedSuppliers = new HashSet<>();
 
-    @ExcelExport(justExport = true, name = "Target Group")
+    @ExcelExport(justExport = true, name = "AGPO Category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<TargetGroup> targetGroups = new ArrayList<>();

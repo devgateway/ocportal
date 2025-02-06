@@ -343,7 +343,7 @@ $yearsBarHeight: 30px;
             }
 
             .glyphicon {
-                display: none
+                display: inline-block;
             }
 
             &.active {
@@ -361,7 +361,7 @@ $yearsBarHeight: 30px;
         }
 
         a:hover .ctrl-click-hint {
-            display: block;
+            display: inline-block;
         }
     }
 
@@ -645,9 +645,11 @@ a.portal-logo-wrapper {
     }
 
     img {
+        display: block;
+        float: left;
         width: 55px;
         margin-left: 20px;
-        margin-top: 3px;
+        margin-top: 7px;
         @media screen and (max-width: 992px) {
             margin-left: 10px;
         }
@@ -662,6 +664,9 @@ a.portal-logo-wrapper {
         color: #fff;
         line-height: 20px;
         font-weight: lighter !important;
+        display: block;
+        float: left;
+        margin-top: 20px;
 
         @media screen and (max-width: 992px) {
            display: inline-block;

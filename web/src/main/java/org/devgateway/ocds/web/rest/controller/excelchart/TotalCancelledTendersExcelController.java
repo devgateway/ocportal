@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.TotalCancelledTendersByYearController;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
@@ -36,7 +36,7 @@ public class TotalCancelledTendersExcelController extends ExcelChartOCDSControll
     @Autowired
     private TotalCancelledTendersByYearController totalCancelledTendersByYearController;
 
-    @ApiOperation(value = "Exports *Cancelled funding* dashboard in Excel format.")
+    @Operation(summary = "Exports *Cancelled funding* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/cancelledFundingExcelChart", method = {RequestMethod.GET, RequestMethod.POST})
     public void cancelledFundingExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
                                            final HttpServletResponse response) throws IOException {

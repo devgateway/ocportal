@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.TenderPercentagesController;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
@@ -36,7 +36,7 @@ public class TenderPercentagesExcelController extends ExcelChartOCDSController {
     @Autowired
     private TenderPercentagesController tenderPercentagesController;
 
-    @ApiOperation(value = "Exports *Cancelled funding (percentage)* dashboard in Excel format.")
+    @Operation(summary = "Exports *Cancelled funding (percentage)* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/cancelledFundingPercentageExcelChart",
             method = {RequestMethod.GET, RequestMethod.POST})
     public void cancelledFundingPercentageExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
@@ -75,7 +75,7 @@ public class TenderPercentagesExcelController extends ExcelChartOCDSController {
                         categories, values));
     }
 
-    @ApiOperation(value = "Exports *Percent of Tenders Using e-Bid* dashboard in Excel format.")
+    @Operation(summary = "Exports *Percent of Tenders Using e-Bid* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/percentTendersUsingEBidExcelChart",
             method = {RequestMethod.GET, RequestMethod.POST})
     public void percentTendersUsingEBidExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
@@ -114,7 +114,7 @@ public class TenderPercentagesExcelController extends ExcelChartOCDSController {
                         categories, values));
     }
 
-    @ApiOperation(value = "Exports *Number of eBid Awards* dashboard in Excel format.")
+    @Operation(summary = "Exports *Number of eBid Awards* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/numberTendersUsingEBidExcelChart",
             method = {RequestMethod.GET, RequestMethod.POST})
     public void numberTendersUsingEBidExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
@@ -154,7 +154,7 @@ public class TenderPercentagesExcelController extends ExcelChartOCDSController {
                         categories, values));
     }
 
-    @ApiOperation(value = "Exports *Percentage of plans with tender* dashboard in Excel format.")
+    @Operation(summary = "Exports *Percentage of plans with tender* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/tendersWithLinkedProcurementPlanExcelChart",
             method = {RequestMethod.GET, RequestMethod.POST})
     public void tendersWithLinkedProcurementPlanExcelChart(@ModelAttribute @Valid

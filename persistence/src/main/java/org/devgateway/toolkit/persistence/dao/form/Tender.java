@@ -58,7 +58,7 @@ import java.util.function.Consumer;
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueTender.message}")
 public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable {
-    @ExcelExport(useTranslation = true, name = "Tender ID")
+    @ExcelExport(useTranslation = true, name = "Tender Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
 
@@ -102,7 +102,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @ExcelExport(useTranslation = true, name = "Tender Value (KES)")
     private BigDecimal tenderValue;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     @ManyToOne
     private TargetGroup targetGroup;
 

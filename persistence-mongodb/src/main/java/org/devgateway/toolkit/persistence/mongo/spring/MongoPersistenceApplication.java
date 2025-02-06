@@ -17,11 +17,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.convert.WritingConverter;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -44,7 +45,8 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MON
  * @author mpostelnicu
  */
 @SpringBootApplication
-@ComponentScan("org.devgateway")
+@ComponentScan(value = "org.devgateway", excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration"))
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/mongo/application.properties")
 @EnableCaching
 public class MongoPersistenceApplication {
@@ -54,12 +56,12 @@ public class MongoPersistenceApplication {
     }
 
     @Bean
-    public CustomConversions customConversions() {
-        return new CustomConversions(Arrays
-                .asList(new Object[]{BigDecimalToDoubleConverter.INSTANCE, DoubleToBigDecimalConverter.INSTANCE,
+    public MongoCustomConversions customConversions() {
+        return new MongoCustomConversions(Arrays
+                .asList(BigDecimalToDoubleConverter.INSTANCE, DoubleToBigDecimalConverter.INSTANCE,
                         DbObjectToGeoJsonPointConverter.INSTANCE,
                         ZonedDateTimeReadConverter.INSTANCE, ZonedDateTimeWriteConverter.INSTANCE,
-                        URIToStringConverter.INSTANCE}));
+                        URIToStringConverter.INSTANCE));
     }
 
     public enum URIToStringConverter implements Converter<URI, String> {

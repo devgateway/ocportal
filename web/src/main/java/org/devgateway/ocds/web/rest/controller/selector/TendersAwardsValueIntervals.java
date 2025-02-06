@@ -3,7 +3,7 @@
  */
 package org.devgateway.ocds.web.rest.controller.selector;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -35,7 +35,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 @CacheConfig(keyGenerator = "genericPagingRequestKeyGenerator", cacheNames = "genericPagingRequestJson")
 public class TendersAwardsValueIntervals extends GenericOCDSController {
-    @ApiOperation(value = "Returns the min and max of tender.value.amount")
+    @Operation(summary = "Returns the min and max of tender.value.amount")
     @RequestMapping(value = "/api/tenderValueInterval", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> tenderValueInterval(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
@@ -58,7 +58,7 @@ public class TendersAwardsValueIntervals extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Returns the min and max of awards.value.amount")
+    @Operation(summary = "Returns the min and max of awards.value.amount")
     @RequestMapping(value = "/api/awardValueInterval", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> awardValueInterval(@ModelAttribute @Valid final YearFilterPagingRequest filter) {

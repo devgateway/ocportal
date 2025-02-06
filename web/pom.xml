@@ -15,18 +15,18 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>org.devgateway.toolkit.web.spring.WebApplication</start-class>
-        <java.version>1.8</java.version>
-        <swagger.version>3.0.0</swagger.version>
+        <java.version>17</java.version>
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
         <commons-email.version>1.5</commons-email.version>
         <json-tools.version>1.2.14</json-tools.version>
         <json-patch.version>1.13</json-patch.version>
+        <ooxml-schemas.version>1.4</ooxml-schemas.version>
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.elgeyo</groupId>
+        <artifactId>elgeyo</artifactId>
+        <version>2.0.10-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -68,21 +68,33 @@
         </dependency>
 
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>3.10.3</version>
+            <version>3.18.3</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.java-json-tools</groupId>
             <artifactId>jackson-coreutils</artifactId>
             <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>ooxml-schemas</artifactId>
+            <version>${ooxml-schemas.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.xmlbeans</groupId>
+                    <artifactId>xmlbeans</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -204,7 +216,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -223,7 +235,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.elgeyo</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 

@@ -57,34 +57,34 @@ public class XSSFLineChartData extends AbstractXSSFChartData {
 
     @Override
     public void fillChart(final Chart chart, final ChartAxis... axis) {
-//        if (!(chart instanceof XSSFChart)) {
-//            throw new IllegalArgumentException("Chart must be instance of XSSFChart");
-//        }
-//
-//        final XSSFChart xssfChart = (XSSFChart) chart;
-//        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
-//        final CTLineChart lineChart = plotArea.addNewLineChart();
-//        lineChart.addNewVaryColors().setVal(false);
-//
-//        for (CustomChartSeries s : series) {
-//            s.addToChart(lineChart);
-//        }
-//
-//        for (ChartAxis ax : axis) {
-//            lineChart.addNewAxId().setVal(ax.getId());
-//        }
-//
-//        xssfChart.setTitleText(this.title);
-//
-//        // add grid lines
-//        CTCatAx[] ctCatAx = plotArea.getCatAxArray();
-//        if (ctCatAx.length != 0) {
-//            ctCatAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
-//        }
-//
-//        CTValAx[] ctValAx = plotArea.getValAxArray();
-//        if (ctValAx.length != 0) {
-//            ctValAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
-//        }
+        if (!(chart instanceof XSSFChart)) {
+            throw new IllegalArgumentException("Chart must be instance of XSSFChart");
+        }
+
+        final XSSFChart xssfChart = (XSSFChart) chart;
+        final CTPlotArea plotArea = xssfChart.getCTChart().getPlotArea();
+        final CTLineChart lineChart = plotArea.addNewLineChart();
+        lineChart.addNewVaryColors().setVal(false);
+
+        for (CustomChartSeries s : series) {
+            s.addToChart(lineChart);
+        }
+
+        for (ChartAxis ax : axis) {
+            lineChart.addNewAxId().setVal(ax.getId());
+        }
+
+        xssfChart.setTitleText(this.title);
+
+        // add grid lines
+        CTCatAx[] ctCatAx = plotArea.getCatAxArray();
+        if (ctCatAx.length != 0) {
+            ctCatAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
+        }
+
+        CTValAx[] ctValAx = plotArea.getValAxArray();
+        if (ctValAx.length != 0) {
+            ctValAx[0].addNewMajorGridlines().addNewSpPr().addNewSolidFill();
+        }
     }
 }

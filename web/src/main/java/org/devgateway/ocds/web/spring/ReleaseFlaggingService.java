@@ -182,8 +182,8 @@ public class ReleaseFlaggingService {
                 releaseFlagI184Processor,
                 releaseFlagI016Processor,
                 releaseFlagI045Processor,
-                releaseFlagI182Processor,
-                releaseFlagI083Processor
+                releaseFlagI182Processor
+                //releaseFlagI083Processor this flag is not working properly and is disabled
         ));
 //        processAndSaveFlagsForAllReleases(this::logMessage);
     }

@@ -25,7 +25,7 @@ class Docs extends CRDPage {
             <h3>{t('publicationPolicy:pd:title')}</h3>
             {t('publicationPolicy:pd:text')}
             <div>
-              <img src={`${process.env.PUBLIC_URL}/ocmakueni-architecture.png`} />
+              <img src={`${process.env.PUBLIC_URL}/ocportal-architecture.svg`} />
               {t('publicationPolicy:pd:architecture')}
             </div>
             <h3>{t('publicationPolicy:ad:title')}</h3>
@@ -36,7 +36,7 @@ class Docs extends CRDPage {
                     <a
                       key={i}
                       className="download-file"
-                      href="https://opencontracting.makueni.go.ke/api/ocds/package/all"
+                      href="/api/ocds/package/all"
                     >
                       {t('publicationPolicy:ad:line1:link1')}
                     </a>
@@ -46,7 +46,7 @@ class Docs extends CRDPage {
                   <a
                     key={i}
                     className="download-file"
-                    href="https://opencontracting.makueni.go.ke/swagger-ui/#/ocds-controller"
+                    href="/swagger-ui/#/ocds-controller"
                   >
                     {t('publicationPolicy:ad:line1:link2')}
                   </a>
@@ -58,9 +58,9 @@ class Docs extends CRDPage {
                 <a
                   key={i}
                   className="download-file"
-                  href="https://opencontracting.makueni.go.ke"
+                  href="/"
                 >
-                  opencontracting.makueni.go.ke
+                  web address
                 </a>
               ))}
             <p />
@@ -106,7 +106,7 @@ class Docs extends CRDPage {
 
             <h3>{t('publicationPolicy:pubContact:title')}</h3>
             {reactStringReplace(t('publicationPolicy:pubContact:text'), '$#$',
-              (m, i) => <a key={i} className="download-file" href="mailto:opencontracting@makueni.go.ke">opencontracting@makueni.go.ke</a>)}
+              (m, i) => <a key={i} className="download-file" href="mailto:info@nandi.go.ke">info@nandi.go.ke</a>)}
 
             <h3>{t('publicationPolicy:disclaimer:title')}</h3>
             {t('publicationPolicy:disclaimer:text')}
@@ -117,7 +117,7 @@ class Docs extends CRDPage {
 
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/contract_contractor"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/contract_contractor"
             >
               {t('publicationPolicy:dataAndExceptions:contractContractor')}
             </a>
@@ -125,42 +125,42 @@ class Docs extends CRDPage {
 
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/first_time_winners"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/first_time_winners"
             >
               {t('publicationPolicy:dataAndExceptions:firstTimeWinners')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/fiscal_year"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/fiscal_year"
             >
               {t('publicationPolicy:dataAndExceptions:fiscalYear')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/milestone_delayed_authorization"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/milestone_delayed_authorization"
             >
               {t('publicationPolicy:dataAndExceptions:delayedMilestone')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/planning_items"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/planning_items"
             >
               {t('publicationPolicy:dataAndExceptions:plannedItems')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/target_groups"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/target_groups"
             >
               {t('publicationPolicy:dataAndExceptions:targetGroups')}
             </a>
             <p />
             <a
               className="download-file"
-              href="https://github.com/devgateway/forms-makueni/tree/master/persistence-mongodb/src/main/resources/extensions/tender_location"
+              href="https://github.com/devgateway/forms-makueni/tree/master-elgeyo/persistence-mongodb/src/main/resources/extensions/tender_location"
             >
               {t('publicationPolicy:dataAndExceptions:tenderLocation')}
             </a>
@@ -192,7 +192,7 @@ class Docs extends CRDPage {
                 if (i === 1) {
                   return <a key={i} className="download-file" href={`${process.env.PUBLIC_URL}/OCDS-Conversion-Matrix.xlsx`}>{t('publicationPolicy:ocdsMapping:text:link1')}</a>;
                 }
-                return <a key={i} target="_blank" className="download-file" href={`${process.env.PUBLIC_URL}/javadoc/dao/index.html`}>{t('publicationPolicy:ocdsMapping:text:link2')}</a>;
+                return <a key={i} target="_blank" className="download-file" href={`${process.env.PUBLIC_URL}/javadoc/index.html`}>{t('publicationPolicy:ocdsMapping:text:link2')}</a>;
               })}
           </div>
 

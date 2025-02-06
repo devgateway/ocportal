@@ -1,6 +1,6 @@
 package org.devgateway.toolkit.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.devgateway.ocds.web.db.CreateFiscalYearsJob;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class TestController {
     @Autowired
     private FiscalYearService fiscalYearService;
 
-    @ApiOperation(value = "Test API")
+    @Operation(summary = "Test API")
     @RequestMapping(value = "/api/testAPI", method = RequestMethod.GET, produces = "application/json")
     @Cacheable
     public String testAPI() {
@@ -45,7 +45,7 @@ public class TestController {
     }
 
 
-    @ApiOperation(value = "Test FY creation")
+    @Operation(summary = "Test FY creation")
     @RequestMapping(value = "/api/createFY", method = RequestMethod.GET, produces = "application/json")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional

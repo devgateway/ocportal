@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.request;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Range;
 
 import java.math.BigDecimal;
@@ -11,37 +11,37 @@ import java.util.TreeSet;
  * @since 2019-07-12
  */
 public class MakueniFilterPagingRequest extends TextSearchRequest {
-    @ApiModelProperty(value = "Department identifier")
+    @Schema(title = "Department identifier")
     private Long department;
 
-    @ApiModelProperty(value = "Fiscal Year identifier")
+    @Schema(title = "Fiscal Year identifier")
     private Long fiscalYear;
 
-    @ApiModelProperty(value = "Item identifier")
+    @Schema(title = "Item identifier")
     private Long item;
 
-    @ApiModelProperty(value = "Procurement Method Rationale identifier")
+    @Schema(title = "Procurement Method Rationale identifier")
     private Long procurementMethodRationale;
 
-    @ApiModelProperty(value = "Subcounty identifier")
+    @Schema(title = "Subcounty identifier")
     private TreeSet<Long> subcounty;
 
-    @ApiModelProperty(value = "Ward identifier")
+    @Schema(title = "Ward identifier")
     private TreeSet<Long> ward;
 
-    @ApiModelProperty(value = "Tender min value")
+    @Schema(title = "Tender min value")
     private BigDecimal min;
 
-    @ApiModelProperty(value = "Tender max value")
+    @Schema(title = "Tender max value")
     private BigDecimal max;
 
-    @ApiModelProperty(value = "This parameter will filter the content based on year. " + "The minimum year allowed is "
+    @Schema(title = "This parameter will filter the content based on year. " + "The minimum year allowed is "
             + MIN_REQ_YEAR + " and the maximum allowed is " + MAX_REQ_YEAR
             + ".It will check if the startDate and endDate are within the year range. "
             + "To check which fields are used to read start/endDate from, have a look at each endpoint definition.")
     private TreeSet<@Range(min = MIN_REQ_YEAR, max = MAX_REQ_YEAR) Integer> year;
 
-    @ApiModelProperty(value = "This parameter will filter the content based on month. "
+    @Schema(title = "This parameter will filter the content based on month. "
             + "The minimum month allowed is "
             + MIN_MONTH + " and the maximum allowed is " + MAX_MONTH
             + "This parameter does nothing if used without the year parameter, as filtering and aggregating by month "

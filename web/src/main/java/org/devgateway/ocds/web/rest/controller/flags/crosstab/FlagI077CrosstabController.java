@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.flags.crosstab;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.flags.FlagsConstants;
 import org.devgateway.ocds.web.rest.controller.flags.AbstractSingleFlagCrosstabController;
@@ -24,7 +24,7 @@ import java.util.List;
 public class FlagI077CrosstabController extends AbstractSingleFlagCrosstabController {
 
     @Override
-    @ApiOperation(value = "Crosstab for flag i077")
+    @Operation(summary = "Crosstab for flag i077")
     @RequestMapping(value = "/api/flags/i077/crosstab",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public List<Document> flagStats(@ModelAttribute @Valid YearFilterPagingRequest filter) {

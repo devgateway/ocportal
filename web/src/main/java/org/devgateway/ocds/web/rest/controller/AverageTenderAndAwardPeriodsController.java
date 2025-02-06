@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -64,7 +64,7 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
     }
 
 
-    @ApiOperation(value = "Calculates the average tender period, per each year. The year is taken from "
+    @Operation(summary = "Calculates the average tender period, per each year. The year is taken from "
             + "tender.tenderPeriod.startDate and the duration is taken by counting the days"
             + "between tender.tenderPeriod.endDate and tender.tenderPeriod.startDate")
     @RequestMapping(value = "/api/averageTenderPeriod", method = {RequestMethod.POST, RequestMethod.GET},
@@ -109,7 +109,7 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
     }
 
 
-    @ApiOperation(value = "Quality indicator for averageTenderPeriod endpoint, "
+    @Operation(summary = "Quality indicator for averageTenderPeriod endpoint, "
             + "showing the percentage of tenders that have start and end dates vs the total tenders in the system")
     @RequestMapping(value = "/api/qualityAverageTenderPeriod",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
@@ -165,7 +165,7 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Calculates the average award period, per each year. The year is taken from "
+    @Operation(summary = "Calculates the average award period, per each year. The year is taken from "
             + "awards.date and the duration is taken by counting the days"
             + "between tender.tenderPeriod.endDate and tender.tenderPeriod.startDate. The award has to be active.")
     @RequestMapping(value = "/api/averageAwardPeriod", method = {RequestMethod.POST, RequestMethod.GET},
@@ -212,7 +212,7 @@ public class AverageTenderAndAwardPeriodsController extends GenericOCDSControlle
     }
 
 
-    @ApiOperation(value = "Quality indicator for averageAwardPeriod endpoint, "
+    @Operation(summary = "Quality indicator for averageAwardPeriod endpoint, "
             + "showing the percentage of awards that have start and end dates vs the total tenders in the system")
     @RequestMapping(value = "/api/qualityAverageAwardPeriod",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")

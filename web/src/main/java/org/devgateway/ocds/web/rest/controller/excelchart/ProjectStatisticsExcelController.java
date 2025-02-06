@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.ProjectStatisticsController;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
@@ -36,7 +36,7 @@ public class ProjectStatisticsExcelController extends ExcelChartOCDSController {
     @Autowired
     private ProjectStatisticsController projectStatisticsController;
 
-    @ApiOperation(value = "Exports Number of projects by year (it shows in map widget) excel chart ")
+    @Operation(summary = "Exports Number of projects by year (it shows in map widget) excel chart ")
     @RequestMapping(value = "/api/ocds/numberOfProjectsByYearExcelChart", method = {RequestMethod.GET,
             RequestMethod.POST})
     public void numberOfProjectsByYearExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
@@ -52,7 +52,7 @@ public class ProjectStatisticsExcelController extends ExcelChartOCDSController {
         respondWithExcel(filter, response, chartTitle, xAxisTitle, valKey, endpointResult);
     }
 
-    @ApiOperation(value = "Exports total Amount from project planning by year (it shows in map widget) excel chart ")
+    @Operation(summary = "Exports total Amount from project planning by year (it shows in map widget) excel chart ")
     @RequestMapping(value = "/api/ocds/amountBudgetedByYearExcelChart", method = {RequestMethod.GET,
             RequestMethod.POST})
     public void amountBudgetedByYearExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
@@ -68,7 +68,7 @@ public class ProjectStatisticsExcelController extends ExcelChartOCDSController {
         respondWithExcel(filter, response, chartTitle, xAxisTitle, valKey, endpointResult);
     }
 
-    @ApiOperation(value = "Exports Number of contracts by year (it shows in map widget) excel chart ")
+    @Operation(summary = "Exports Number of contracts by year (it shows in map widget) excel chart ")
     @RequestMapping(value = "/api/ocds/numberOfContractsByYearExcelChart", method = {RequestMethod.GET,
             RequestMethod.POST})
     public void numberOfContractsByYearExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,
@@ -84,7 +84,7 @@ public class ProjectStatisticsExcelController extends ExcelChartOCDSController {
         respondWithExcel(filter, response, chartTitle, xAxisTitle, valKey, endpointResult);
     }
 
-    @ApiOperation(value = "Exports total Amount from contracts by year (it shows in map widget) excel chart ")
+    @Operation(summary = "Exports total Amount from contracts by year (it shows in map widget) excel chart ")
     @RequestMapping(value = "/api/ocds/amountContractedByYearExcelChart", method = {RequestMethod.GET,
             RequestMethod.POST})
     public void amountContractedByYearExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,

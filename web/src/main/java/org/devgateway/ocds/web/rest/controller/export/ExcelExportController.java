@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.export;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.io.FileCleaningTracker;
 import org.devgateway.ocds.persistence.mongo.Release;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -58,7 +58,7 @@ public class ExcelExportController extends GenericOCDSController {
     @Autowired
     private ExcelGeneratorService excelGeneratorService;
 
-    @ApiOperation(value = "Export releases in Excel format.")
+    @Operation(summary = "Export releases in Excel format.")
     @RequestMapping(value = "/api/ocds/excelExport", method = {RequestMethod.GET, RequestMethod.POST})
     public void excelExport(@ModelAttribute @Valid final YearFilterPagingRequest filter,
                             final HttpServletResponse response) throws IOException {
@@ -103,7 +103,7 @@ public class ExcelExportController extends GenericOCDSController {
         }
     }
 
-    @ApiOperation(value = "Export Data in Excel format.")
+    @Operation(summary = "Export Data in Excel format.")
     @RequestMapping(value = "/api/makueni/excelExport", method = {RequestMethod.GET, RequestMethod.POST})
     public void makueniExcelExport(final HttpServletResponse response) throws IOException {
         final List<ProcurementPlan> procurementPlans = procurementPlanService.findAll();

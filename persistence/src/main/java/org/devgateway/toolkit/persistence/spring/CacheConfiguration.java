@@ -45,7 +45,7 @@ public class CacheConfiguration {
     }
 
 
-    @Autowired(required = false)
+    @Autowired
     private MBeanServer mbeanServer;
 
     @Bean

@@ -11,21 +11,21 @@
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devgateway.makueni</groupId>
-    <artifactId>makueni</artifactId>
-    <version>${revision}</version>
+    <groupId>org.devgateway.ocportal.elgeyo</groupId>
+    <artifactId>elgeyo</artifactId>
+    <version>2.0.10-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Makueni</name>
+    <name>Nandi</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
     <properties>
-        <revision>1.13.2-SNAPSHOT</revision>
+        <revision>2.0.10-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <liquibase.version>3.8.5</liquibase.version>
-        <spring.boot.version>2.2.13.RELEASE</spring.boot.version>
+        <java.version>17</java.version>
+        <liquibase.version>4.23.0</liquibase.version>
+        <spring.boot.version>2.7.18</spring.boot.version>
         <derby.version>10.14.2.0</derby.version>
-        <pg.version>42.2.18</pg.version>
+        <pg.version>42.5.4</pg.version>
         <poi.version>4.0.1</poi.version>
         <embedded.postgres.version>2.10</embedded.postgres.version>
         <docker.image.prefix>devgateway/toolkit</docker.image.prefix>
@@ -38,10 +38,10 @@
         <poi.version>3.17</poi.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <jminix.version>1.2.0</jminix.version>
-        <swagger.version>3.0.0</swagger.version>
-        <jdk-serializable-functional.version>1.8.6</jdk-serializable-functional.version>
+        <jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
         <commons-io.version>2.6</commons-io.version>
         <maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
+        <reflections.version>0.9.12</reflections.version>
     </properties>
 
     <modules>
@@ -99,6 +99,14 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -107,27 +115,27 @@
                 <version>${pg.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>persistence</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>persistence-mongodb</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>ui</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>web</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.elgeyo</groupId>
                 <artifactId>forms</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -243,7 +251,7 @@
                     </executions>
                     <dependencies>
                         <dependency>
-                            <groupId>org.devgateway.makueni</groupId>
+                            <groupId>org.devgateway.ocportal.elgeyo</groupId>
                             <artifactId>pmd-rules</artifactId>
                             <version>${revision}</version>
                         </dependency>

@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -57,7 +57,7 @@ public class TendersByItemClassification extends GenericOCDSController {
         public static final String TENDER_COUNT = "tenderCount";
     }
 
-    @ApiOperation(value = "This should show the number of tenders per tender.items.classification."
+    @Operation(summary = "This should show the number of tenders per tender.items.classification."
             + "The tender date is taken from tender.tenderPeriod.endDate.")
     @RequestMapping(value = "/api/tendersByItemClassification", method = { RequestMethod.POST,
             RequestMethod.GET }, produces = "application/json")
@@ -81,7 +81,7 @@ public class TendersByItemClassification extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Y axis = Top 10 of the Total Cost per item in Tender doc. Both, Total Cost and the item "
+    @Operation(summary = "Y axis = Top 10 of the Total Cost per item in Tender doc. Both, Total Cost and the item "
             + "details are being taken from the tender doc.\n"
             + "X Axis = Item Details (on from IFMIS. The description of each item will be the same defined in the "
             + "procurement plan but selected in the tender doc)")

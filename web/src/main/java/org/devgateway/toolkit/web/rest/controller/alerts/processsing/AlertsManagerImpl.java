@@ -43,8 +43,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.proj
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-import javax.annotation.Resource;
-
 /**
  * @author idobre
  * @since 26/08/2019
@@ -56,9 +54,6 @@ public class AlertsManagerImpl implements AlertsManager {
     private static final Integer MAX_FAIL_COUNT = 3;
 
     private static final int THREAD_COUNT = 2;
-
-    @Resource
-    private AlertsManager self;
 
     @Value("${serverURL}")
     private String serverURL;
@@ -92,7 +87,7 @@ public class AlertsManagerImpl implements AlertsManager {
         // create and start alerts threads
         final List<AlertsThread> threads = new ArrayList<>();
         for (int i = 0; i < lists.length; i++) {
-            final AlertsThread thread = new AlertsThread(lists[i], self);
+            final AlertsThread thread = new AlertsThread(lists[i], this);
             thread.setName("Alerts Thread #" + i);
             thread.start();
             threads.add(thread);

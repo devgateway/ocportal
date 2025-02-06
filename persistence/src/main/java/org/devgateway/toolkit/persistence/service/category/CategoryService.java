@@ -10,5 +10,7 @@ public interface CategoryService<T extends Category> extends BaseJpaService<T>, 
 
     Page<T> findByLabel(String label, Pageable page);
 
+    T findByLabel(String label);
+
     T findFirstByLabel(String label);
 }

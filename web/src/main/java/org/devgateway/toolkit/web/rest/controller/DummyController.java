@@ -51,7 +51,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,9 +64,6 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @RestController
 public class DummyController {
-
-    @Resource
-    private DummyController self;
 
     @Autowired
     private ProcurementPlanService procurementPlanService;
@@ -174,7 +170,7 @@ public class DummyController {
             return "Doing nothing";
         }
 
-        tenderQuotationEvaluationService.findAll().forEach(tqe -> self.attachFile(tqe.getId()));
+        tenderQuotationEvaluationService.findAll().forEach(tqe -> attachFile(tqe.getId()));
 
         return "Attached files";
     }
@@ -203,7 +199,7 @@ public class DummyController {
             return "Doing nothing";
         }
 
-        tenderQuotationEvaluationService.findAll().forEach(tqe -> self.removeAttachedFiles(tqe.getId()));
+        tenderQuotationEvaluationService.findAll().forEach(tqe -> removeAttachedFiles(tqe.getId()));
 
         return "Removed attached files";
     }

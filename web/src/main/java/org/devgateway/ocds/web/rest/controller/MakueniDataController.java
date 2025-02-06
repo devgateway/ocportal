@@ -2,9 +2,8 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -17,8 +16,8 @@ import org.devgateway.toolkit.persistence.dao.categories.Item;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.mongo.aggregate.CustomOperation;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
+import org.devgateway.toolkit.persistence.mongo.spring.MongoUtil;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.category.SubcountyService;
@@ -32,7 +31,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
-import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.util.ObjectUtils;
@@ -43,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -97,9 +94,6 @@ public class MakueniDataController extends GenericOCDSController {
     @Autowired
     private GridFsOperations gridFsOperations;
 
-    @Resource
-    private MakueniDataController self; // Self-autowired reference to proxified bean of this class.
-
     private List<AggregationOperation> makueniTenderOperations(MakueniFilterPagingRequest filter) {
         final Criteria criteria = new Criteria().andOperator(
                 createFilterCriteria("department._id", filter.getDepartment()),
@@ -134,7 +128,7 @@ public class MakueniDataController extends GenericOCDSController {
         return operations;
     }
 
-    @ApiOperation(value = "Fetch Makueni Tenders")
+    @Operation(summary = "Fetch Makueni Tenders")
     @RequestMapping(value = "/api/makueni/tenders",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -154,7 +148,7 @@ public class MakueniDataController extends GenericOCDSController {
         return Aggregation.newAggregationOptions().allowDiskUse(true).build();
     }
 
-    @ApiOperation(value = "Counts Makueni Tenders")
+    @Operation(summary = "Counts Makueni Tenders")
     @RequestMapping(value = "/api/makueni/tendersCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -183,7 +177,7 @@ public class MakueniDataController extends GenericOCDSController {
         return operations;
     }
 
-    @ApiOperation(value = "Fetch Makueni Procurement Plans")
+    @Operation(summary = "Fetch Makueni Procurement Plans")
     @RequestMapping(value = "/api/makueni/procurementPlans",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -204,7 +198,7 @@ public class MakueniDataController extends GenericOCDSController {
                 .getMappedResults();
     }
 
-    @ApiOperation(value = "Counts Makueni Procurement Plans")
+    @Operation(summary = "Counts Makueni Procurement Plans")
     @RequestMapping(value = "/api/makueni/procurementPlansCount",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
@@ -222,7 +216,7 @@ public class MakueniDataController extends GenericOCDSController {
 
     @RequestMapping(value = "/api/makueni/procurementPlan/id/{id:^[0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Finds ProcurementPlan by the given id")
+    @Operation(summary = "Finds ProcurementPlan by the given id")
     @Cacheable
     public ProcurementPlan procurementPlanById(@PathVariable final Long id) {
         final Optional<ProcurementPlan> procurementPlan = procurementPlanMongoRepository.findById(id);
@@ -237,7 +231,7 @@ public class MakueniDataController extends GenericOCDSController {
 
     @RequestMapping(value = "/api/makueni/project/id/{id:^[0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Finds a Project by the given id")
+    @Operation(summary = "Finds a Project by the given id")
     @Cacheable
     public Document projectById(@PathVariable final Long id) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
@@ -252,7 +246,7 @@ public class MakueniDataController extends GenericOCDSController {
 
     @RequestMapping(value = "/api/makueni/purchaseReq/id/{id:^[0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Finds a Tender Process by the given id")
+    @Operation(summary = "Finds a Tender Process by the given id")
     @Cacheable
     public Document purchaseReqById(@PathVariable final Long id) {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
@@ -268,7 +262,7 @@ public class MakueniDataController extends GenericOCDSController {
 
     @RequestMapping(value = "/api/makueni/contractStats",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Fetch Contract Stats")
+    @Operation(summary = "Fetch Contract Stats")
     @Cacheable
     public Document makueniContractStats() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
@@ -282,26 +276,22 @@ public class MakueniDataController extends GenericOCDSController {
                 .getUniqueMappedResult();
     }
 
-    @ApiOperation(value = "Display the available Procurement Plan Departments.")
+    @Operation(summary = "Display the available Procurement Plan Departments.")
     @RequestMapping(value = "/api/makueni/filters/departments", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
     public List<Document> getDepartments() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
-        final DBObject project = new BasicDBObject("_id._id", 1);
-        project.put("_id.label", 1);
-        project.put("_id.code", 1);
-
-        final Aggregation aggregation = newAggregation(project("department", Fields.UNDERSCORE_ID),
-                group("department"), new CustomOperation(new Document("$project", project)),
-                sort(Sort.by("_id.label")));
+        final Aggregation aggregation = newAggregation(group("department"),
+                MongoUtil.replaceRootWithId(),
+                sort(Sort.by("label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
     }
 
-    @ApiOperation(value = "Display ALL Procurement Plan Departments.")
+    @Operation(summary = "Display ALL Procurement Plan Departments.")
     @RequestMapping(value = "/api/makueni/filters/departments/all", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
@@ -316,7 +306,7 @@ public class MakueniDataController extends GenericOCDSController {
         return results;
     }
 
-    @ApiOperation(value = "Display the available Items.")
+    @Operation(summary = "Display the available Items.")
     @RequestMapping(value = "/api/makueni/filters/items", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
@@ -338,7 +328,7 @@ public class MakueniDataController extends GenericOCDSController {
                 .getMappedResults();
     }
 
-    @ApiOperation(value = "Display ALL Items.")
+    @Operation(summary = "Display ALL Items.")
     @RequestMapping(value = "/api/makueni/filters/items/all", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
@@ -357,7 +347,7 @@ public class MakueniDataController extends GenericOCDSController {
         return results;
     }
 
-    @ApiOperation(value = "Display the available Sub Counties.")
+    @Operation(summary = "Display the available Sub Counties.")
     @RequestMapping(value = "/api/makueni/filters/subcounties", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
@@ -374,7 +364,7 @@ public class MakueniDataController extends GenericOCDSController {
         return results;
     }
 
-    @ApiOperation(value = "Display the available Wards.")
+    @Operation(summary = "Display the available Wards.")
     @RequestMapping(value = "/api/makueni/filters/wards", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
@@ -395,7 +385,7 @@ public class MakueniDataController extends GenericOCDSController {
         return results;
     }
 
-    @ApiOperation(value = "Display the available Procurement Method Rationale")
+    @Operation(summary = "Display the available Procurement Method Rationale")
     @RequestMapping(value = "/api/makueni/filters/procurementMethodRationale", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
@@ -408,27 +398,22 @@ public class MakueniDataController extends GenericOCDSController {
                 unwind("tender"),
                 project("tender.procurementMethodRationale"),
                 match(where("procurementMethodRationale").exists(true)),
-                group("procurementMethodRationale")
+                group("procurementMethodRationale"),
+                MongoUtil.replaceRootWithId()
                 );
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
     }
 
-    @ApiOperation(value = "Display the available Procurement Plan FY.")
+    @Operation(summary = "Display the available Procurement Plan FY.")
     @RequestMapping(value = "/api/makueni/filters/fiscalYears", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     @Cacheable
     public List<Document> getFiscalYears() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
-
-        final DBObject project = new BasicDBObject("_id._id", 1);
-        project.put("_id.label", "$_id.name");
-        project.put("_id.startDate", 1);
-        project.put("_id.endDate", 1);
-
-        final Aggregation aggregation = newAggregation(project("fiscalYear", Fields.UNDERSCORE_ID),
-                group("fiscalYear"), new CustomOperation(new Document("$project", project)));
+        final Aggregation aggregation = newAggregation(group("fiscalYear"), MongoUtil.replaceRootWithId(),
+                sort(Sort.by("label")));
 
         return mongoTemplate.aggregate(aggregation.withOptions(options), "procurementPlan", Document.class)
                 .getMappedResults();
@@ -436,7 +421,7 @@ public class MakueniDataController extends GenericOCDSController {
 
     @RequestMapping(value = "/api/file/{id:^[a-zA-Z0-9\\-]*$}",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
-    @ApiOperation(value = "Downloads a Makueni file")
+    @Operation(summary = "Downloads a Makueni file")
     public void downloadFile(@PathVariable final String id, final HttpServletResponse response) throws IOException {
         final GridFSFile file = mongoFileStorageService.retrieveFile(new ObjectId(id));
 

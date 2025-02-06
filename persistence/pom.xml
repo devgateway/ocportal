@@ -12,22 +12,21 @@
     <packaging>jar</packaging>
 
     <name>Persistence</name>
-    <description>Makueni Persistence</description>
+    <description>Elgeyo Persistence</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>org.devgateway.toolkit.persistence.spring.PersistenceApplication</start-class>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <ehcache.version>2.10.6</ehcache.version>
-        <dozer.hibernate.model.version>0.3.8</dozer.hibernate.model.version>
-        <guava.version>28.1-jre</guava.version>
-        <reflections.version>0.9.11</reflections.version>
+        <dozer.hibernate.model.version>0.3.9</dozer.hibernate.model.version>
+        <guava.version>31.1-jre</guava.version>
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.elgeyo</groupId>
+        <artifactId>elgeyo</artifactId>
+        <version>2.0.10-SNAPSHOT</version>
     </parent>
 
     <dependencies>

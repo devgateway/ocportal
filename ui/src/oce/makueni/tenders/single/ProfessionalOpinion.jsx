@@ -19,7 +19,7 @@ const ProfessionalOpinion = (props) => {
     if (department !== undefined) {
       metadata = ` - ${tenderTitle
       } - ${department.label
-      } - ${fiscalYear.name}`;
+      } - ${fiscalYear.label}`;
     }
     return escape(t('professionalOpinion:label') + metadata);
   };

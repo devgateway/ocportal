@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.devgateway.ocds.web.spring.CaptchaValidator;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
@@ -49,7 +49,7 @@ public class FeedbackMessagesController {
     @Autowired
     private DepartmentService departmentService;
 
-    @ApiOperation(value = "Returns a list of feedback messages for a given page")
+    @Operation(summary = "Returns a list of feedback messages for a given page")
     @RequestMapping(value = "/api/feedback", method = {RequestMethod.GET, RequestMethod.POST},
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

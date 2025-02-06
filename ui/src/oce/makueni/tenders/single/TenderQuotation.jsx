@@ -19,7 +19,7 @@ const TenderQuotation = (props) => {
     if (department !== undefined) {
       metadata = ` - ${tenderTitle
       } - ${department.label
-      } - ${fiscalYear.name}`;
+      } - ${fiscalYear.label}`;
     }
     return escape(t('tenderQuotation:subject') + metadata);
   };

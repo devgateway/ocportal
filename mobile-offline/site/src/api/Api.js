@@ -1,7 +1,7 @@
 import {httpPost, httpGet} from "./Ajax.js";
 
 export const API_ROOT_URL = (document.location.hostname === "localhost" || document.location.protocol === "file:")
-    ? "https://opencontracting.makueni.go.ke" : "";
+    ? "https://elgeyomarakwet.dgpreprod.org" : "";
 
 const API_LOGIN = API_ROOT_URL + "/api/login";
 const API_FORGOT_PASSWORD = API_ROOT_URL + "/api/user/forgotPassword";

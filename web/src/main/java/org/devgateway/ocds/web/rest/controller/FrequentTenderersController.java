@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -54,7 +54,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class FrequentTenderersController extends GenericOCDSController {
 
 
-    @ApiOperation(value = "Detect frequent pairs of tenderers that apply together to bids."
+    @Operation(summary = "Detect frequent pairs of tenderers that apply together to bids."
             + "We are only showing pairs if they applied to more than one bid together."
             + "We are sorting the results after the number of occurences, descending."
             + "You can use all the filters that are available along with pagination options.")
@@ -88,7 +88,7 @@ public class FrequentTenderersController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Counts awards awarded to a supplier that participated in a bidding process with a "
+    @Operation(summary = "Counts awards awarded to a supplier that participated in a bidding process with a "
             + "group of tenderers")
     @RequestMapping(value = "/api/activeAwardsCount",
             method = {RequestMethod.POST, RequestMethod.GET},

@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.DefaultFilterPagingRequest;
@@ -58,7 +58,7 @@ public class FrequentSuppliersTimeIntervalController extends GenericOCDSControll
                 .toString();
     }
 
-    @ApiOperation(value = "Returns the frequent suppliers of a buyer split by a time interval. "
+    @Operation(summary = "Returns the frequent suppliers of a buyer split by a time interval. "
             + "The time interval is "
             + "a parameter and represents the number of days to take as interval, starting with today and going back "
             + "till the last award date. The awards are grouped by procuringEntity, supplier and the time interval. "

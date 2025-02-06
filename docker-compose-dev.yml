@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+
+  app:
+    image: ocportal-nandi/admin/dev:${TAG-local}
+    restart: 'no'
+    extra_hosts:
+      - "host.docker.internal:host-gateway" #required so docker connects to host interface (this is for sending emails)
+    build:
+        target: dev
+    depends_on:
+      - db
+      - mongo
+    ports:
+      - "8090:8090"
+      - "8000:8000"
+    env_file:
+      - .env
+    #entrypoint: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ./forms/target/classes:/opt/app/forms/classes
+      - ./persistence/target/classes:/opt/app/persistence/classes
+      - ./persistence-mongodb/target/classes:/opt/app/persistence-mongodb/classes
+      - ./web/target/classes:/opt/app/web/classes
+      - ./ui:/opt/app/ui
+
+  db:
+    image: postgis/postgis:11-3.3
+    restart: 'no'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+
+  mongo:
+    image: mongo:4.2
+    restart: 'no'
+    command: [--auth]
+    volumes:
+        - mongodata:/data/db
+    ports:
+      - "27017:27017"
+    env_file:
+      - .env
+
+#  pgbackups:
+#    image: prodrigestivill/postgres-backup-local
+#    restart: 'no'
+#    volumes:
+#      - /opt/pgbackups:/backups
+#    env_file:
+#      - .env
+#    depends_on:
+#      - db
+#    environment:
+#      - POSTGRES_HOST=db
+#      - POSTGRES_DB=ocportal
+#      - POSTGRES_USER=$POSTGRES_USER
+#      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+#      - SCHEDULE=@daily
+#      - BACKUP_KEEP_DAYS=30
+#      - BACKUP_KEEP_WEEKS=12
+#      - BACKUP_KEEP_MONTHS=24
+#      - HEALTHCHECK_PORT=5432
+
+volumes:
+    pgdata:
+    mongodata:
