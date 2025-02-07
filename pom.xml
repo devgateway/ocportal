@@ -1,25 +1,25 @@
 <!--
     Copyright (c) 2015 Development Gateway, Inc and others.
-   
+
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the MIT License (MIT)
     which accompanies this distribution, and is available at
     https://opensource.org/licenses/MIT
-   
+
     Contributors:
     Development Gateway - initial API and implementation
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devgateway.ocportal.elgeyo</groupId>
-    <artifactId>elgeyo</artifactId>
-    <version>2.0.10-SNAPSHOT</version>
+    <groupId>org.devgateway.ocportal.portal</groupId>
+    <artifactId>portal</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Nandi</name>
+    <name>OCPortal</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
     <properties>
-        <revision>2.0.10-SNAPSHOT</revision>
+        <revision>3.0.0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <liquibase.version>4.23.0</liquibase.version>
@@ -115,27 +115,27 @@
                 <version>${pg.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.ocportal.elgeyo</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>persistence</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.ocportal.elgeyo</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>persistence-mongodb</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.ocportal.elgeyo</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>ui</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.ocportal.elgeyo</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>web</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.ocportal.elgeyo</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>forms</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -150,6 +150,26 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>.env</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -185,6 +205,7 @@
                 </executions>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
+                    <propertyExpansion>checkstyle.config.path=</propertyExpansion>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
@@ -222,6 +243,8 @@
         </plugins>
         <pluginManagement>
             <plugins>
+
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -251,7 +274,7 @@
                     </executions>
                     <dependencies>
                         <dependency>
-                            <groupId>org.devgateway.ocportal.elgeyo</groupId>
+                            <groupId>org.devgateway.ocportal.portal</groupId>
                             <artifactId>pmd-rules</artifactId>
                             <version>${revision}</version>
                         </dependency>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2015 Development Gateway, Inc and others. All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the MIT License (MIT) which accompanies this distribution, and is available at https://opensource.org/licenses/MIT 
+<!-- Copyright (c) 2015 Development Gateway, Inc and others. All rights reserved. This program and the accompanying materials
+	are made available under the terms of the MIT License (MIT) which accompanies this distribution, and is available at https://opensource.org/licenses/MIT
 	Contributors: Development Gateway - initial API and implementation -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -21,18 +21,26 @@
         <json-tools.version>1.2.14</json-tools.version>
         <json-patch.version>1.13</json-patch.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
+        <ORG_NAME>${env.ORG_NAME}</ORG_NAME>
+        <ORG_SHORT_NAME>${env.ORG_SHORT_NAME}</ORG_SHORT_NAME>
+        <ORG_SHORT_NAME>${env.GOVERNMENT}</ORG_SHORT_NAME>
     </properties>
 
     <parent>
-        <groupId>org.devgateway.ocportal.elgeyo</groupId>
-        <artifactId>elgeyo</artifactId>
-        <version>2.0.10-SNAPSHOT</version>
+        <groupId>org.devgateway.ocportal.portal</groupId>
+        <artifactId>portal</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
         </dependency>
 
         <dependency>
@@ -216,7 +224,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.ocportal.elgeyo</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -235,7 +243,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.ocportal.elgeyo</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 
@@ -276,7 +284,7 @@
             </resource>
 
             <resource>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
                 <directory>${project.basedir}</directory>
                 <includes>
                     <include>public/**</include>

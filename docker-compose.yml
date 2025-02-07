@@ -3,12 +3,14 @@ version: '3.8'
 services:
 
   app:
-    image: ocportal-nandi/admin/prod:${TAG-local}
+    image: ${APP_IMAGE:-ocportal/admin/dev}:${TAG:-local}
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway" #required so docker connects to host interface (this is for sending emails)
     build:
         target: prod
+        args:
+          PROJECT_NAME: ${PROJECT_NAME:-ocportal}
     depends_on:
       - db
       - mongo

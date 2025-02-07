@@ -2,10 +2,10 @@ PMC Reporter App Data Privacy Policy
 
 1. About this Privacy Policy
 
-The PMC Reporter app is to be used by members of Nandi County Project Management Committee (PMC).
+The PMC Reporter app is to be used by members of @ORG_SHORT_NAME@ County Project Management Committee (PMC).
 It allows members to create and submit reports on the status of government funded projects. The data is stored
 offline and once a report is submitted and connected to the internet, the report is sent to the
-Government of Nandi Open Contracting Portal for validation.
+@ORG_NAME@ Open Contracting Portal for validation.
 To receive a login to the app, please contact the government administrators. This tool was developed
 by Development Gateway (DG). DG is committed to keeping data safe, taking a minimalist approach to using data only
 when strictly necessary to fulfil the purpose of users interacting with the app.

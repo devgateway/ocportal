@@ -3,12 +3,14 @@ version: '3.8'
 services:
 
   app:
-    image: ocportal-nandi/admin/dev:${TAG-local}
+    image: ${APP_IMAGE:-ocportal/admin/dev}:${TAG:-local}
     restart: 'no'
     extra_hosts:
       - "host.docker.internal:host-gateway" #required so docker connects to host interface (this is for sending emails)
     build:
         target: dev
+        args:
+          PROJECT_NAME: ${PROJECT_NAME:-ocportal}
     depends_on:
       - db
       - mongo
@@ -17,6 +19,10 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      # Set environment variables that the app can use at runtime
+      ORG_NAME: ${ORG_NAME:-Makueni County Government}
+      ORG_SHORT_NAME: ${ORG_SHORT_NAME:-Makueni}
     #entrypoint: /bin/sh -c "while sleep 1000; do :; done"
     volumes:
       - ./forms/target/classes:/opt/app/forms/classes

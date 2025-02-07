@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright (c) 2015 Development Gateway, Inc and others.
-   
+
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the MIT License (MIT)
     which accompanies this distribution, and is available at
     https://opensource.org/licenses/MIT
-   
+
     Contributors:
     Development Gateway - initial API and implementation
  -->
@@ -17,13 +17,14 @@
     <artifactId>forms</artifactId>
     <packaging>jar</packaging>
 
+
     <name>Wicket Forms</name>
-    <description>Elgeyo Forms</description>
+    <description>OCPortal Forms</description>
 
     <parent>
-        <groupId>org.devgateway.ocportal.elgeyo</groupId>
-        <artifactId>elgeyo</artifactId>
-        <version>2.0.10-SNAPSHOT</version>
+        <groupId>org.devgateway.ocportal.portal</groupId>
+        <artifactId>portal</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -38,11 +39,13 @@
         <yuicompressor.version>2.4.8</yuicompressor.version>
         <javamelody.version>1.95.0</javamelody.version>
         <exclude.devtools>false</exclude.devtools>
+            <ORG_NAME>${env.ORG_NAME}</ORG_NAME>
+            <ORG_SHORT_NAME>${env.ORG_SHORT_NAME}</ORG_SHORT_NAME>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.ocportal.elgeyo</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -53,17 +56,17 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.ocportal.elgeyo</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.ocportal.elgeyo</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.ocportal.elgeyo</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>ui</artifactId>
         </dependency>
 
