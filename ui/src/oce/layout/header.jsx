@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
-import nandiLogo from '../resources/nandi-logo.png';
+import orgLogo from '../resources/@LOGO_IMAGE_NAME@';
 import { getGaId } from '../api/Api';
 import fmConnect from '../fm/fm';
 
@@ -130,7 +130,7 @@ const Header = ({
       <header className="branding row">
         <div className="col-md-6 col-sm-6 col-xs-12">
           <a className="portal-logo-wrapper" href="/portal/">
-            <img src={nandiLogo} alt="Nandi" />
+            <img src={orgLogo} alt="@ORG_SHORT_NAME@" />
             <span data-step="1" data-intro={t('header:title:intro')}>
               {t('header:title')}
             </span>

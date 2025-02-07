@@ -23,7 +23,7 @@
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <ORG_NAME>${env.ORG_NAME}</ORG_NAME>
         <ORG_SHORT_NAME>${env.ORG_SHORT_NAME}</ORG_SHORT_NAME>
-        <ORG_SHORT_NAME>${env.GOVERNMENT}</ORG_SHORT_NAME>
+        <GOVERNMENT>${env.GOVERNMENT}</GOVERNMENT>
     </properties>
 
     <parent>
