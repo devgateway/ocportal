@@ -1,7 +1,7 @@
 import React from 'react';
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
-import './makueni.scss';
+import './portal.scss';
 import Footer from '../layout/footer';
 import smsHelp from '../resources/help/sms-help.png';
 import ussdMainMenu from '../resources/help/ussd-main-menu.jpg';

@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
-import '../makueni.scss';
+import '../portal.scss';
 import ProcurementPlan from './single/procurementPlan';
 import Footer from '../../layout/footer';
 import FileDownloadLinks from '../tenders/single/FileDownloadLinks';

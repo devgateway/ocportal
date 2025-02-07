@@ -1,4 +1,4 @@
-import './makueni.scss';
+import './portal.scss';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { API_ROOT } from '../api/Api';

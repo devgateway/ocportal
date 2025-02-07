@@ -25,8 +25,8 @@ import LandingPopup from './landing-popup';
 import { LOGIN_URL } from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
-import orgLogo from '../resources/@LOGO_IMAGE_NAME@';
 import { LOCALES } from '../translatable';
+import DynamicLogo from '../logo';
 
 const getIndicators = cacheFn((indicatorTypesMapping, corruptionType) => Object.keys(indicatorTypesMapping)
   .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1));
@@ -315,7 +315,7 @@ class CorruptionRiskDashboard extends React.Component {
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
             <a className="portal-logo-wrapper" href="/portal/">
-              <img src={orgLogo} alt="Nandi" />
+              <DynamicLogo />
               <span>{t('crd:title')}</span>
             </a>
           </div>

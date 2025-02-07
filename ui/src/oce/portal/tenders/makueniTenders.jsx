@@ -1,7 +1,7 @@
 import Header from '../../layout/header';
 import BootstrapTableWrapper from '../../corruption-risk/archive/bootstrap-table-wrapper';
 
-import '../makueni.scss';
+import '../portal.scss';
 import Project from './single/Project';
 import PurchaseReqView from './single/PurchaseReqView';
 import FiltersTendersWrapper from '../filters/FiltersTendersWrapper';

@@ -10,18 +10,18 @@ import {
 } from 'react-router-dom';
 import './style.scss';
 import OCEMakueni from './oceMakueni';
-import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
-import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
+import MakueniTenders from '../oce/portal/tenders/makueniTenders';
+import MakueniProcurementPlans from '../oce/portal/procurementPlan/makueniProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
-import Docs from '../oce/makueni/Docs';
-import PublicationPolicy from '../oce/makueni/PublicationPolicy';
-import PrivacyPolicy from '../oce/makueni/PrivacyPolicy';
-import ContractsList from '../oce/makueni/ContractsList';
-import SMSHelp from '../oce/makueni/SMSHelp';
-import PortalVideos from '../oce/makueni/PortalVideos';
+import Docs from '../oce/portal/Docs';
+import PublicationPolicy from '../oce/portal/PublicationPolicy';
+import PrivacyPolicy from '../oce/portal/PrivacyPolicy';
+import ContractsList from '../oce/portal/ContractsList';
+import SMSHelp from '../oce/portal/SMSHelp';
+import PortalVideos from '../oce/portal/PortalVideos';
 
 import store from '../oce/app/store';
 

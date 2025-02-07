@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
-import './makueni.scss';
+import './portal.scss';
 import Footer from '../layout/footer';
 
 class Docs extends CRDPage {

@@ -12,9 +12,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skip.frontend.build>false</skip.frontend.build>
         <checkstyle.skip>true</checkstyle.skip>
-        <ORG_NAME>${env.ORG_NAME}</ORG_NAME>
-        <ORG_SHORT_NAME>${env.ORG_SHORT_NAME}</ORG_SHORT_NAME>
-        <LOGO_IMAGE_NAME>${env.LOGO_IMAGE_NAME}</LOGO_IMAGE_NAME>
     </properties>
 
     <parent>
@@ -29,6 +26,13 @@
                 <filtering>false</filtering>
                 <directory>${project.basedir}/build</directory>
                 <targetPath>public/ui</targetPath>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/oce</directory>
+                <includes>
+                    <include>**/*.jsx</include>
+                </includes>
             </resource>
         </resources>
         <plugins>

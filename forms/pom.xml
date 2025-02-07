@@ -39,8 +39,6 @@
         <yuicompressor.version>2.4.8</yuicompressor.version>
         <javamelody.version>1.95.0</javamelody.version>
         <exclude.devtools>false</exclude.devtools>
-            <ORG_NAME>${env.ORG_NAME}</ORG_NAME>
-            <ORG_SHORT_NAME>${env.ORG_SHORT_NAME}</ORG_SHORT_NAME>
     </properties>
 
     <dependencies>

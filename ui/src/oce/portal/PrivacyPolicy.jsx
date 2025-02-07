@@ -1,6 +1,6 @@
 import CRDPage from '../corruption-risk/page';
 import Header from '../layout/header';
-import './makueni.scss';
+import './portal.scss';
 import React from 'react';
 import { Trans } from 'react-i18next';
 
