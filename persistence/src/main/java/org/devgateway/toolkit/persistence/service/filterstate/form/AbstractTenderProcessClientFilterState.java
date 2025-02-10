@@ -3,13 +3,13 @@ package org.devgateway.toolkit.persistence.service.filterstate.form;
 import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity_;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
-import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity_;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess_;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan_;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.filterstate.StatusAuditableEntityFilterState;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2019-05-23
  */
 
-public abstract class AbstractTenderProcessMakueniFilterState<T extends AbstractTenderProcessMakueniEntity>
+public abstract class AbstractTenderProcessClientFilterState<T extends AbstractTenderProcessClientEntity>
         extends StatusAuditableEntityFilterState<T> {
     private TenderProcess tenderProcess;
     private String tenderTitle;
@@ -33,11 +33,11 @@ public abstract class AbstractTenderProcessMakueniFilterState<T extends Abstract
         return (root, query, cb) -> {
             final List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(root.get(AbstractTenderProcessMakueniEntity_.tenderProcess).isNotNull());
-            
+            predicates.add(root.get(AbstractTenderProcessClientEntity_.tenderProcess).isNotNull());
+
             if (StringUtils.isNotBlank(tenderTitle)) {
                 predicates.add(cb.like(
-                        cb.lower(root.join(AbstractTenderProcessMakueniEntity_.tenderProcess)
+                        cb.lower(root.join(AbstractTenderProcessClientEntity_.tenderProcess)
                                 .join(TenderProcess_.tender).get(Tender_.tenderTitle)),
                         "%" + tenderTitle.toLowerCase() + "%"
                 ));
@@ -47,7 +47,7 @@ public abstract class AbstractTenderProcessMakueniFilterState<T extends Abstract
                 final ProcurementPlan procurementPlan = tenderProcess.getProcurementPlan();
 
                 if (procurementPlan != null) {
-                    Path<ProcurementPlan> pp = root.join(AbstractTenderProcessMakueniEntity_.tenderProcess)
+                    Path<ProcurementPlan> pp = root.join(AbstractTenderProcessClientEntity_.tenderProcess)
                             .join(TenderProcess_.procurementPlan);
 
                     Department department = procurementPlan.getDepartment();

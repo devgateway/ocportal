@@ -38,7 +38,7 @@ public class ImportPostgresToMongoJob {
 
     @Autowired
     private AdminSettingsRepository adminSettingsRepository;
-    
+
     public void formStatusIntegrityCheck() {
         importPostgresToMongo.formStatusIntegrityCheck();
     }
@@ -48,7 +48,7 @@ public class ImportPostgresToMongoJob {
      */
     @Scheduled(cron = "0 0 23 * * SAT")
     @Async
-    public Future<String> importOcdsMakueniToMongo() {
+    public Future<String> importOcdsClientToMongo() {
         formStatusIntegrityCheck();
         importPostgresToMongo.importToMongo();
         ocPortalToOCDSConversionService.convertToOcdsAndSaveAllApprovedPurchaseRequisitions();

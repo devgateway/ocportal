@@ -2,7 +2,7 @@ package org.devgateway.toolkit.persistence.repository.form;
 
 
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 @NoRepositoryBean
-public interface AbstractImplTenderProcessMakueniEntityRepository<T extends AbstractImplTenderProcessMakueniEntity>
-        extends AbstractMakueniEntityRepository<T> {
+public interface AbstractImplTenderProcessClientEntityRepository<T extends AbstractImplTenderProcessClientEntity>
+        extends AbstractClientEntityRepository<T> {
     List<T> findByTenderProcess(@Param("tenderProcess") TenderProcess tenderProcess);
 
     @Override

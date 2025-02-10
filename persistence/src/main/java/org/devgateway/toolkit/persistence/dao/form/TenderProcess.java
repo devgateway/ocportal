@@ -170,7 +170,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     }
 
     @Transactional(readOnly = true)
-    protected boolean hasNonDraftImplForms(Set<? extends AbstractImplTenderProcessMakueniEntity> s) {
+    protected boolean hasNonDraftImplForms(Set<? extends AbstractImplTenderProcessClientEntity> s) {
         return s.stream().anyMatch(f -> !DBConstants.Status.DRAFT.equals(f.getStatus()));
     }
 
@@ -497,7 +497,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     }
 
     @SuppressWarnings("unchecked")
-    public <Z extends AbstractMakueniEntity> Z getProcurementEntity(Class<Z> clazz) {
+    public <Z extends AbstractClientEntity> Z getProcurementEntity(Class<Z> clazz) {
         if (clazz.equals(Project.class)) {
             return (Z) getProject();
         }

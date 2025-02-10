@@ -29,7 +29,7 @@ class Docs extends CRDPage {
                 <h3 className="list-group-item-heading">{t('docs:allEndpoints:heading')}</h3>
                 <p className="list-group-item-text">{t('docs:allEndpoints:text')}</p>
               </a>
-              <a href="/swagger-ui/index.html#/makueni-data-controller" className="list-group-item">
+              <a href="/swagger-ui/index.html#/client-data-controller" className="list-group-item">
                 <h3 className="list-group-item-heading">{t('docs:makueniEndpoints:heading')}</h3>
                 <p className="list-group-item-text">{t('docs:makueniEndpoints:text')}</p>
               </a>

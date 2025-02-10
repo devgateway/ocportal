@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 @Form(featureName = "contractForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueContract.message}")
-public class Contract extends AbstractTenderProcessMakueniEntity {
+public class Contract extends AbstractTenderProcessClientEntity {
     @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
 
@@ -216,8 +216,8 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     @Override
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
+        ArrayList<AbstractClientEntity> children = new ArrayList<>();
         children.addAll(getTenderProcessNotNull().getAdministratorReports());
         children.addAll(getTenderProcessNotNull().getPmcReports());
         children.addAll(getTenderProcessNotNull().getInspectionReports());

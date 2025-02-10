@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 @Form(featureName = "professionalOpinionForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueProfessionalOpinion.message}")
-public class ProfessionalOpinion extends AbstractTenderProcessMakueniEntity {
+public class ProfessionalOpinion extends AbstractTenderProcessClientEntity {
 
     @ExcelExport(name = "Professional Opinions", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -74,7 +74,7 @@ public class ProfessionalOpinion extends AbstractTenderProcessMakueniEntity {
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getAwardNotification()));
     }

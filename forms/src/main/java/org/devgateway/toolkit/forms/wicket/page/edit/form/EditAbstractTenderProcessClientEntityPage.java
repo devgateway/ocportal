@@ -19,8 +19,8 @@ import org.devgateway.toolkit.forms.wicket.events.EditingDisabledEvent;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -42,9 +42,9 @@ import java.util.Map;
 /**
  * @author mihai
  */
-public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends AbstractTenderProcessMakueniEntity>
-        extends EditAbstractMakueniEntityPage<T> {
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessMakueniEntityPage.class);
+public abstract class EditAbstractTenderProcessClientEntityPage<T extends AbstractTenderProcessClientEntity>
+        extends EditAbstractClientEntityPage<T> {
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderProcessClientEntityPage.class);
 
     public static final Map<Class<?>, Class<? extends Page>> PAGE_CLASS_BY_FORM_CLASS =
             ImmutableMap.<Class<?>, Class<? extends Page>>builder()
@@ -60,7 +60,7 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     @SpringBean
     private TenderProcessService tenderProcessService;
 
-    public EditAbstractTenderProcessMakueniEntityPage(final PageParameters parameters) {
+    public EditAbstractTenderProcessClientEntityPage(final PageParameters parameters) {
         super(parameters);
 
         final Fragment fragment = new Fragment("extraReadOnlyFields", "noExtraReadOnlyFields", this);
@@ -202,7 +202,7 @@ public abstract class EditAbstractTenderProcessMakueniEntityPage<T extends Abstr
     @Override
     protected PageParameters parametersAfterSubmitAndNext() {
         final PageParameters pp = new PageParameters();
-        AbstractMakueniEntity nextStatusable = tenderProcessService.getNextStatusable(
+        AbstractClientEntity nextStatusable = tenderProcessService.getNextStatusable(
                 editForm.getModelObject().getTenderProcess(), editForm.getModelObject().getClass());
         if (!ObjectUtils.isEmpty(nextStatusable)) {
             pp.set(WebConstants.PARAM_ID, nextStatusable.getId());

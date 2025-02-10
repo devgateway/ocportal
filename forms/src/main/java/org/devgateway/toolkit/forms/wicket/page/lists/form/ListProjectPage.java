@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/projects")
-public class ListProjectPage extends ListAbstractMakueniEntityPage<Project> {
+public class ListProjectPage extends ListAbstractClientEntityPage<Project> {
     @SpringBean
     protected ProjectService projectService;
 

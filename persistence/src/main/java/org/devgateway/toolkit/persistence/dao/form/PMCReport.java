@@ -38,7 +38,7 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "pmcReportForm")
-public class PMCReport extends AbstractAuthImplTenderProcessMakueniEntity {
+public class PMCReport extends AbstractAuthImplTenderProcessClientEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Sub-Counties")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

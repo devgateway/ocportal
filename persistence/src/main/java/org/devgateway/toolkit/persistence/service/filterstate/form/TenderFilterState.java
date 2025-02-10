@@ -13,7 +13,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class TenderFilterState extends AbstractTenderProcessMakueniFilterState<Tender> {
+public class TenderFilterState extends AbstractTenderProcessClientFilterState<Tender> {
 
     private String tenderTitle;
 

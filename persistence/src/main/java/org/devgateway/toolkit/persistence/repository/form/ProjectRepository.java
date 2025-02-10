@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2019-04-02
  */
 @Transactional
-public interface ProjectRepository extends AbstractMakueniEntityRepository<Project> {
+public interface ProjectRepository extends AbstractClientEntityRepository<Project> {
 
     Long countByProcurementPlanAndProjectTitleAndIdNot(ProcurementPlan procurementPlan, String projectTitle, Long id);
 

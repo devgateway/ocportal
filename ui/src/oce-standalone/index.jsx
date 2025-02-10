@@ -9,9 +9,9 @@ import {
   Route, Redirect,
 } from 'react-router-dom';
 import './style.scss';
-import OCEMakueni from './oceMakueni';
-import MakueniTenders from '../oce/portal/tenders/makueniTenders';
-import MakueniProcurementPlans from '../oce/portal/procurementPlan/makueniProcurementPlans';
+import OCEMakueni from './oceClient';
+import MakueniTenders from '../oce/portal/tenders/clientTenders';
+import MakueniProcurementPlans from '../oce/portal/procurementPlan/clientProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';

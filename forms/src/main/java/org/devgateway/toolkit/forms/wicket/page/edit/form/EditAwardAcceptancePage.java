@@ -22,7 +22,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditAwardAcceptancePage extends EditAbstractTenderReqMakueniEntityPage<AwardAcceptance>
+public class EditAwardAcceptancePage extends EditAbstractTenderReqClientEntityPage<AwardAcceptance>
         implements ProcurementRoleAssignable {
     @SpringBean
     protected AwardAcceptanceService awardAcceptanceService;

@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @since 2019-04-02
  */
 @Transactional
-public interface ProcurementPlanRepository extends AbstractMakueniEntityRepository<ProcurementPlan> {
+public interface ProcurementPlanRepository extends AbstractClientEntityRepository<ProcurementPlan> {
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 

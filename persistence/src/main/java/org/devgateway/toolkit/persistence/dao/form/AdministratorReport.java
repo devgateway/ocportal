@@ -23,7 +23,7 @@ import java.util.Collection;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "administratorReportForm")
-public class AdministratorReport extends AbstractAuthImplTenderProcessMakueniEntity {
+public class AdministratorReport extends AbstractAuthImplTenderProcessClientEntity {
 
     @MaxAttachedFiles
     @JsonIgnore

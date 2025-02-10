@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 @MappedSuperclass
 @Audited
-public abstract class AbstractImplTenderProcessMakueniEntity extends AbstractTenderProcessMakueniEntity {
+public abstract class AbstractImplTenderProcessClientEntity extends AbstractTenderProcessClientEntity {
 
     @ManyToOne(optional = false)
     @ExcelExport(name = "Contract", justExport = true)

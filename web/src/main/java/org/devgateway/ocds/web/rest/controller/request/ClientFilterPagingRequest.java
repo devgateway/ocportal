@@ -10,7 +10,7 @@ import java.util.TreeSet;
  * @author idobre
  * @since 2019-07-12
  */
-public class MakueniFilterPagingRequest extends TextSearchRequest {
+public class ClientFilterPagingRequest extends TextSearchRequest {
     @Schema(title = "Department identifier")
     private Long department;
 

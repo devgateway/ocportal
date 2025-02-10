@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author gmutuhu
  */
-public class ContractFilterState extends AbstractTenderProcessMakueniFilterState<Contract> {
+public class ContractFilterState extends AbstractTenderProcessClientFilterState<Contract> {
     protected Supplier awardee;
     @Override
     public Specification<Contract> getSpecification() {

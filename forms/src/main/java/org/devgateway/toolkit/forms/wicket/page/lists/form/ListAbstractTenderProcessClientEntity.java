@@ -16,9 +16,9 @@ import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootst
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.service.category.SupplierService;
-import org.devgateway.toolkit.persistence.service.filterstate.form.AbstractTenderProcessMakueniFilterState;
+import org.devgateway.toolkit.persistence.service.filterstate.form.AbstractTenderProcessClientFilterState;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -28,15 +28,15 @@ import java.util.Optional;
  * @author idobre
  * @since 2019-05-23
  */
-public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractTenderProcessMakueniEntity>
-        extends ListAbstractMakueniEntityPage<T> {
+public abstract class ListAbstractTenderProcessClientEntity<T extends AbstractTenderProcessClientEntity>
+        extends ListAbstractClientEntityPage<T> {
 
     protected final List<Supplier> awardees;
 
     @SpringBean
     private SupplierService supplierService;
 
-    public ListAbstractTenderProcessMakueniEntity(final PageParameters parameters) {
+    public ListAbstractTenderProcessClientEntity(final PageParameters parameters) {
         super(parameters);
 
         this.awardees = supplierService.findAll();
@@ -80,7 +80,7 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
     protected void addAwardeeColumn() {
         addFmColumn("awardee", new SelectFilteredBootstrapPropertyColumn<>(
                 new Model<>(
-                        (new StringResourceModel("awardee", ListAbstractTenderProcessMakueniEntity.this)).getString()),
+                        (new StringResourceModel("awardee", ListAbstractTenderProcessClientEntity.this)).getString()),
                 "items.awardee",
                 "awardee",
                 new ListModel<>(awardees), getDataTable(), false
@@ -90,13 +90,13 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
     protected void addTenderTitleColumn() {
 
         addFmColumn("tenderTitle", new TextFilteredBootstrapPropertyColumn<T,
-                AbstractTenderProcessMakueniFilterState<T>, String>(
+                AbstractTenderProcessClientFilterState<T>, String>(
                 new Model<>(
-                        (new StringResourceModel("title", ListAbstractTenderProcessMakueniEntity.this)).getString()),
+                        (new StringResourceModel("title", ListAbstractTenderProcessClientEntity.this)).getString()),
                 null, "tenderProcess.tender.iterator.next.tenderTitle"
         ) {
             @Override
-            protected IModel<AbstractTenderProcessMakueniFilterState<T>> getFilterModel(FilterForm form) {
+            protected IModel<AbstractTenderProcessClientFilterState<T>> getFilterModel(FilterForm form) {
                 return new PropertyModel<>(form.getDefaultModel(), "tenderTitle");
             }
         });
@@ -105,7 +105,7 @@ public abstract class ListAbstractTenderProcessMakueniEntity<T extends AbstractT
 //        columns.add(new PropertyColumn<T, String>(
 //                new Model<>((new StringResourceModel(
 //                        "title",
-//                        ListAbstractTenderProcessMakueniEntity.this
+//                        ListAbstractTenderProcessClientEntity.this
 //                )).getString()),
 //                null, "tenderProcess.tender.iterator.next.tenderTitle"
 //        ) {

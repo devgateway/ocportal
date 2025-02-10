@@ -3,13 +3,13 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
 
 /**
  * @author mpostelnicu
  */
-public abstract class EditAbstractImplTenderProcessEntityPage<T extends AbstractImplTenderProcessMakueniEntity>
-        extends EditAbstractTenderProcessMakueniEntityPage<T> {
+public abstract class EditAbstractImplTenderProcessEntityPage<T extends AbstractImplTenderProcessClientEntity>
+        extends EditAbstractTenderProcessClientEntityPage<T> {
 
     protected Fragment abstractImplExtraFields;
 

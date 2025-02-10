@@ -8,7 +8,7 @@ import org.devgateway.ocds.web.convert.MongoFileStorageService;
 import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
@@ -97,7 +97,7 @@ public class ImportPostgresToMongo {
         logger.info("Forms status integrity check done.");
 
         logger.info("Form Status Integrity Checks Failure: " + sb.toString());
-        
+
         final MimeMessagePreparator messagePreparator = mimeMessage -> {
             final MimeMessageHelper msg = new MimeMessageHelper(mimeMessage, "UTF-8");
             msg.setTo(SecurityUtil.getSuperAdminEmail(adminSettingsRepository));
@@ -124,7 +124,7 @@ public class ImportPostgresToMongo {
     }
 
     @Transactional(readOnly = true)
-    public void formStatusIntegrityCheck(AbstractMakueniEntity p, StringBuffer sb) {
+    public void formStatusIntegrityCheck(AbstractClientEntity p, StringBuffer sb) {
         if (p == null) {
             return;
         }
@@ -213,69 +213,69 @@ public class ImportPostgresToMongo {
 
             pr.setPurchaseRequisition(new HashSet<>(filterNotExportable(pr.getPurchaseRequisition())));
             pr.getPurchaseRequisition().stream().flatMap(i -> i.getPurchRequisitions().stream())
-                    .forEach(item -> storeMakueniFormFiles(item.getFormDocs()));
-            pr.getPurchaseRequisition().stream().forEach(item -> storeMakueniFormFiles(
+                    .forEach(item -> storeClientFormFiles(item.getFormDocs()));
+            pr.getPurchaseRequisition().stream().forEach(item -> storeClientFormFiles(
                     item.getFormDocs()));
 
             Tender tender = pr.getSingleTender();
 
             pr.setTender(new HashSet<>(filterNotExportable(pr.getTender())));
-            pr.getTender().stream().forEach(item -> storeMakueniFormFiles(item.getFormDocs()));
-            pr.getTender().stream().forEach(item -> storeMakueniFormFiles(item.getBillOfQuantities()));
+            pr.getTender().stream().forEach(item -> storeClientFormFiles(item.getFormDocs()));
+            pr.getTender().stream().forEach(item -> storeClientFormFiles(item.getBillOfQuantities()));
 
             pr.setTenderQuotationEvaluation(new HashSet<>(
                     filterNotExportable(pr.getTenderQuotationEvaluation())));
             pr.getTenderQuotationEvaluation()
                     .forEach(item -> {
                         item.getBids().forEach(b -> computePrequalifiedItems(b, tender));
-                        storeMakueniFormFiles(item.getFormDocs());
+                        storeClientFormFiles(item.getFormDocs());
                     });
 
             pr.setProfessionalOpinion(new HashSet<>(filterNotExportable(pr.getProfessionalOpinion())));
             pr.getProfessionalOpinion().stream().flatMap(i -> i.getItems().stream())
-                    .forEach(item -> storeMakueniFormFiles(item.getFormDocs()));
+                    .forEach(item -> storeClientFormFiles(item.getFormDocs()));
 
             pr.setAwardNotification(new HashSet<>(filterNotExportable(pr.getAwardNotification())));
             pr.getAwardNotification().stream().flatMap(i -> i.getItems().stream())
-                    .forEach(item -> storeMakueniFormFiles(item.getFormDocs()));
+                    .forEach(item -> storeClientFormFiles(item.getFormDocs()));
 
             pr.setAwardAcceptance(new HashSet<>(filterNotExportable(pr.getAwardAcceptance())));
             pr.getAwardAcceptance().stream().flatMap(i -> i.getItems().stream())
-                    .forEach(item -> storeMakueniFormFiles(item.getFormDocs()));
+                    .forEach(item -> storeClientFormFiles(item.getFormDocs()));
 
             pr.setContract(new HashSet<>(filterNotExportable(pr.getContract())));
             pr.getContract().stream()
                     .forEach(item -> item.getContractDocs().stream()
-                            .forEach(doc -> storeMakueniFormFiles(doc.getFormDocs())));
+                            .forEach(doc -> storeClientFormFiles(doc.getFormDocs())));
 
             pr.setAdministratorReports(new HashSet<>(filterNotExportable(pr.getAdministratorReports())));
-            pr.getAdministratorReports().stream().forEach(doc -> storeMakueniFormFiles(doc.getFormDocs()));
+            pr.getAdministratorReports().stream().forEach(doc -> storeClientFormFiles(doc.getFormDocs()));
 
             pr.setInspectionReports(new HashSet<>(filterNotExportable(pr.getInspectionReports())));
             pr.getInspectionReports().stream().forEach(doc -> {
-                storeMakueniFormFiles(doc.getFormDocs());
-                storeMakueniFormFiles(doc.getPicture());
+                storeClientFormFiles(doc.getFormDocs());
+                storeClientFormFiles(doc.getPicture());
                 doc.getPrivateSectorRequests().stream()
-                        .forEach(psr -> storeMakueniFormFiles(psr.getUpload()));
+                        .forEach(psr -> storeClientFormFiles(psr.getUpload()));
             });
 
             pr.setPmcReports(new HashSet<>(filterNotExportable(pr.getPmcReports())));
-            pr.getPmcReports().stream().forEach(doc -> storeMakueniFormFiles(doc.getFormDocs()));
+            pr.getPmcReports().stream().forEach(doc -> storeClientFormFiles(doc.getFormDocs()));
 
             pr.setMeReports(new HashSet<>(filterNotExportable(pr.getMeReports())));
-            pr.getMeReports().stream().forEach(doc -> storeMakueniFormFiles(doc.getFormDocs()));
+            pr.getMeReports().stream().forEach(doc -> storeClientFormFiles(doc.getFormDocs()));
 
             pr.setPaymentVouchers(new HashSet<>(filterNotExportable(pr.getPaymentVouchers())));
             pr.getPaymentVouchers().stream().forEach(doc -> {
-                storeMakueniFormFiles(doc.getFormDocs());
-                storeMakueniFormFiles(doc.getCompletionCertificate());
+                storeClientFormFiles(doc.getFormDocs());
+                storeClientFormFiles(doc.getCompletionCertificate());
             });
         });
 
         pp.getProjects().stream().flatMap(p->p.getCabinetPapers().stream()).
-                forEach(doc -> storeMakueniFormFiles(doc.getFormDocs()));
+                forEach(doc -> storeClientFormFiles(doc.getFormDocs()));
 
-        storeMakueniFormFiles(pp.getFormDocs());
+        storeClientFormFiles(pp.getFormDocs());
         procurementPlanMongoRepository.save(pp);
         logger.info("Procurement Plan " + pp.getId() + " " + pp.getLabel() + " saved to MongoDB.");
     }
@@ -284,7 +284,7 @@ public class ImportPostgresToMongo {
         bid.setPrequalifiedItems(prequalifiedSupplierService.findItemsForBid(bid, tender));
     }
 
-    public void storeMakueniFormFiles(final Set<FileMetadata> formDocs) {
+    public void storeClientFormFiles(final Set<FileMetadata> formDocs) {
         for (final FileMetadata fileMetadata : formDocs) {
             mongoFileStorageService.storeFile(fileMetadata);
         }

@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class PaymentVoucherServiceImpl extends AbstractImplTenderProcessMakueniEntityServiceImpl<PaymentVoucher>
+public class PaymentVoucherServiceImpl extends AbstractImplTenderProcessClientEntityServiceImpl<PaymentVoucher>
         implements PaymentVoucherService {
 
     @Autowired

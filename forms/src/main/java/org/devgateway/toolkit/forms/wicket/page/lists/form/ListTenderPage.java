@@ -45,7 +45,7 @@ import java.util.Optional;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenders")
-public class ListTenderPage extends ListAbstractTenderProcessMakueniEntity<Tender> {
+public class ListTenderPage extends ListAbstractTenderProcessClientEntity<Tender> {
     
     @SpringBean
     protected TenderService tenderService;

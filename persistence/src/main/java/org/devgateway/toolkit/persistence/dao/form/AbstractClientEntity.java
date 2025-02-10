@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @MappedSuperclass
 @Audited
-public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntity
+public abstract class AbstractClientEntity extends AbstractStatusAuditableEntity
         implements Labelable, SingleFileMetadatable, Lockable {
     @ExcelExport(useTranslation = true,
             onlyForClass = {ProcurementPlan.class, Project.class, InspectionReport.class,
@@ -62,12 +62,12 @@ public abstract class AbstractMakueniEntity extends AbstractStatusAuditableEntit
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     @Transactional
-    protected abstract Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities();
+    protected abstract Collection<? extends AbstractClientEntity> getDirectChildrenEntities();
 
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     @Transactional
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntitiesNotNull() {
+    public Collection<? extends AbstractClientEntity> getDirectChildrenEntitiesNotNull() {
         return getDirectChildrenEntities().stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 

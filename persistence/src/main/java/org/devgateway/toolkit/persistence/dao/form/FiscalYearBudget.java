@@ -32,7 +32,7 @@ import java.util.Collections;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"department_id", "fiscal_year_id"}))
 @OneBudgetPerDepartmentAndFY(groups = HighLevel.class, payload = Severity.NonRecoverable.class)
-public class FiscalYearBudget extends AbstractMakueniEntity {
+public class FiscalYearBudget extends AbstractClientEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
     @ManyToOne(optional = false)
@@ -66,7 +66,7 @@ public class FiscalYearBudget extends AbstractMakueniEntity {
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    public Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

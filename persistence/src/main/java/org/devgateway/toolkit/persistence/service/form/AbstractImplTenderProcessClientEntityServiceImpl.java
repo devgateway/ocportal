@@ -1,15 +1,15 @@
 package org.devgateway.toolkit.persistence.service.form;
 
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
 
 import java.util.List;
 
 /**
  * @author mpostelnicu
  */
-public abstract class AbstractImplTenderProcessMakueniEntityServiceImpl
-        <T extends AbstractImplTenderProcessMakueniEntity>
-        extends AbstractTenderProcessEntityServiceImpl<T> implements AbstractImplTenderProcessMakueniEntityService<T> {
+public abstract class AbstractImplTenderProcessClientEntityServiceImpl
+        <T extends AbstractImplTenderProcessClientEntity>
+        extends AbstractTenderProcessEntityServiceImpl<T> implements AbstractImplTenderProcessClientEntityService<T> {
 
     @Override
     public <S extends T> S save(S entity) {

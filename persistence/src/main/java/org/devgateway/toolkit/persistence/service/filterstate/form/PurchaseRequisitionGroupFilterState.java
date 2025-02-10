@@ -11,7 +11,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-17
  */
-public class PurchaseRequisitionGroupFilterState extends AbstractTenderProcessMakueniFilterState
+public class PurchaseRequisitionGroupFilterState extends AbstractTenderProcessClientFilterState
         <PurchaseRequisitionGroup> {
 
 

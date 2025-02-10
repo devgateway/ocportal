@@ -104,7 +104,7 @@ public class ExcelExportController extends GenericOCDSController {
     }
 
     @Operation(summary = "Export Data in Excel format.")
-    @RequestMapping(value = "/api/makueni/excelExport", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/api/client/excelExport", method = {RequestMethod.GET, RequestMethod.POST})
     public void makueniExcelExport(final HttpServletResponse response) throws IOException {
         final List<ProcurementPlan> procurementPlans = procurementPlanService.findAll();
 

@@ -38,7 +38,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.GoFilterToolbar;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.service.PersonService;
-import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
+import org.devgateway.toolkit.persistence.service.form.ClientEntityServiceResolver;
 import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.hibernate.proxy.HibernateProxyHelper;
 
@@ -48,7 +48,7 @@ import org.hibernate.proxy.HibernateProxyHelper;
 public class ListLockPanel extends Panel {
 
     @SpringBean
-    private MakueniEntityServiceResolver makueniEntityServiceResolver;
+    private ClientEntityServiceResolver clientEntityServiceResolver;
 
     @SpringBean
     private PersonService personService;
@@ -156,9 +156,9 @@ public class ListLockPanel extends Panel {
         private List<? extends Lockable> getLocks() {
             if (locks == null) {
                 if (filterState.getOwner() != null) {
-                    locks = makueniEntityServiceResolver.getAllLocked(filterState.getOwner());
+                    locks = clientEntityServiceResolver.getAllLocked(filterState.getOwner());
                 } else {
-                    locks = makueniEntityServiceResolver.getAllLocked();
+                    locks = clientEntityServiceResolver.getAllLocked();
                 }
             }
             return locks;
@@ -214,7 +214,7 @@ public class ListLockPanel extends Panel {
 
                 @Override
                 public void onClick(AjaxRequestTarget target) {
-                    makueniEntityServiceResolver.unlock(lockable);
+                    clientEntityServiceResolver.unlock(lockable);
                     target.add(ListLockPanel.this);
                 }
             };

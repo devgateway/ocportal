@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @MappedSuperclass
 @Audited
-public abstract class AbstractAuthImplTenderProcessMakueniEntity extends AbstractImplTenderProcessMakueniEntity {
+public abstract class AbstractAuthImplTenderProcessClientEntity extends AbstractImplTenderProcessClientEntity {
 
     @ExcelExport(useTranslation = true, name = "Authorize Payment")
     private Boolean authorizePayment;
@@ -22,7 +22,7 @@ public abstract class AbstractAuthImplTenderProcessMakueniEntity extends Abstrac
     }
 
     @Override
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return getTenderProcessNotNull().getPaymentVouchers();
     }
 

@@ -36,7 +36,7 @@ import java.util.Collections;
         @Index(columnList = "name")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "cabinetPaperForm")
-public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
+public class CabinetPaper extends AbstractClientEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "procurement_plan_id")
@@ -100,7 +100,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

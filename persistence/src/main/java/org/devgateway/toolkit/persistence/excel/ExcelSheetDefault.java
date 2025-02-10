@@ -318,7 +318,7 @@ public class ExcelSheetDefault extends AbstractExcelSheet {
     @Override
     public void writeSheet(final Class clazz, final List<Object> objects, String parentFeatureName) {
         for (Object obj : objects) {
-            // apply rules for exporting Makueni Forms (see: OCMAKU-200)
+            // apply rules for exporting Forms (see: OCMAKU-200)
             if (obj instanceof Statusable && !(obj instanceof CabinetPaper)) {
                 final Statusable status = (Statusable) obj;
 

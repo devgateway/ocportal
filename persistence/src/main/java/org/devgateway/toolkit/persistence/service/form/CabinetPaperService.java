@@ -10,7 +10,7 @@ import java.util.List;
  * @author gmutuhu
  *
  */
-public interface CabinetPaperService extends AbstractMakueniEntityService<CabinetPaper>,
+public interface CabinetPaperService extends AbstractClientEntityService<CabinetPaper>,
         TextSearchableService<CabinetPaper> {
     Long countByProcurementPlanAndNameAndIdNot(ProcurementPlan procurementPlan, String name, Long id);
 

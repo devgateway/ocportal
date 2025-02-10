@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -47,16 +47,16 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
 
     private static class TenderProcessForm {
 
-        private final Class<? extends AbstractMakueniEntity> formClass;
+        private final Class<? extends AbstractClientEntity> formClass;
 
         private final String featureName;
 
-        TenderProcessForm(Class<? extends AbstractMakueniEntity> formClass, String featureName) {
+        TenderProcessForm(Class<? extends AbstractClientEntity> formClass, String featureName) {
             this.formClass = formClass;
             this.featureName = featureName;
         }
 
-        public Class<? extends AbstractMakueniEntity> getFormClass() {
+        public Class<? extends AbstractClientEntity> getFormClass() {
             return formClass;
         }
 
@@ -66,7 +66,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
     }
 
     @Override
-    public AbstractMakueniEntity getPreviousStatusable(TenderProcess tp, Class<?> currentClazz) {
+    public AbstractClientEntity getPreviousStatusable(TenderProcess tp, Class<?> currentClazz) {
         TenderProcessForm entry = FORMS.stream().filter(f -> f.getFormClass().equals(currentClazz))
                 .findFirst().orElseThrow(() -> new RuntimeException("Unknown class to fm mapping " + currentClazz));
         for (int i = FORMS.indexOf(entry) - 1; i >= 0; i--) {
@@ -78,7 +78,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
     }
 
     @Override
-    public AbstractMakueniEntity getNextStatusable(TenderProcess tp, Class<?> currentClazz) {
+    public AbstractClientEntity getNextStatusable(TenderProcess tp, Class<?> currentClazz) {
         TenderProcessForm entry = FORMS.stream().filter(f -> f.getFormClass().equals(currentClazz))
                 .findFirst().orElseThrow(() -> new RuntimeException("Unknown class to fm mapping " + currentClazz));
         for (int i = FORMS.indexOf(entry) + 1; i < FORMS.size(); i++) {
@@ -107,7 +107,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
             new TenderProcessForm(Contract.class, "contractForm")
     );
 
-    public static final Map<? extends Class<? extends AbstractMakueniEntity>, String> FORM_FM_MAP =
+    public static final Map<? extends Class<? extends AbstractClientEntity>, String> FORM_FM_MAP =
             ImmutableMap.copyOf(FORMS.stream().collect(Collectors.toMap(TenderProcessForm::getFormClass,
                     TenderProcessForm::getFeatureName)));
 
@@ -143,7 +143,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
     }
 
     @Override
-    public BindingResult validate(TenderProcess tp, AbstractMakueniEntity e) {
+    public BindingResult validate(TenderProcess tp, AbstractClientEntity e) {
         String status = null;
         try {
             if (!Objects.isNull(e)) {
@@ -171,7 +171,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
         return tenderProcessRepository.countByDepartmentAndFiscalYear(department, fiscalYear);
     }
 
-    private TenderProcessValidator createValidator(AbstractMakueniEntity e) {
+    private TenderProcessValidator createValidator(AbstractClientEntity e) {
         return new TenderProcessValidator(e, e != null);
     }
 
@@ -181,7 +181,7 @@ public class TenderProcessServiceImpl extends BaseJpaServiceImpl<TenderProcess>
     }
 
     @Transactional
-    public <E extends AbstractMakueniEntity> Stream<E> nonDraft(Stream<E> input) {
+    public <E extends AbstractClientEntity> Stream<E> nonDraft(Stream<E> input) {
         return input.filter(i -> !DBConstants.Status.DRAFT.equals(i.getStatus()));
     }
 

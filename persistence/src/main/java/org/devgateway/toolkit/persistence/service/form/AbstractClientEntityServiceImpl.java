@@ -3,8 +3,8 @@ package org.devgateway.toolkit.persistence.service.form;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.repository.form.AbstractMakueniEntityRepository;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
+import org.devgateway.toolkit.persistence.repository.form.AbstractClientEntityRepository;
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +18,13 @@ import java.util.stream.Stream;
  * @author idobre
  * @since 2019-05-21
  */
-public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueniEntity>
-        extends BaseJpaServiceImpl<T> implements AbstractMakueniEntityService<T> {
+public abstract class AbstractClientEntityServiceImpl<T extends AbstractClientEntity>
+        extends BaseJpaServiceImpl<T> implements AbstractClientEntityService<T> {
 
 
     @Transactional
-    public AbstractMakueniEntityRepository<T> makueniRepository() {
-        return (AbstractMakueniEntityRepository<T>) repository();
+    public AbstractClientEntityRepository<T> makueniRepository() {
+        return (AbstractClientEntityRepository<T>) repository();
     }
 
     @Override
@@ -33,7 +33,7 @@ public abstract class AbstractMakueniEntityServiceImpl<T extends AbstractMakueni
     }
 
     @Override
-    public Stream<? extends AbstractMakueniEntity> getAllSubmitted() {
+    public Stream<? extends AbstractClientEntity> getAllSubmitted() {
         return makueniRepository().findByStatus(DBConstants.Status.SUBMITTED);
     }
 

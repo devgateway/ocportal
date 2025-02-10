@@ -57,7 +57,7 @@ import java.util.function.Consumer;
 @Form(featureName = "tenderForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueTender.message}")
-public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable {
+public class Tender extends AbstractTenderProcessClientEntity implements TitleAutogeneratable {
     @ExcelExport(useTranslation = true, name = "Tender Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
@@ -242,7 +242,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     @Override
     @Transactional
-    protected Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<AbstractClientEntity> getDirectChildrenEntities() {
 
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getTenderQuotationEvaluation()));

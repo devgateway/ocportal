@@ -38,7 +38,7 @@ import java.util.List;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "meReportForm")
-public class MEReport extends AbstractImplTenderProcessMakueniEntity {
+public class MEReport extends AbstractImplTenderProcessClientEntity {
 
     @ExcelExport(useTranslation = true)
     private Long sno;
@@ -128,7 +128,7 @@ public class MEReport extends AbstractImplTenderProcessMakueniEntity {
     }
 
     @Override
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

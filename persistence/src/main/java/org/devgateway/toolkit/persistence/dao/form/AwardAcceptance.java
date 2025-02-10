@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 @Form(featureName = "awardAcceptanceForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueAwardAcceptance.message}")
-public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
+public class AwardAcceptance extends AbstractTenderProcessClientEntity {
 
     @ExcelExport(name = "Award Acceptances", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -81,7 +81,7 @@ public class AwardAcceptance extends AbstractTenderProcessMakueniEntity {
 
     @Override
     @Transactional
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull().getContract()));
     }
 

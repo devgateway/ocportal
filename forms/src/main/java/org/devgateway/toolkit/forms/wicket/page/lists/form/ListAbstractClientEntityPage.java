@@ -22,7 +22,7 @@ import org.devgateway.toolkit.forms.wicket.page.lists.AbstractListStatusEntityPa
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.SingleFileMetadatable;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.FiscalYearService;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
+public abstract class ListAbstractClientEntityPage<T extends AbstractClientEntity>
         extends AbstractListStatusEntityPage<T> {
     @SpringBean
     private DepartmentService departmentService;
@@ -47,7 +47,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     protected final List<FiscalYear> fiscalYears;
 
-    public ListAbstractMakueniEntityPage(final PageParameters parameters) {
+    public ListAbstractClientEntityPage(final PageParameters parameters) {
         super(parameters);
 
         filterGoReset = true;
@@ -84,7 +84,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
             downloadLink.add(new Label("downloadText", model.getObject().getName()));
             downloadLink.add(new TooltipBehavior(
-                    new StringResourceModel("downloadUploadedFileTooltip", ListAbstractMakueniEntityPage.this, null)));
+                    new StringResourceModel("downloadUploadedFileTooltip", ListAbstractClientEntityPage.this, null)));
             add(downloadLink);
         }
     }
@@ -92,7 +92,7 @@ public abstract class ListAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     protected void addLastModifiedDateColumn() {
         addFmColumn("lastModifiedDate", new SimpleDateProperyColumn<>(new Model<>((
                 new StringResourceModel("lastModifiedDate",
-                        ListAbstractMakueniEntityPage.this)).getString()),
+                        ListAbstractClientEntityPage.this)).getString()),
                 "lastModifiedDate", "lastModifiedDate",
                 t -> t.getLastModifiedDate().orElse(null)));
     }

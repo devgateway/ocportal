@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class AdministratorReportServiceImpl extends AbstractImplTenderProcessMakueniEntityServiceImpl
+public class AdministratorReportServiceImpl extends AbstractImplTenderProcessClientEntityServiceImpl
         <AdministratorReport> implements AdministratorReportService {
 
     @Autowired

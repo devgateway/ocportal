@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 @Form(featureName = "purchaseRequisitionForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniquePurchaseRequisitionGroup.message}")
-public class PurchaseRequisitionGroup extends AbstractTenderProcessMakueniEntity {
+public class PurchaseRequisitionGroup extends AbstractTenderProcessClientEntity {
 
     @ExcelExport(name = "Purchase Requisitions", separateSheet = true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -111,7 +111,7 @@ public class PurchaseRequisitionGroup extends AbstractTenderProcessMakueniEntity
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getTender()));
     }

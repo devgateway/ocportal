@@ -23,7 +23,7 @@ class OCEDemoLocation extends LocationTab {
 
 OCEDemoLocation.CENTER = [37, -100];
 
-class OCEMakueni extends OCApp {
+class OceClient extends OCApp {
   constructor(props) {
     super(props);
     this.registerTab(OverviewTab);
@@ -136,8 +136,8 @@ class OCEMakueni extends OCApp {
   }
 }
 
-OCEMakueni.propTypes = {
+OceClient.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withRouter(fmConnect(OCEMakueni));
+export default withRouter(fmConnect(OceClient));

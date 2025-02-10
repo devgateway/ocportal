@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  */
 @Service
 @Transactional
-public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl<ProcurementPlan>
+public class ProcurementPlanServiceImpl extends AbstractClientEntityServiceImpl<ProcurementPlan>
         implements ProcurementPlanService {
     @Autowired
     private ProcurementPlanRepository procurementPlanRepository;

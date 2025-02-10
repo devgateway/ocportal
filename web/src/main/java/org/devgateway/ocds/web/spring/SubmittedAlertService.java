@@ -4,12 +4,12 @@ import org.apache.logging.log4j.util.Strings;
 import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.repository.AdminSettingsRepository;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
-import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AbstractClientEntityService;
 import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
@@ -137,7 +137,7 @@ public class SubmittedAlertService {
     @Value("${serverURL}")
     private String serverURL;
 
-    private List<? extends AbstractMakueniEntityService<?>> procurementServices;
+    private List<? extends AbstractClientEntityService<?>> procurementServices;
 
 
     @PostConstruct
@@ -170,7 +170,7 @@ public class SubmittedAlertService {
                 .collect(Collectors.toSet());
     }
 
-    private String createDepartmentContent(Long department, Map<Class<? extends AbstractMakueniEntity>,
+    private String createDepartmentContent(Long department, Map<Class<? extends AbstractClientEntity>,
             Map<Long, String[]>> notifyMap) {
         StringBuffer sb = new StringBuffer();
         sb.append("The following forms are pending your approval:<br>");
@@ -189,7 +189,7 @@ public class SubmittedAlertService {
     }
 
     private void sendDepartmentEmailsForRole(Long department, String role,
-                                             Map<Class<? extends AbstractMakueniEntity>,
+                                             Map<Class<? extends AbstractClientEntity>,
                                                      Map<Long, String[]>> notifyMap) {
         String departmentName = departmentService.findById(department).get().getLabel();
         String[] strings = getValidatorEmailsForDepartmentAndRole(department, role).toArray(new String[0]);
@@ -212,19 +212,19 @@ public class SubmittedAlertService {
     }
 
 
-    public Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>>
-    collectDepartmentTypeIdTitle(List<? extends AbstractMakueniEntityService<?>> services) {
-        Map<Long, Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>>> departmentTypeIdTitle =
+    public Map<Long, Map<Class<? extends AbstractClientEntity>, Map<Long, String[]>>>
+    collectDepartmentTypeIdTitle(List<? extends AbstractClientEntityService<?>> services) {
+        Map<Long, Map<Class<? extends AbstractClientEntity>, Map<Long, String[]>>> departmentTypeIdTitle =
                 new ConcurrentHashMap<>();
 
         Integer daysSubmittedReminder = settingsUtils.getDaysSubmittedReminder();
 
-        try (Stream<? extends AbstractMakueniEntity> allSubmitted = services.stream()
-                .flatMap(AbstractMakueniEntityService::getAllSubmitted)) {
+        try (Stream<? extends AbstractClientEntity> allSubmitted = services.stream()
+                .flatMap(AbstractClientEntityService::getAllSubmitted)) {
             allSubmitted
                     .filter(e -> {
-                        if (e instanceof AbstractTenderProcessMakueniEntity) {
-                            return !((AbstractTenderProcessMakueniEntity) e).getTenderProcess().isTerminated();
+                        if (e instanceof AbstractTenderProcessClientEntity) {
+                            return !((AbstractTenderProcessClientEntity) e).getTenderProcess().isTerminated();
                         }
                         return !e.isTerminated();
                     })
@@ -232,10 +232,10 @@ public class SubmittedAlertService {
                             LocalDate.now().atStartOfDay()).toDays() >= daysSubmittedReminder)
                     .forEach(
                     o -> {
-                        AbstractMakueniEntity e = o;
+                        AbstractClientEntity e = o;
                         Department department = e.getDepartment();
                         departmentTypeIdTitle.putIfAbsent(department.getId(), new ConcurrentHashMap<>());
-                        Map<Class<? extends AbstractMakueniEntity>, Map<Long, String[]>> departmentMap =
+                        Map<Class<? extends AbstractClientEntity>, Map<Long, String[]>> departmentMap =
                                 departmentTypeIdTitle
                                         .get(department.getId());
                         Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(e);

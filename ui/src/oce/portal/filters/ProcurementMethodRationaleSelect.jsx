@@ -3,7 +3,7 @@ import FilterItemSingleSelect from './FilterItemSingleSelect';
 
 const ProcurementMethodRationaleSelect = (props) => (
   <FilterItemSingleSelect
-    ep="/makueni/filters/procurementMethodRationale"
+    ep="/client/filters/procurementMethodRationale"
     itemValueKey="_id"
     itemLabelKey="label"
     {...props}

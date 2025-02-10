@@ -5,8 +5,8 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -27,8 +27,8 @@ import org.devgateway.toolkit.persistence.dto.StatusOverviewRowGroup;
 import org.devgateway.toolkit.persistence.dto.StatusOverviewRowInfo;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.persistence.service.filterstate.form.ProjectFilterState;
-import org.devgateway.toolkit.persistence.service.form.AbstractImplTenderProcessMakueniEntityService;
-import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AbstractImplTenderProcessClientEntityService;
+import org.devgateway.toolkit.persistence.service.form.AbstractClientEntityService;
 import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.AwardAcceptanceService;
 import org.devgateway.toolkit.persistence.service.form.AwardNotificationService;
@@ -136,18 +136,18 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 rowInfo.setTitle(tp.getSingleTender() == null ? tp.getClass().getSimpleName() + " " + tp.getId()
                         : tp.getSingleTender().getTitle());
                 rowInfo.setTenderProcessStatus(
-                        getProcessStatus(getMakueniEntitiesStatuses(
+                        getProcessStatus(getClientEntitiesStatuses(
                                 tp.getPurchaseRequisition(),
                                 tp.getTender(),
                                 tp.getTenderQuotationEvaluation(), tp.getProfessionalOpinion()),
                                 getStatusSizeWithFm(PurchaseRequisitionGroup.class, Tender.class,
                                         TenderQuotationEvaluation.class, ProfessionalOpinion.class)));
                 rowInfo.setAwardProcessStatus(
-                        getProcessStatus(getMakueniEntitiesStatuses(tp.getAwardNotification(), tp.getAwardAcceptance(),
+                        getProcessStatus(getClientEntitiesStatuses(tp.getAwardNotification(), tp.getAwardAcceptance(),
                                 tp.getContract()),
                                 getStatusSizeWithFm(AwardNotification.class, AwardAcceptance.class, Contract.class)));
                 rowInfo.setImplementationStatus(
-                        getProcessStatus(getMakueniEntitiesStatuses(tp.getAdministratorReports(),
+                        getProcessStatus(getClientEntitiesStatuses(tp.getAdministratorReports(),
                                 tp.getInspectionReports(), tp.getPmcReports(), tp.getMeReports(),
                                 tp.getPaymentVouchers()),
                                 0));
@@ -158,23 +158,23 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         return groupList;
     }
 
-    public int getStatusSizeWithFm(Class<? extends AbstractMakueniEntity>... classes) {
+    public int getStatusSizeWithFm(Class<? extends AbstractClientEntity>... classes) {
         return (int) Arrays.stream(classes).map(TenderProcessServiceImpl.FORM_FM_MAP::get)
                 .map(fmService::isFeatureVisible)
                 .filter(BooleanUtils::isTrue).count();
     }
 
 
-    private <S extends AbstractMakueniEntity> List<String> getMakueniEntitiesStatuses(
+    private <S extends AbstractClientEntity> List<String> getClientEntitiesStatuses(
             Collection<? extends S>... cols) {
         ArrayList<String> ret = new ArrayList<>();
         for (Collection<? extends S> col : cols) {
-            col.forEach(e -> ret.add(getMakueniEntityVirtualStatus(e)));
+            col.forEach(e -> ret.add(getClientEntityVirtualStatus(e)));
         }
         return ret;
     }
 
-    private String getMakueniEntityVirtualStatus(AbstractMakueniEntity e) {
+    private String getClientEntityVirtualStatus(AbstractClientEntity e) {
         if (e instanceof PaymentVoucher) {
             return getPaymentVoucherVirtualStatus((PaymentVoucher) e);
         }
@@ -345,12 +345,12 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
     }
 
     @Transactional(readOnly = true)
-    public  <S extends AbstractMakueniEntity & ProjectAttachable & Statusable>
+    public  <S extends AbstractClientEntity & ProjectAttachable & Statusable>
     Map<Project, List<String>> addStatus(final FiscalYear fiscalYear,
-                                         final AbstractMakueniEntityService<? extends S>... services) {
+                                         final AbstractClientEntityService<? extends S>... services) {
         Map<Project, List<String>> statusMap = new HashMap<>();
 
-        for (AbstractMakueniEntityService<? extends S> service : services) {
+        for (AbstractClientEntityService<? extends S> service : services) {
             final List<? extends S> list = service.findByFiscalYear(fiscalYear);
             statusMap = mergeMapOfStatuses(statusMap, groupStatusByProject(list));
         }
@@ -360,13 +360,13 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
 
 
     @Transactional(readOnly = true)
-    public  <S extends AbstractImplTenderProcessMakueniEntity & ProjectAttachable & Statusable>
+    public  <S extends AbstractImplTenderProcessClientEntity & ProjectAttachable & Statusable>
     Map<Project, List<String>> addImplementationStatus(final FiscalYear fiscalYear,
-                                                       final AbstractImplTenderProcessMakueniEntityService
+                                                       final AbstractImplTenderProcessClientEntityService
                                                                <? extends S>... services) {
         Map<Project, List<String>> statusMap = new HashMap<>();
 
-        for (AbstractMakueniEntityService<? extends S> service : services) {
+        for (AbstractClientEntityService<? extends S> service : services) {
             final List<? extends S> list = service.findByFiscalYear(fiscalYear);
             statusMap = mergeMapOfStatuses(statusMap,
                     service instanceof PaymentVoucherService

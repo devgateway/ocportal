@@ -11,7 +11,7 @@ import javax.persistence.MappedSuperclass;
 import java.util.Objects;
 
 @MappedSuperclass
-public abstract class AbstractTenderProcessMakueniEntity extends AbstractMakueniEntity implements ProjectAttachable,
+public abstract class AbstractTenderProcessClientEntity extends AbstractClientEntity implements ProjectAttachable,
         ProcurementPlanAttachable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tender_process_id")

@@ -101,7 +101,7 @@ const Header = ({
   const isActive = (option) => selected === option;
 
   const exportBtn = () => {
-    const excelURL = new URI('/api/makueni/excelExport');
+    const excelURL = new URI('/api/client/excelExport');
     const jsonURL = new URI('/api/ocds/package/all');
 
     return (

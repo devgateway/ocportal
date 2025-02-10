@@ -16,19 +16,19 @@ export const getGaId = async () => {
   return gaId;
 };
 
-export const getProject = (params) => fetch(`/makueni/project/id/${params.id}`);
+export const getProject = (params) => fetch(`/client/project/id/${params.id}`);
 
 export const getFeedback = (page) => fetch(`/feedback?page=${page}`);
 
 export const postFeedback = (postData) => fetch('/postFeedback', postData);
 
 export const getPurchaseRequisition = async (params) => {
-  const rawData = await fetch(`/makueni/purchaseReq/id/${params.id}`);
+  const rawData = await fetch(`/client/purchaseReq/id/${params.id}`);
   return rawData;
 };
 
 export const getTenders = async (params) => {
-  const rawData = await fetch('/makueni/tenders', params);
+  const rawData = await fetch('/client/tenders', params);
   const data = rawData.map((datum) => {
     let project;
     let tender;
@@ -52,13 +52,13 @@ export const getTenders = async (params) => {
     };
   });
 
-  const count = await fetch('/makueni/tendersCount', params);
+  const count = await fetch('/client/tendersCount', params);
 
   return { data, count };
 };
 
 export const getProcurementPlans = async (params) => {
-  const rawData = await fetch('/makueni/procurementPlans', params);
+  const rawData = await fetch('/client/procurementPlans', params);
   const data = rawData.map((datum) => ({
     id: datum.id,
     department: datum.department.label,
@@ -66,11 +66,11 @@ export const getProcurementPlans = async (params) => {
     formDocs: datum.formDocs,
   }));
 
-  const count = await fetch('/makueni/procurementPlansCount', params);
+  const count = await fetch('/client/procurementPlansCount', params);
 
   return { data, count };
 };
 
-export const getProcurementPlan = (id) => fetch(`/makueni/procurementPlan/id/${id}`);
+export const getProcurementPlan = (id) => fetch(`/client/procurementPlan/id/${id}`);
 
-export const subscribeToAlerts = (params) => fetch('/makueni/alerts/subscribeAlert', params);
+export const subscribeToAlerts = (params) => fetch('/client/alerts/subscribeAlert', params);

@@ -10,18 +10,18 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.SimpleDateProperyColumn;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.service.filterstate.form.AbstractImplTenderProcessFilterState;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 
 /**
  * @author mpostelnicu
  */
-public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends AbstractImplTenderProcessMakueniEntity>
-        extends ListAbstractTenderProcessMakueniEntity<T> {
+public abstract class ListAbstractImplTenderProcessClientEntity<T extends AbstractImplTenderProcessClientEntity>
+        extends ListAbstractTenderProcessClientEntity<T> {
 
 
-    public ListAbstractImplTenderProcessMakueniEntity(PageParameters parameters) {
+    public ListAbstractImplTenderProcessClientEntity(PageParameters parameters) {
         super(parameters);
     }
 
@@ -32,7 +32,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
                 new Model<>(
                         (new StringResourceModel(
                                 "awardee",
-                                ListAbstractImplTenderProcessMakueniEntity.this
+                                ListAbstractImplTenderProcessClientEntity.this
                         )).getString()),
                 "tenderProcess.contract.awardee",
                 "tenderProcess.singleContract.awardee",
@@ -51,7 +51,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
         addFmColumn("authorizePayment", new PropertyColumn<>(new Model<>(
                 (new StringResourceModel(
                         "authorizePayment",
-                        ListAbstractImplTenderProcessMakueniEntity.this
+                        ListAbstractImplTenderProcessClientEntity.this
                 )).getString()), "authorizePayment", "authorizePayment"));
     }
 
@@ -63,7 +63,7 @@ public abstract class ListAbstractImplTenderProcessMakueniEntity<T extends Abstr
 
         addFmColumn("approvedDate", new SimpleDateProperyColumn<>(new StringResourceModel(
                 "approvedDate",
-                ListAbstractImplTenderProcessMakueniEntity.this),
+                ListAbstractImplTenderProcessClientEntity.this),
                 "approvedDate", "approvedDate",
                 t -> PersistenceUtil.convertDateToZonedDateTime(t.getApprovedDate())
         ));

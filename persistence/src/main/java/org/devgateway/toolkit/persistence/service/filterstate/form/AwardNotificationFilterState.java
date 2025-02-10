@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author gmutuhu
  */
-public class AwardNotificationFilterState extends AbstractTenderProcessMakueniFilterState<AwardNotification> {
+public class AwardNotificationFilterState extends AbstractTenderProcessClientFilterState<AwardNotification> {
     protected Supplier awardee;
 
     @Override

@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import com.google.common.collect.ImmutableMap;
 import org.devgateway.toolkit.persistence.dao.Person;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.service.AdminSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceResolver {
+public class ClientEntityServiceResolverImpl implements ClientEntityServiceResolver {
 
     @Autowired
     private AdminSettingsService adminSettingsService;
 
     @Autowired
-    private List<AbstractMakueniEntityService<?>> serviceList;
+    private List<AbstractClientEntityService<?>> serviceList;
 
-    private Map<Class<?>, AbstractMakueniEntityService<?>> serviceMap;
+    private Map<Class<?>, AbstractClientEntityService<?>> serviceMap;
 
     @PostConstruct
     public void init() {
@@ -44,14 +44,14 @@ public class MakeniEntityServiceResolverImpl implements MakueniEntityServiceReso
     }
 
     @Override
-    public List<? extends AbstractMakueniEntity> getAllLocked(Person person) {
+    public List<? extends AbstractClientEntity> getAllLocked(Person person) {
         return serviceList.stream()
                 .flatMap(s -> s.getAllLocked(person).stream())
                 .collect(toList());
     }
 
     @Override
-    public List<? extends AbstractMakueniEntity> getAllLocked() {
+    public List<? extends AbstractClientEntity> getAllLocked() {
         return serviceList.stream()
                 .flatMap(s -> s.getAllLocked().stream())
                 .collect(toList());

@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "paymentVoucherForm")
-public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
+public class PaymentVoucher extends AbstractImplTenderProcessClientEntity {
 
     @ExcelExport(useTranslation = true)
     private BigDecimal totalAmount;
@@ -59,7 +59,7 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
     private Set<FileMetadata> completionCertificate = new HashSet<>();
 
     @Override
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

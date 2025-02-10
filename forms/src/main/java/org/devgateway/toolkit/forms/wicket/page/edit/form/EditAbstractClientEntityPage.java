@@ -24,9 +24,9 @@ import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValida
 import org.devgateway.toolkit.forms.wicket.page.overview.department.DepartmentOverviewPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.TitleAutogeneratable;
-import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AbstractClientEntityService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory;
  * @author idobre
  * @since 2019-04-02
  */
-public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEntity>
+public abstract class EditAbstractClientEntityPage<T extends AbstractClientEntity>
         extends AbstractEditStatusEntityPage<T> implements EditorValidatorRoleAssignable {
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractMakueniEntityPage.class);
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractClientEntityPage.class);
 
     protected ButtonContentModal revertToDraftModal;
 
@@ -56,11 +56,11 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     }
 
-    public EditAbstractMakueniEntityPage() {
+    public EditAbstractClientEntityPage() {
         this(new PageParameters());
     }
 
-    public EditAbstractMakueniEntityPage(final PageParameters parameters) {
+    public EditAbstractClientEntityPage(final PageParameters parameters) {
         super(parameters);
 
         this.listPageClass = DepartmentOverviewPage.class;
@@ -74,7 +74,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 
     @Override
     protected void onAfterRevertToDraft(AjaxRequestTarget target) {
-//       Collection<? extends AbstractMakueniEntity> allChildrenInHierarchy = getJpaService().getAllChildrenInHierarchy(
+//       Collection<? extends AbstractClientEntity> allChildrenInHierarchy = getJpaService().getAllChildrenInHierarchy(
 //                editForm.getModelObject());
 //        allChildrenInHierarchy.stream().filter(c -> !c.getStatus().equals(DRAFT)).forEach(c -> {
 //            logger.info("Reverting to DRAFT " + c.getClass().getSimpleName());
@@ -85,7 +85,7 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
 //            comment.setComment(c.getNewStatusComment());
 //            c.getStatusComments().add(comment);
 //            c.setStatus(DRAFT);
-//            makeniEntityServiceResolver.saveAndFlushMakueniEntity(c);
+//            makeniEntityServiceResolver.saveAndFlushClientEntity(c);
 //        });
     }
 
@@ -133,8 +133,8 @@ public abstract class EditAbstractMakueniEntityPage<T extends AbstractMakueniEnt
     }
 
 
-    public AbstractMakueniEntityService<T> getJpaService() {
-        return (AbstractMakueniEntityService<T>) jpaService;
+    public AbstractClientEntityService<T> getJpaService() {
+        return (AbstractClientEntityService<T>) jpaService;
     }
 
     @Override

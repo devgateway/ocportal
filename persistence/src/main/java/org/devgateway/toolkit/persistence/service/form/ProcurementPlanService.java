@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * @since 2019-04-02
  */
 public interface ProcurementPlanService
-        extends AbstractMakueniEntityService<ProcurementPlan>, TextSearchableService<ProcurementPlan> {
+        extends AbstractClientEntityService<ProcurementPlan>, TextSearchableService<ProcurementPlan> {
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 

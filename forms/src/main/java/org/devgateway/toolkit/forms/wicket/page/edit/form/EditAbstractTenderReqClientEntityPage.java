@@ -3,7 +3,7 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.spring.PersistenceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mihai
  */
-public abstract class EditAbstractTenderReqMakueniEntityPage<T extends AbstractTenderProcessMakueniEntity>
-        extends EditAbstractTenderProcessMakueniEntityPage<T> {
-    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderReqMakueniEntityPage.class);
+public abstract class EditAbstractTenderReqClientEntityPage<T extends AbstractTenderProcessClientEntity>
+        extends EditAbstractTenderProcessClientEntityPage<T> {
+    protected static final Logger logger = LoggerFactory.getLogger(EditAbstractTenderReqClientEntityPage.class);
 
     protected GenericSleepFormComponent<String> tenderTitle;
 
     protected GenericSleepFormComponent<String> tenderNumber;
 
-    public EditAbstractTenderReqMakueniEntityPage(final PageParameters parameters) {
+    public EditAbstractTenderReqClientEntityPage(final PageParameters parameters) {
         super(parameters);
     }
 

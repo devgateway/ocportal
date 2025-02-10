@@ -43,7 +43,7 @@ import java.util.List;
 @Form(featureName = "tenderQuotationEvaluationForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueTenderQuotationEvaluation.message}")
-public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntity {
+public class TenderQuotationEvaluation extends AbstractTenderProcessClientEntity {
 
     @ExcelExport(useTranslation = true, name = "Tender Opening Date")
     private Date openingDate;
@@ -97,7 +97,7 @@ public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntit
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getProfessionalOpinion()));
     }

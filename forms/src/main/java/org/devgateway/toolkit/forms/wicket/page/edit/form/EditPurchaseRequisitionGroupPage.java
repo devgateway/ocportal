@@ -21,7 +21,7 @@ import org.wicketstuff.annotation.mount.MountPath;
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/purchaseRequisition")
 public class EditPurchaseRequisitionGroupPage
-        extends EditAbstractTenderProcessMakueniEntityPage<PurchaseRequisitionGroup>
+        extends EditAbstractTenderProcessClientEntityPage<PurchaseRequisitionGroup>
         implements ProcurementRoleAssignable {
     @SpringBean
     private PurchaseRequisitionGroupService purchaseRequisitionGroupService;

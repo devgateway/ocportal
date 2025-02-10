@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "inspectionReportForm")
-public class InspectionReport extends AbstractAuthImplTenderProcessMakueniEntity {
+public class InspectionReport extends AbstractAuthImplTenderProcessClientEntity {
 
     @Column(length = DBConstants.MAX_DEFAULT_TEXT_AREA)
     @ExcelExport(useTranslation = true)

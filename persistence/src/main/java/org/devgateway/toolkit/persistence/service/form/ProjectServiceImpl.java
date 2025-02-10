@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class ProjectServiceImpl extends AbstractMakueniEntityServiceImpl<Project> implements ProjectService {
+public class ProjectServiceImpl extends AbstractClientEntityServiceImpl<Project> implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 

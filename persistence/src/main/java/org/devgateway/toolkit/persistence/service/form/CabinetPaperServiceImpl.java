@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class CabinetPaperServiceImpl extends AbstractMakueniEntityServiceImpl<CabinetPaper>
+public class CabinetPaperServiceImpl extends AbstractClientEntityServiceImpl<CabinetPaper>
         implements CabinetPaperService {
 
     @Autowired

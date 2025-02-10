@@ -54,7 +54,7 @@ import org.devgateway.toolkit.forms.wicket.page.overview.AbstractListViewStatus;
 import org.devgateway.toolkit.forms.wicket.page.overview.DataEntryBasePage;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -311,7 +311,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel administratorReportPanel = new TenderDetailPanel<>("administratorReportPanel",
                     tenderProcess.getAdministratorReports().stream().sorted(
-                            Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
+                            Comparator.comparingLong(AbstractClientEntity::getId)).collect(Collectors.toList()),
                     ar -> Collections.singletonList(ar.getLabel()),
                     tenderProcess, EditAdministratorReportPage.class, contract, true,
                     "deptOverview.tenderProcess.administratorReport"
@@ -320,7 +320,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel inspectionReportPanel = new TenderDetailPanel<>("inspectionReportPanel",
                     tenderProcess.getInspectionReports().stream().sorted(
-                            Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
+                            Comparator.comparingLong(AbstractClientEntity::getId)).collect(Collectors.toList()),
                     ir -> Collections.singletonList(ir.getLabel()),
                     tenderProcess, EditInspectionReportPage.class, contract, true,
                     "deptOverview.tenderProcess.inspectionReport"
@@ -329,7 +329,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel pmcReportPanel = new TenderDetailPanel<>("pmcReportPanel",
                     tenderProcess.getPmcReports().stream().sorted(
-                            Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
+                            Comparator.comparingLong(AbstractClientEntity::getId)).collect(Collectors.toList()),
                     pmc -> Collections.singletonList(pmc.getLabel()),
                     tenderProcess, EditPMCReportPage.class, contract, false,
                     "deptOverview.tenderProcess.pmcReport"
@@ -338,7 +338,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel meReportPanel = new TenderDetailPanel<>("meReportPanel",
                     tenderProcess.getMeReports().stream().sorted(
-                            Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
+                            Comparator.comparingLong(AbstractClientEntity::getId)).collect(Collectors.toList()),
                     me -> Collections.singletonList(me.getLabel()),
                     tenderProcess, EditMEReportPage.class, contract, true,
                     "deptOverview.tenderProcess.meReport"
@@ -347,7 +347,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
             final Panel paymentVoucherPanel = new TenderDetailPanel<>("paymentVoucherPanel",
                     tenderProcess.getPaymentVouchers().stream().sorted(
-                            Comparator.comparingLong(AbstractMakueniEntity::getId)).collect(Collectors.toList()),
+                            Comparator.comparingLong(AbstractClientEntity::getId)).collect(Collectors.toList()),
                     pv -> Collections.singletonList(pv.getLabel()),
                     tenderProcess, EditPaymentVoucherPage.class, contract, true,
                     "deptOverview.tenderProcess.paymentVoucher"
@@ -406,7 +406,7 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
         return previousStep != null;
     }
 
-    private class TenderDetailPanel<T extends AbstractMakueniEntity> extends GenericPanel<T> {
+    private class TenderDetailPanel<T extends AbstractClientEntity> extends GenericPanel<T> {
         private final List<T> entities;
 
         private final SerializableFunction<T, List<Object>> tenderInfo;

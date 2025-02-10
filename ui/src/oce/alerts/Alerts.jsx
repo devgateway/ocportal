@@ -30,10 +30,10 @@ const Alerts = (props) => {
 
   useEffect(() => {
     if (!purchaseReqId) {
-      fetch('/makueni/filters/departments/all')
+      fetch('/client/filters/departments/all')
         .then(setImmer(updateFetchedDepartments));
 
-      fetch('/makueni/filters/items/all')
+      fetch('/client/filters/items/all')
         .then(setImmer(updateFetchedItems));
     }
 

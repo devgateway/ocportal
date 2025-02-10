@@ -61,9 +61,9 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.form.AbstractAuthImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractAuthImplTenderProcessClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
@@ -490,7 +490,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         return period;
     }
 
-    public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessMakueniEntity report) {
+    public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessClientEntity report) {
         OCPortalMilestone milestone = new OCPortalMilestone();
         safeSet(milestone::setId, report::getId, this::longIdToString);
         safeSet(milestone::setTitle, () -> "Payment Authorization " + report.getId());
@@ -593,7 +593,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROCUREMENT_PLAN);
     }
 
-    private Document storeAsDocumentProjectPlan(AbstractMakueniEntity entity) {
+    private Document storeAsDocumentProjectPlan(AbstractClientEntity entity) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(
                 entity.getFormDoc(),
                 Document.DocumentType.PROJECT_PLAN
@@ -1375,7 +1375,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         return impl;
     }
 
-    private <S extends AbstractImplTenderProcessMakueniEntity>
+    private <S extends AbstractImplTenderProcessClientEntity>
     Collection<FileMetadata> convertImplToFileMetadata(Collection<S> c) {
         return c.stream()
                 .flatMap(r -> r.getFormDocs().stream()).collect(Collectors.toList());

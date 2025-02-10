@@ -47,7 +47,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "procurementPlanForm")
 @OnePlanPerDepartmentAndFY(groups = HighLevel.class, payload = Severity.NonRecoverable.class)
-public class ProcurementPlan extends AbstractMakueniEntity {
+public class ProcurementPlan extends AbstractClientEntity {
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Department department;
@@ -151,7 +151,7 @@ public class ProcurementPlan extends AbstractMakueniEntity {
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    public Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

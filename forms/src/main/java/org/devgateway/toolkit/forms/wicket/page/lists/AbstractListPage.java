@@ -42,11 +42,11 @@ import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractMakueniEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractClientEntityPage;
 import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.web.Constants;
@@ -186,9 +186,9 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                     .setSize(Size.Small)
                     .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
-            if (editPage instanceof EditAbstractMakueniEntityPage && entity instanceof AbstractMakueniEntity
+            if (editPage instanceof EditAbstractClientEntityPage && entity instanceof AbstractClientEntity
                     && SecurityConstants.Action.VIEW.equals(permissionEntityRenderableService.getAllowedAccess(
-                    (EditAbstractMakueniEntityPage<?>) editPage, (AbstractMakueniEntity) entity))) {
+                    (EditAbstractClientEntityPage<?>) editPage, (AbstractClientEntity) entity))) {
                 editPageLink.setIconType(FontAwesomeIconType.eye)
                         .setType(Buttons.Type.Warning)
                         .setLabel(new StringResourceModel("view", AbstractListPage.this, null));

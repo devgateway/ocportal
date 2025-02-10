@@ -16,7 +16,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class ListPaymentVoucherPage extends ListAbstractImplTenderProcessMakueniEntity<PaymentVoucher> {
+public class ListPaymentVoucherPage extends ListAbstractImplTenderProcessClientEntity<PaymentVoucher> {
 
     @SpringBean
     protected PaymentVoucherService service;

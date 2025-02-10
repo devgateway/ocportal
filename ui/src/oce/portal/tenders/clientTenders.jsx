@@ -18,7 +18,7 @@ import {
   Link, Route, Switch, useHistory,
 } from 'react-router-dom';
 
-const MakueniTenders = (props) => {
+const ClientTenders = (props) => {
   const [filters, updateFilters] = useImmer({});
   const [page, updatePage] = useImmer(1);
   const [pageSize, updatePageSize] = useImmer(20);
@@ -233,8 +233,8 @@ const MakueniTenders = (props) => {
   );
 };
 
-MakueniTenders.propTypes = {
+ClientTenders.propTypes = {
   styling: PropTypes.object.isRequired,
 };
 
-export default fmConnect(MakueniTenders);
+export default fmConnect(ClientTenders);

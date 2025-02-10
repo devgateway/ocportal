@@ -55,7 +55,7 @@ public class AlertsController {
     private AlertsEmailService alertsEmailService;
 
     @Operation(summary = "Subscribe to a particular Email Alert")
-    @RequestMapping(value = "/api/makueni/alerts/subscribeAlert",
+    @RequestMapping(value = "/api/client/alerts/subscribeAlert",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @Transactional
@@ -148,7 +148,7 @@ public class AlertsController {
     }
 
     @Operation(summary = "Unsubscribe to a particular Email Alert")
-    @RequestMapping(value = "/api/makueni/alerts/unsubscribeAlert",
+    @RequestMapping(value = "/api/client/alerts/unsubscribeAlert",
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     public Boolean unsubscribeAlert() {

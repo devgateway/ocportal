@@ -5,7 +5,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.ResourceModel;
@@ -25,7 +24,6 @@ import org.springframework.cache.CacheManager;
 import org.wicketstuff.annotation.mount.MountPath;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -169,7 +167,7 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                Future<String> stringFuture = importPostgresToMongoJob.importOcdsMakueniToMongo();
+                Future<String> stringFuture = importPostgresToMongoJob.importOcdsClientToMongo();
                 try {
                     stringFuture.get();
                 } catch (InterruptedException | ExecutionException e) {

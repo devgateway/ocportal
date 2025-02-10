@@ -15,7 +15,7 @@ import FiltersProcurementPlanWrapper from '../filters/FiltersProcurementPlanWrap
 import { getProcurementPlans } from '../../api/Api';
 import fmConnect from '../../fm/fm';
 
-const MakueniProcurementPlans = (props) => {
+const ClientProcurementPlans = (props) => {
   const history = useHistory();
 
   const [state, updateState] = useImmer({
@@ -186,8 +186,8 @@ const MakueniProcurementPlans = (props) => {
   );
 };
 
-MakueniProcurementPlans.propTypes = {
+ClientProcurementPlans.propTypes = {
   styling: PropTypes.object.isRequired,
 };
 
-export default fmConnect(MakueniProcurementPlans);
+export default fmConnect(ClientProcurementPlans);

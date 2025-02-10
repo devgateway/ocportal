@@ -4,7 +4,7 @@ import FilterItemTypeAhead from './FilterItemTypeAhead';
 
 const FilterWards = ({ subcounty, ...otherProps }) => (
   <FilterItemTypeAhead
-    ep="/makueni/filters/wards"
+    ep="/client/filters/wards"
     epParams={subcounty ? { subcountyIds: subcounty } : {}}
     {...otherProps}
     mapper={(obj) => ({ _id: obj.id, label: obj.label })}

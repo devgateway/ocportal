@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.service.form;
 
 import com.google.common.collect.ImmutableMap;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,17 +31,17 @@ public class TenderProcessEntityServiceResolverImpl implements TenderProcessEnti
     }
 
     @Override
-    public <T extends AbstractTenderProcessMakueniEntity> long countByTenderProcess(T entity) {
+    public <T extends AbstractTenderProcessClientEntity> long countByTenderProcess(T entity) {
         return getService(entity).countByTenderProcess(entity.getId(), entity.getTenderProcess());
     }
 
     @Override
-    public <T extends AbstractTenderProcessMakueniEntity> T saveAndFlush(T entity) {
+    public <T extends AbstractTenderProcessClientEntity> T saveAndFlush(T entity) {
         return (T) getService(entity).saveAndFlush(entity);
     }
 
-    private <T extends AbstractTenderProcessMakueniEntity> AbstractTenderProcessEntityService getService(T entity) {
-        Class<? extends AbstractTenderProcessMakueniEntity> entityClass = entity.getClass();
+    private <T extends AbstractTenderProcessClientEntity> AbstractTenderProcessEntityService getService(T entity) {
+        Class<? extends AbstractTenderProcessClientEntity> entityClass = entity.getClass();
         AbstractTenderProcessEntityService<?> service = serviceMap.get(entityClass);
         if (service == null) {
             throw new RuntimeException("No service configured for " + entityClass);

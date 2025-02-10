@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "projectForm")
-public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
+public class Project extends AbstractClientEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Papers")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
@@ -142,7 +142,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 
