@@ -14,10 +14,10 @@
  */
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons.Size;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
@@ -27,7 +27,7 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
  * @author mpostelnicu
  *
  */
-public abstract class BootstrapAddButton extends DgFmLaddaAjaxButton {
+public abstract class BootstrapAddButton extends DgFmAjaxButton {
 
     private static final long serialVersionUID = 8306451874943978003L;
 
@@ -35,13 +35,22 @@ public abstract class BootstrapAddButton extends DgFmLaddaAjaxButton {
      * @param id
      * @param model
      */
-    public BootstrapAddButton(final String id, final IModel<String> model) {
-        super(id, model, Buttons.Type.Info);
-        setIconType(FontAwesomeIconType.save);
+    protected BootstrapAddButton(final String id, final IModel<String> model) {
+        super(id, model);
+        add(new IconBehavior(FontAwesome5IconType.save_r));
+
         setDefaultFormProcessing(false);
-        setIconType(FontAwesomeIconType.plus).setSize(Size.Medium).setLabel(model);
+        add(new IconBehavior(FontAwesome5IconType.plus_s));
+
+        add(new IconBehavior(FontAwesome5IconType.plus_s));
+        add(new AttributeModifier("size", Size.Medium));
+
+        setLabel(model);
+
+
         setOutputMarkupPlaceholderTag(true);
     }
+
 
     @Override
     protected abstract void onSubmit(AjaxRequestTarget target);

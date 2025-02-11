@@ -1,9 +1,10 @@
 package org.devgateway.toolkit.forms.wicket.page.lists;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -88,8 +89,9 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
 
         // create custom submit button in order to prevent form submission
-        final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
-                new StringResourceModel("submit"), Buttons.Type.Default) {
+        final AjaxButton submit = new AjaxButton("submit",
+                new StringResourceModel("submit")) {
+
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -99,6 +101,8 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
                 target.add(dataTable);
             }
         };
+        submit.add(new AttributeAppender("class", Buttons.Type.Default));
+
 
         filterForm.add(submit);
         filterForm.setDefaultButton(submit);

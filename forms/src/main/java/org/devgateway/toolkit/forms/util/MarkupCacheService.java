@@ -1,19 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 2015 Development Gateway, Inc and others.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the MIT License (MIT)
- * which accompanies this distribution, and is available at
- * https://opensource.org/licenses/MIT
- *
- * Contributors:
- * Development Gateway - initial API and implementation
- *******************************************************************************/
 package org.devgateway.toolkit.forms.util;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupCache;
 import org.slf4j.Logger;
@@ -26,7 +17,7 @@ import java.util.Collection;
  * @author idobre
  * @since 3/3/16
  * <p>
- * Class the removes the cache created in
+ * Class that removes the cache created in
  * org.devgateway.ccrs.web.wicket.page.reports.AbstractReportPage#ResourceStreamPanel#getCacheKey
  * function
  */
@@ -65,12 +56,19 @@ public class MarkupCacheService {
      */
     public void addPentahoReportToCache(final String outputType, final String reportName, final String parameters,
                                         final byte[] buffer) {
-        final CacheManager cm = CacheManager.getInstance();
+        // Initialize CacheManager using Ehcache 3.x
+        CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                .withCache("reportsCache", CacheConfigurationBuilder.
+                        newCacheConfigurationBuilder(String.class, byte[].class,
+                        ResourcePoolsBuilder.heap(100)))
+                .build(true);
 
-        // get the reports cache "reportsCache", declared in ehcache.xml
-        final Cache cache = cm.getCache("reportsCache");
+        // Retrieve the "reportsCache" cache
+        Cache<String, byte[]> cache = cacheManager.getCache("reportsCache", String.class, byte[].class);
 
-        cache.put(new Element(createCacheKey(outputType, reportName, parameters), buffer));
+        // Put the report content into the cache
+        String cacheKey = createCacheKey(outputType, reportName, parameters);
+        cache.put(cacheKey, buffer);
     }
 
     /**
@@ -82,54 +80,70 @@ public class MarkupCacheService {
      * @return
      */
     public byte[] getPentahoReportFromCache(final String outputType, final String reportName, final String parameters) {
-        final CacheManager cm = CacheManager.getInstance();
+        // Initialize CacheManager using Ehcache 3.x
+        CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                .withCache("reportsCache", CacheConfigurationBuilder.
+                        newCacheConfigurationBuilder(String.class, byte[].class,
+                        ResourcePoolsBuilder.heap(100)))
+                .build(true);
 
-        // get the reports cache "reportsCache", declared in ehcache.xml
-        final Cache cache = cm.getCache("reportsCache");
+        // Retrieve the "reportsCache" cache
+        Cache<String, byte[]> cache = cacheManager.getCache("reportsCache", String.class, byte[].class);
 
-        final String key = createCacheKey(outputType, reportName, parameters);
+        String key = createCacheKey(outputType, reportName, parameters);
 
-        if (cache.isKeyInCache(key)) {
-            return (byte[]) cache.get(key).getObjectValue();
-        }
-
-        return null;
+        // Fetch the content from the cache
+        return cache.containsKey(key) ? cache.get(key) : null;
     }
 
     /**
      * Remove from cache all reports content
      */
     public void clearPentahoReportsCache() {
-        final CacheManager cm = CacheManager.getInstance();
+        // Initialize CacheManager using Ehcache 3.x
+        CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                .withCache("reportsCache", CacheConfigurationBuilder.
+                        newCacheConfigurationBuilder(String.class, byte[].class,
+                        ResourcePoolsBuilder.heap(100)))
+                .build(true);
 
-        // get the reports cache "reportsCache", declared in ehcache.xml
-        final Cache cache = cm.getCache("reportsCache");
+        // Retrieve the "reportsCache" cache
+        Cache<String, byte[]> cache = cacheManager.getCache("reportsCache", String.class, byte[].class);
 
-        if (cache != null) {
-            cache.removeAll();
-        }
+        // Clear the cache
+        cache.clear();
     }
 
     /**
      * Remove from cache all APIs/Services content.
      */
     public void clearAllCaches() {
-        final CacheManager cm = CacheManager.getInstance();
+        // Initialize CacheManager using Ehcache 3.x
+        CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                .withCache("reportsApiCache", CacheConfigurationBuilder.
+                        newCacheConfigurationBuilder(String.class, byte[].class,
+                        ResourcePoolsBuilder.heap(100)))
+                .withCache("excelExportCache", CacheConfigurationBuilder.
+                        newCacheConfigurationBuilder(String.class, byte[].class,
+                        ResourcePoolsBuilder.heap(100)))
+                .build(true);
 
-        // get the reports cache "reportsApiCache", declared in ehcache.xml
-        final Cache cache = cm.getCache("reportsApiCache");
-        if (cache != null) {
-            cache.removeAll();
+        // Retrieve the caches and clear them
+        Cache<String, byte[]> reportsApiCache = cacheManager.
+                getCache("reportsApiCache", String.class, byte[].class);
+        if (reportsApiCache != null) {
+            reportsApiCache.clear();
         }
 
-        // get the reports cache "excelExportCache", declared in ehcache.xml
-        final Cache excelExportCache = cm.getCache("excelExportCache");
+        Cache<String, byte[]> excelExportCache = cacheManager.
+                getCache("excelExportCache", String.class, byte[].class);
         if (excelExportCache != null) {
-            excelExportCache.removeAll();
+            excelExportCache.clear();
         }
     }
 
-    private String createCacheKey(final String outputType, final String reportName, final String parameters) {
+    private String createCacheKey(final String outputType, final String reportName,
+                                  final String parameters) {
         return reportName + "-" + parameters + "-" + outputType;
     }
 }

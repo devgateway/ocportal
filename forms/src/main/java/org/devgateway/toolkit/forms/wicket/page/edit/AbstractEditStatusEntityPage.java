@@ -15,14 +15,16 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Alert;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.Modal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -42,7 +44,6 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
@@ -68,6 +69,8 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.datetime.markup.html.basic.DateLabel;
 import org.wicketstuff.select2.Select2Choice;
+
+import java.time.Duration;
 
 /**
  * @author mpostelnicu
@@ -122,7 +125,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     public class ButtonContentModal extends TextContentModal {
         private final Buttons.Type buttonType;
-        private LaddaAjaxButton button;
+        private AjaxButton button;
         private IModel<String> buttonModel;
         private ModalSaveEditPageButton modalSavePageButton;
 
@@ -142,12 +145,14 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         @Override
         protected void onInitialize() {
             super.onInitialize();
-            button = new LaddaAjaxButton("button", buttonType) {
+            button = new AjaxButton("button") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target) {
                     modalSavePageButton.continueSubmit(target);
                 }
             };
+            button.add(new AttributeAppender("class", buttonType));
+
             addButton(button);
             button.setDefaultFormProcessing(false);
             button.setLabel(buttonModel);
@@ -293,7 +298,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         };
         modal.addCloseButton(new ResourceModel("checkoutModal.view"));
 
-        final LaddaAjaxButton checkoutButton = new LaddaAjaxButton("button", Buttons.Type.Primary) {
+        final AjaxButton checkoutButton = new AjaxButton("button") {
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -302,6 +307,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 modal.close(target);
             }
         };
+        checkoutButton.add(new AttributeAppender("class", Buttons.Type.Primary));
+
         checkoutButton.setDefaultFormProcessing(false);
         checkoutButton.setLabel(new ResourceModel("checkoutModal.edit"));
 
@@ -425,7 +432,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 super.continueSubmit(target);
             }
         };
-        saveEditPageButton.setIconType(FontAwesomeIconType.archive);
+        saveEditPageButton.add(new IconBehavior(FontAwesome5IconType.archive_s));
+
         saveEditPageButton.setDefaultFormProcessing(true);
         terminateModal.modalSavePageButton(saveEditPageButton);
         return saveEditPageButton;
@@ -451,8 +459,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
     }
 
     private AbstractAjaxTimerBehavior getAutosaveBehavior() {
-        final AbstractAjaxTimerBehavior ajaxTimerBehavior = new AbstractAjaxTimerBehavior(
-                Duration.minutes(settingsUtils.getAutosaveTime())) {
+        return new AbstractAjaxTimerBehavior(
+                Duration.ofMinutes(settingsUtils.getAutosaveTime())) {
             @Override
             protected void onTimer(final AjaxRequestTarget target) {
                 if (hasNonRecoverableError()) {
@@ -474,8 +482,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 target.prependJavaScript("$('#" + editForm.getMarkupId() + " button').prop('disabled', true);");
             }
         };
-
-        return ajaxTimerBehavior;
     }
 
     private Label addStatusLabel() {
@@ -539,7 +545,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
                     @Override
                     public boolean isRequired() {
-                        return editForm.getRootForm().findSubmittingButton() == saveTerminateButton;
+                        return editForm.getRootForm().findSubmitter() == saveTerminateButton;
                     }
 
                     @Override
@@ -625,8 +631,10 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 super.onSubmit(target);
             }
         };
+        button.add(new IconBehavior(FontAwesome5IconType.paper_plane_s));
 
-        button.setIconType(FontAwesomeIconType.send);
+
+//        button.setIconType(FontAwesomeIconType.send);
         return button;
     }
 
@@ -654,8 +662,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 return afterSubmitNextParameters;
             }
         };
+            button.add(new IconBehavior(FontAwesome5IconType.tasks_s));
 
-        button.setIconType(FontAwesomeIconType.tasks);
         return button;
     }
 
@@ -707,7 +715,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
             }
         };
 
-        button.setIconType(FontAwesomeIconType.tasks);
+        button.add(new IconBehavior(FontAwesome5IconType.tasks_s));
+
         return button;
     }
 
@@ -728,7 +737,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 onApproved();
             }
         };
-        saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_up);
+        saveEditPageButton.add(new IconBehavior(FontAwesome5IconType.thumbs_up_r));
+
         return saveEditPageButton;
     }
 
@@ -755,7 +765,8 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 onAfterRevertToDraft(target);
             }
         };
-        saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
+        saveEditPageButton.add(new IconBehavior(FontAwesome5IconType.thumbs_down_r));
+
         return saveEditPageButton;
     }
 

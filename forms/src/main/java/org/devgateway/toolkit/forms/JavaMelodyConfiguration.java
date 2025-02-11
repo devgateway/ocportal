@@ -29,8 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.ServletContext;
 import java.util.Arrays;
 import java.util.EventListener;
 import java.util.HashSet;

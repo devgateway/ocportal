@@ -2,8 +2,8 @@ package org.devgateway.toolkit.web.rest.controller.alerts;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
 /**

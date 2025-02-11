@@ -8,7 +8,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.validation.Configuration;
+import jakarta.validation.Configuration;
 
 /**
  * Configure and expose a bean validator based on {@link HibernateValidator}.

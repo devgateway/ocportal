@@ -4,7 +4,7 @@ import org.devgateway.toolkit.persistence.fm.entity.FeatureConfig;
 import org.devgateway.toolkit.persistence.fm.entity.UnchainedDgFeature;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**

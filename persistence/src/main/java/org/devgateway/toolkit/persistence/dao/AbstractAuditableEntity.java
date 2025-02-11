@@ -16,9 +16,9 @@ import org.hibernate.envers.Audited;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PreUpdate;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PreUpdate;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Optional;

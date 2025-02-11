@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.forms.wicket.page.user;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -11,14 +11,18 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.service.alerts.AlertService;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.annotation.mount.MountPath;
+
+import java.time.Duration;
 
 /**
  * @author idobre
@@ -74,24 +78,35 @@ public class VerifyEmailAddressPage extends BasePage {
                     alert.setEmailVerified(true);
                     alertService.saveAndFlush(alert);
 
-                    // clear "servicesCache" cache;
-                    final CacheManager cm = CacheManager.getInstance();
-                    final Cache servicesCache = cm.getCache("servicesCache");
+                    CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                            .withCache("servicesCache", CacheConfigurationBuilder.
+                                    newCacheConfigurationBuilder(
+                                            String.class, Object.class,
+                                            ResourcePoolsBuilder.heap(100))
+                                    .build())
+                            .build(true);
+
+                    Cache<String, Object> servicesCache =
+                            cacheManager.getCache("servicesCache", String.class, Object.class);
+
                     if (servicesCache != null) {
-                        servicesCache.removeAll();
+                        servicesCache.clear(); // Clear all entries from the cache
                     }
                 }
             }
         }
 
-        final TransparentWebMarkupContainer messageContainer = new TransparentWebMarkupContainer("messageContainer");
+        final TransparentWebMarkupContainer messageContainer =
+                new TransparentWebMarkupContainer("messageContainer");
         add(messageContainer);
 
-        final TransparentWebMarkupContainer errorContainer = new TransparentWebMarkupContainer("errorContainer");
+        final TransparentWebMarkupContainer errorContainer =
+                new TransparentWebMarkupContainer("errorContainer");
         errorContainer.add(new WebMarkupContainer("link"));
         add(errorContainer);
 
-        final TransparentWebMarkupContainer successContainer = new TransparentWebMarkupContainer("successContainer");
+        final TransparentWebMarkupContainer successContainer =
+                new TransparentWebMarkupContainer("successContainer");
         successContainer.add(new WebMarkupContainer("link"));
         add(successContainer);
 
@@ -100,23 +115,26 @@ public class VerifyEmailAddressPage extends BasePage {
         successContainer.setVisibilityAllowed(success);
 
         final Label verifyEmailMsg = new Label("verifyEmailMsg",
-                new StringResourceModel("verifyEmailMsg", VerifyEmailAddressPage.this));
+                new StringResourceModel("verifyEmailMsg",
+                        VerifyEmailAddressPage.this));
         verifyEmailMsg.setEscapeModelStrings(false);
         messageContainer.add(verifyEmailMsg);
 
         final Label linkMsg = new Label("linkMsg",
-                new StringResourceModel("linkMsg", VerifyEmailAddressPage.this));
+                new StringResourceModel("linkMsg",
+                        VerifyEmailAddressPage.this));
         linkMsg.setEscapeModelStrings(false);
         messageContainer.add(linkMsg);
 
         verifyEmailTime = new Label("verifyEmailTime",
-                new StringResourceModel("verifyEmailTime", VerifyEmailAddressPage.this)
+                new StringResourceModel("verifyEmailTime",
+                        VerifyEmailAddressPage.this)
                         .setParameters(timer));
         verifyEmailTime.setOutputMarkupId(true);
         messageContainer.add(verifyEmailTime);
 
         if (!error) {
-            add(new AbstractAjaxTimerBehavior(Duration.seconds(1)) {
+            add(new AbstractAjaxTimerBehavior(Duration.ofSeconds(1)) {
                 protected void onTimer(final AjaxRequestTarget target) {
                     // redirect to home page
                     if (timer == 1) {
@@ -126,7 +144,8 @@ public class VerifyEmailAddressPage extends BasePage {
                         // decrease timer and update the label on the screen
                         timer--;
                         verifyEmailTime.setDefaultModel(
-                                new StringResourceModel("verifyEmailTime", VerifyEmailAddressPage.this)
+                                new StringResourceModel("verifyEmailTime",
+                                        VerifyEmailAddressPage.this)
                                         .setParameters(timer));
                         target.add(verifyEmailTime);
                     }

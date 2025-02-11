@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.SimpleMongoClientDbFactory;
+import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
@@ -26,9 +26,9 @@ public class MongoTemplateConfig {
     @Autowired
     private MongoCustomConversions customConversions;
 
-    @Bean(autowire = Autowire.BY_NAME, name = "mongoTemplate")
+    @Bean(name = "mongoTemplate")
     public MongoTemplate mongoTemplate() throws Exception {
-        MongoTemplate template = new MongoTemplate(new SimpleMongoClientDbFactory(properties.getUri()));
+        MongoTemplate template = new MongoTemplate(new SimpleMongoClientDatabaseFactory(properties.getUri()));
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
 
         // CALL THIS MANULLY, so that all the default converters will be registered!

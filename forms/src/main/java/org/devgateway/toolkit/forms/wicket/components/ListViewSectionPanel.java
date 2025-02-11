@@ -2,14 +2,17 @@ package org.devgateway.toolkit.forms.wicket.components;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
@@ -329,7 +332,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         removeButtonNotificationPanel.setFilter(new ComponentFeedbackMessageFilter(removeButton));
 
         // we add the edit button
-        final LaddaAjaxButton editButton = getEditChildButton(item);
+        final AjaxButton editButton = getEditChildButton(item);
         editButton.setVisibilityAllowed(item.getModelObject().getEditable() != null
                 && !item.getModelObject().getEditable());
         hideableContainer.add(editButton);
@@ -388,10 +391,9 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
      * @param item
      * @return
      */
-    private LaddaAjaxButton getEditChildButton(final ListItem<T> item) {
-        final LaddaAjaxButton editButton = new LaddaAjaxButton("edit",
-                new ResourceModel("editButton"),
-                Buttons.Type.Info) {
+    private AjaxButton getEditChildButton(final ListItem<T> item) {
+        final AjaxButton editButton = new AjaxButton("edit",
+                new ResourceModel("editButton")) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 final T modelObject = item.getModelObject();
@@ -415,8 +417,10 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 }
             }
         };
+        editButton.add(new AttributeAppender("class", Buttons.Type.Info));
+        editButton.add(new IconBehavior(FontAwesome5IconType.edit_r));
+
         editButton.setDefaultFormProcessing(false);
-        editButton.setIconType(FontAwesomeIconType.edit);
         editButton.setOutputMarkupPlaceholderTag(true);
         return editButton;
     }

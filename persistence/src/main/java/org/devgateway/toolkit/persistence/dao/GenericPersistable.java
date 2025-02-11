@@ -16,9 +16,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import nl.dries.wicket.hibernate.dozer.proxy.Proxied;

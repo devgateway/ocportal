@@ -21,7 +21,7 @@ import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Select2BootstrapTheme;
 import org.wicketstuff.select2.Select2Choice;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * @author mpostelnicu

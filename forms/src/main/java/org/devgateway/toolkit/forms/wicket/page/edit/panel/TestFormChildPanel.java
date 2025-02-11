@@ -2,9 +2,11 @@ package org.devgateway.toolkit.forms.wicket.page.edit.panel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -107,9 +109,8 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
 
             header = ComponentUtil.addTextLoginField(this, "header");
 
-            final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
-                    new Model<>("Filter"),
-                    Buttons.Type.Info) {
+            final AjaxButton submit = new AjaxButton("submit",
+                    new Model<>("Filter")) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target) {
                     super.onSubmit(target);
@@ -119,7 +120,10 @@ public class TestFormChildPanel extends ListViewSectionPanel<TestFormChild, Test
                     target.add(listWrapper);
                 }
             };
-            submit.setIconType(FontAwesomeIconType.search);
+            submit.add(new AttributeAppender("class", Buttons.Type.Info));
+            submit.add(new IconBehavior(FontAwesome5IconType.search_s));
+
+
             add(submit);
         }
     }

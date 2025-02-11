@@ -3,8 +3,8 @@ package org.devgateway.toolkit.persistence.dao.categories;
 import org.hibernate.envers.Audited;
 import org.locationtech.jts.geom.Point;
 
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 
 /**
  * @author mpostelnicu

@@ -17,7 +17,7 @@
         <start-class>org.devgateway.toolkit.web.spring.WebApplication</start-class>
         <java.version>17</java.version>
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
-        <commons-email.version>1.5</commons-email.version>
+        <commons-email.version>1.6.0</commons-email.version>
         <json-tools.version>1.2.14</json-tools.version>
         <json-patch.version>1.13</json-patch.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
@@ -47,10 +47,10 @@
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.mail</groupId>
-                    <artifactId>javax.mail</artifactId>
+                    <artifactId>jakarta.mail</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>javax.activation</groupId>
+                    <groupId>jakarta.activation</groupId>
                     <artifactId>activation</artifactId>
                 </exclusion>
             </exclusions>
@@ -140,7 +140,7 @@
             <version>0.3.2</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.mail</groupId>
+                    <groupId>jakarta.mail</groupId>
                     <artifactId>mailapi</artifactId>
                 </exclusion>
                 <exclusion>
@@ -257,6 +257,7 @@
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>4.18.1</version>
             <scope>test</scope>
         </dependency>
 

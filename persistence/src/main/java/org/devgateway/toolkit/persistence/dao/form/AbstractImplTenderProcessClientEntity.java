@@ -4,8 +4,8 @@ import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.excel.annotation.ExcelExport;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 

@@ -11,7 +11,7 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -Dspring.devtools.restart.enabled=$SPRING_DEVTOOLS_RESTART_ENABLED
   -Xms512m
   -Xmx6144m
-  --add-opens=java.naming/javax.naming=ALL-UNNAMED
+  --add-opens=java.naming/jakarta.naming=ALL-UNNAMED
   --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
   --add-opens=java.base/java.lang.ref=ALL-UNNAMED
   --add-opens=java.base/java.lang=ALL-UNNAMED
@@ -20,7 +20,7 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   --add-opens=java.base/java.io=ALL-UNNAMED
   --add-opens=java.base/java.security=ALL-UNNAMED
   --add-opens=java.base/java.util=ALL-UNNAMED
-  --add-opens=java.management/javax.management=ALL-UNNAMED
+  --add-opens=java.management/jakarta.management=ALL-UNNAMED
   -Dspring.mail.port=$SMTP_PORT
   -Dspring.mail.host=$SMTP_HOST
   -XX:MaxMetaspaceSize=512m

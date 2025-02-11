@@ -22,26 +22,27 @@
         <revision>3.0.0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <liquibase.version>4.23.0</liquibase.version>
-        <spring.boot.version>2.7.18</spring.boot.version>
+        <liquibase.version>4.31.0</liquibase.version>
+        <spring.boot.version>3.4.2</spring.boot.version>
         <derby.version>10.14.2.0</derby.version>
         <pg.version>42.5.4</pg.version>
-        <poi.version>4.0.1</poi.version>
+        <poi.version>5.4.0</poi.version>
         <embedded.postgres.version>2.10</embedded.postgres.version>
         <docker.image.prefix>devgateway/toolkit</docker.image.prefix>
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-        <commons.lang3.version>3.9</commons.lang3.version>
-        <commons.text.version>1.8</commons.text.version>
+        <commons.lang3.version>3.17.0</commons.lang3.version>
+        <commons.text.version>1.13.0</commons.text.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <poi.version>3.17</poi.version>
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-beanutils.version>1.10.0</commons-beanutils.version>
         <jminix.version>1.2.0</jminix.version>
         <jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.18.0</commons-io.version>
         <maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
         <reflections.version>0.9.12</reflections.version>
+        <jakarta-xml.version>4.0.2</jakarta-xml.version>
     </properties>
 
     <modules>

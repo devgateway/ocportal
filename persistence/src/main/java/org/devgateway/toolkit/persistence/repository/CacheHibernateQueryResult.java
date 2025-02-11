@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.persistence.QueryHint;
+import jakarta.persistence.QueryHint;
 
 import org.springframework.data.jpa.repository.QueryHints;
 

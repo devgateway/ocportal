@@ -18,11 +18,12 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -82,7 +83,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -419,7 +420,7 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
             };
             add(download);
 
-            final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton", Buttons.Type.Warning) {
+            final AjaxButton excelButton = new AjaxButton("excelButton") {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target) {
                     super.onSubmit(target);
@@ -428,6 +429,8 @@ public class DepartmentOverviewPage extends DataEntryBasePage {
                     download.initiate(target);
                 }
             };
+            excelButton.add(new AttributeAppender("class", Buttons.Type.Warning));
+
             excelButton.setEnabled(getProcurementPlan() != null);
             add(excelButton);
         }

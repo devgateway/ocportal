@@ -30,9 +30,9 @@ public class CachedCollectionRule extends AbstractJavaRule {
 
     private boolean isCollectionAnnotation(ASTAnnotation a) {
         return a.getAnnotationName().equals("OneToMany")
-                || a.getAnnotationName().equals("javax.persistence.OneToMany")
+                || a.getAnnotationName().equals("jakarta.persistence.OneToMany")
                 || a.getAnnotationName().equals("ManyToMany")
-                || a.getAnnotationName().equals("javax.persistence.ManyToMany");
+                || a.getAnnotationName().equals("jakarta.persistence.ManyToMany");
     }
 
     private boolean isCacheAnnotation(ASTAnnotation a) {

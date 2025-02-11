@@ -2,6 +2,8 @@ package org.devgateway.ocds.persistence.mongo.spring;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
@@ -11,19 +13,18 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import org.devgateway.toolkit.persistence.mongo.spring.MongoTemplateConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mongo.MongoClientFactory;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -72,6 +73,17 @@ public class MongoTemplateTestConfig {
         return MongodStarter.getDefaultInstance();
     }
 
+    @Bean
+    public MongoClient mongoClient() {
+        ConnectionString connectionString = new ConnectionString(properties.getUri());
+
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+
+        return MongoClients.create(settings);
+    }
+
 
     @Bean(name = "mongoTemplate")
     public MongoTemplate mongoTemplate(MongodProcess mongodProcess) throws Exception {
@@ -81,12 +93,15 @@ public class MongoTemplateTestConfig {
         properties.setDatabase(originalUri);
         properties.setUri(null);
 
-        MongoClientFactory mcf = new MongoClientFactory(Collections.singletonList(
-                new MongoPropertiesClientSettingsBuilderCustomizer(properties, environment)));
+        // Create the MongoClient using the properties
+        ConnectionString connectionString = new ConnectionString(properties.getUri());
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        MongoClient mongoClient = MongoClients.create(mongoClientSettings);
 
-        MongoTemplate template = new MongoTemplate(
-                new SimpleMongoClientDatabaseFactory(mcf.createMongoClient(this.options),
-                        properties.getDatabase()));
+        MongoDatabaseFactory mongoDatabaseFactory = new SimpleMongoClientDatabaseFactory(mongoClient, properties.getDatabase());
+        MongoTemplate template = new MongoTemplate(mongoDatabaseFactory);
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
         return template;
     }
@@ -112,12 +127,15 @@ public class MongoTemplateTestConfig {
         properties.setDatabase(originalUri + MongoTemplateConfig.SHADOW_POSTFIX);
         properties.setUri(null);
 
-        MongoClientFactory mcf = new MongoClientFactory(Collections.singletonList(
-                new MongoPropertiesClientSettingsBuilderCustomizer(properties, environment)));
+        // Create the MongoClient using the properties
+        ConnectionString connectionString = new ConnectionString(properties.getUri());
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .build();
+        MongoClient mongoClient = MongoClients.create(mongoClientSettings);
 
-        MongoTemplate template = new MongoTemplate(
-                new SimpleMongoClientDatabaseFactory(mcf.createMongoClient(this.options),
-                        properties.getDatabase()));
+        MongoDatabaseFactory mongoDatabaseFactory = new SimpleMongoClientDatabaseFactory(mongoClient, properties.getDatabase());
+        MongoTemplate template = new MongoTemplate(mongoDatabaseFactory);
         ((MappingMongoConverter) template.getConverter()).setCustomConversions(customConversions);
         return template;
     }

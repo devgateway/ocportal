@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
 import org.bson.Document;
 import org.devgateway.ocds.web.spring.SendEmailService;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
@@ -12,6 +12,7 @@ import org.devgateway.toolkit.persistence.service.alerts.AlertsStatisticsService
 import org.devgateway.toolkit.persistence.service.filterstate.alerts.AlertFilterState;
 import org.devgateway.toolkit.web.rest.controller.alerts.AlertsEmailService;
 import org.devgateway.toolkit.web.rest.controller.alerts.exception.AlertsProcessingException;
+import org.ehcache.config.builders.CacheManagerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,11 +107,12 @@ public class AlertsManagerImpl implements AlertsManager {
 
             alertsStatisticsService.saveAndFlush(globalStats);
 
-            // clear "servicesCache" cache;
-            final CacheManager cm = CacheManager.getInstance();
-            final Cache servicesCache = cm.getCache("servicesCache");
+            // Clear the cache using Ehcache 3.x
+            CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
+            Cache<Long, Object> servicesCache = cacheManager.getCache("servicesCache", Long.class, Object.class);
+
             if (servicesCache != null) {
-                servicesCache.removeAll();
+                servicesCache.clear(); // Clear all entries from the cache
             }
         } catch (InterruptedException e) {
             logger.error("Couldn't join all threads", e);

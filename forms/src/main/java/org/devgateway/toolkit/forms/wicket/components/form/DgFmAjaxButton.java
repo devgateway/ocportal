@@ -1,14 +1,13 @@
 package org.devgateway.toolkit.forms.wicket.components.form;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.fm.DgFmComponentSubject;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 
-public class DgFmLaddaAjaxButton extends LaddaAjaxButton implements DgFmComponentSubject {
+public class DgFmAjaxButton extends AjaxButton implements DgFmComponentSubject {
 
     @SpringBean
     protected DgFmService fmService;
@@ -28,19 +27,19 @@ public class DgFmLaddaAjaxButton extends LaddaAjaxButton implements DgFmComponen
         return isFmVisible(super::isVisible);
     }
 
-    public DgFmLaddaAjaxButton(String id, Buttons.Type type) {
-        super(id, type);
+    public DgFmAjaxButton(String id) {
+        super(id);
     }
 
-    public DgFmLaddaAjaxButton(String id, IModel<String> model, Buttons.Type type) {
-        super(id, model, type);
+    public DgFmAjaxButton(String id, IModel<String> model) {
+        super(id, model);
     }
 
-    public DgFmLaddaAjaxButton(String id, Form<?> form, Buttons.Type type) {
-        super(id, form, type);
+    public DgFmAjaxButton(String id, Form<?> form) {
+        super(id, form);
     }
 
-    public DgFmLaddaAjaxButton(String id, IModel<String> model, Form<?> form, Buttons.Type type) {
-        super(id, model, form, type);
+    public DgFmAjaxButton(String id, IModel<String> model, Form<?> form) {
+        super(id, model, form);
     }
 }

@@ -8,7 +8,7 @@ import org.devgateway.ocds.persistence.mongo.flags.FlagType;
 import org.devgateway.ocds.persistence.mongo.flags.preconditions.FlaggedReleasePredicates;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;

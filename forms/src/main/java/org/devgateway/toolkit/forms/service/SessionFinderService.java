@@ -17,13 +17,13 @@ import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 /**
  * Spring Service allowing access to hibernate session. This is needed by
  * {@link DozerModel}
- * 
+ *
  * @author mpostelnicu
  * @see DozerModel
  */
@@ -35,7 +35,7 @@ public class SessionFinderService implements SessionFinder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * nl.dries.wicket.hibernate.dozer.SessionFinder#getHibernateSession(java
      * .lang.Class)

@@ -138,7 +138,7 @@ public class OnfonMediaClient {
         public ClientHttpResponse intercept(HttpRequest request, byte[] requestBody,
                 ClientHttpRequestExecution execution) throws IOException {
 
-            logger.info(">> {} {}\n{}", request.getMethodValue(), request.getURI(),
+            logger.info(">> {} {}\n{}", request.getMethod(), request.getURI(),
                     new String(requestBody, StandardCharsets.UTF_8));
 
             ClientHttpResponse response = execution.execute(request, requestBody);
@@ -147,7 +147,7 @@ public class OnfonMediaClient {
             String responseBody = new BufferedReader(isr)
                     .lines()
                     .collect(Collectors.joining("\n"));
-            logger.info("<< {} {}\n{}", response.getRawStatusCode(), response.getStatusText(), responseBody);
+            logger.info("<< {} {}\n{}", response.getStatusCode(), response.getStatusText(), responseBody);
 
             return response;
         }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.devgateway.toolkit.web;
 
@@ -17,7 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
 import static org.mockito.Mockito.mock;
@@ -39,7 +39,7 @@ public abstract class AbstractSpringDataRestControllerTest extends AbstractWebTe
     private MockMvc mockMvc;
 
     /**
-     * http://stackoverflow.com/a/36960968 
+     * http://stackoverflow.com/a/36960968
      * This is needed if you do
      * {@link PagedResourcesAssembler#toResource(org.springframework.data.domain.Page)}
      * in your controller

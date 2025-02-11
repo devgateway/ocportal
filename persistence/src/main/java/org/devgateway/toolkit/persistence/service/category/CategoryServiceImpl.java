@@ -7,7 +7,7 @@ import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 /**
  * @author mpostelnicu

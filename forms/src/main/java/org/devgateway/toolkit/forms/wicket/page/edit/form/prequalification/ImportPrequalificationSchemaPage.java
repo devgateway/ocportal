@@ -3,9 +3,11 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.ResourceModel;
@@ -37,10 +39,12 @@ public class ImportPrequalificationSchemaPage extends BasePage {
     /**
      * Construct.
      *
-     * @param parameters current page parameters
+     * @param parameters                    current page parameters
+     * @param prequalificationSchemaService
      */
-    public ImportPrequalificationSchemaPage(PageParameters parameters) {
+    public ImportPrequalificationSchemaPage(PageParameters parameters, PrequalificationSchemaService prequalificationSchemaService) {
         super(parameters);
+        this.prequalificationSchemaService = prequalificationSchemaService;
     }
 
     public static class SchemaSelect implements Serializable {
@@ -61,7 +65,7 @@ public class ImportPrequalificationSchemaPage extends BasePage {
 
         final BootstrapBookmarkablePageLink<Void> newSchema = new BootstrapBookmarkablePageLink<>(
                 "newSchema", EditPrequalificationSchemaPage.class, Buttons.Type.Success);
-        newSchema.setIconType(FontAwesomeIconType.plus_circle).setSize(Buttons.Size.Large);
+        newSchema.setIconType(FontAwesome5IconType.plus_circle_s).setSize(Buttons.Size.Large);
         newSchema.setLabel(new ResourceModel("newSchema"));
         add(newSchema);
 
@@ -87,7 +91,9 @@ public class ImportPrequalificationSchemaPage extends BasePage {
                 target.add(form);
             }
         };
-        importSchema.setIconType(FontAwesomeIconType.upload).setSize(Buttons.Size.Large);
+        importSchema.add(new IconBehavior(FontAwesome5IconType.upload_s));
+        importSchema.add(new AttributeAppender("size", Buttons.Size.Large));
+
         form.add(importSchema);
 
 

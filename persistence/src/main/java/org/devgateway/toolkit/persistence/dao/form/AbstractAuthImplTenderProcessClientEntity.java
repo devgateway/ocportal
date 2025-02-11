@@ -5,7 +5,7 @@ import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.AccessType;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 import java.util.Collection;
 
 @MappedSuperclass

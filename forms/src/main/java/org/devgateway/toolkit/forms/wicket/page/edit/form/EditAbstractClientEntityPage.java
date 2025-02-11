@@ -2,7 +2,8 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
@@ -124,7 +125,8 @@ public abstract class EditAbstractClientEntityPage<T extends AbstractClientEntit
                 onAfterRevertToDraft(target);
             }
         };
-        saveEditPageButton.setIconType(FontAwesomeIconType.thumbs_down);
+        saveEditPageButton.add(new IconBehavior(FontAwesome5IconType.thumbs_down_r));
+
         return saveEditPageButton;
     }
 

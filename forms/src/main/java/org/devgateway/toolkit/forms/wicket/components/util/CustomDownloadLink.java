@@ -14,7 +14,7 @@ package org.devgateway.toolkit.forms.wicket.components.util;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -36,7 +36,7 @@ public class CustomDownloadLink extends Link<FileMetadata> {
 
     public CustomDownloadLink(final String id, final IModel<FileMetadata> model) {
         super(id, model);
-        add(new IconBehavior(FontAwesomeIconType.download));
+        add(new IconBehavior(FontAwesome5IconType.download_s));
         add(new TooltipBehavior(new StringResourceModel("downloadUploadedFileTooltip", this, null), TOOLTIP_CONFIG));
     }
 

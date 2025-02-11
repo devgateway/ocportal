@@ -1,8 +1,8 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
 import io.swagger.v3.oas.annotations.Operation;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
@@ -13,6 +13,9 @@ import org.devgateway.toolkit.persistence.service.alerts.AlertService;
 import org.devgateway.toolkit.persistence.service.category.DepartmentService;
 import org.devgateway.toolkit.persistence.service.category.ItemService;
 import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -133,10 +136,17 @@ public class AlertsController {
             alertsEmailService.sendVerifyEmail(alert);
 
             // clear "servicesCache" cache;
-            final CacheManager cm = CacheManager.getInstance();
-            final Cache servicesCache = cm.getCache("servicesCache");
+            CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                    .withCache("servicesCache", CacheConfigurationBuilder.newCacheConfigurationBuilder(
+                                    String.class, Object.class, ResourcePoolsBuilder.heap(100))
+                            .build())
+                    .build(true);
+
+            Cache<String, Object> servicesCache =
+                    cacheManager.getCache("servicesCache", String.class, Object.class);
+
             if (servicesCache != null) {
-                servicesCache.removeAll();
+                servicesCache.clear(); // Clear all entries from the cache
             }
 
             response.put("status", true);

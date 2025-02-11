@@ -4,10 +4,10 @@ import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;

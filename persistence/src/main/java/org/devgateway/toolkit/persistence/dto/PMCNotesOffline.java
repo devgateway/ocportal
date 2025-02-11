@@ -2,7 +2,7 @@ package org.devgateway.toolkit.persistence.dto;
 
 import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 public class PMCNotesOffline implements Serializable {

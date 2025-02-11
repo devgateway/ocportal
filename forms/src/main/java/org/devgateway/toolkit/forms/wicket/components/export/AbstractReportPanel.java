@@ -2,10 +2,12 @@ package org.devgateway.toolkit.forms.wicket.components.export;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -66,9 +68,8 @@ public abstract class AbstractReportPanel<T> extends Panel {
         });
         dataExportForm.add(excelExportBehavior);
 
-        final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton",
-                new StringResourceModel("export", this),
-                Buttons.Type.Success) {
+        final AjaxButton excelButton = new AjaxButton("excelButton",
+                new StringResourceModel("export", this)) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -99,7 +100,9 @@ public abstract class AbstractReportPanel<T> extends Panel {
                 ajaxFormListener.onError(target);
             }
         };
-        excelButton.setIconType(FontAwesomeIconType.download);
+        excelButton.add(new AttributeAppender("class", Buttons.Type.Success));
+        excelButton.add(new IconBehavior(FontAwesome5IconType.download_s));
+
         dataExportForm.add(excelButton);
     }
 

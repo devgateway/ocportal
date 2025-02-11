@@ -36,7 +36,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
-import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
@@ -73,7 +72,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.select2.ApplicationSettings;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import java.math.BigDecimal;
 
 /**
@@ -171,7 +170,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         WicketWebjars.install(this);
 
         // use the Paper bootstrap theme
-        final ThemeProvider themeProvider = new BootswatchThemeProvider(BootswatchTheme.Paper);
+        final ThemeProvider themeProvider = new BootswatchThemeProvider(BootswatchTheme.Litera);
         final IBootstrapSettings settings = new BootstrapSettings();
         settings.useCdnResources(false);
         settings.setThemeProvider(themeProvider);
@@ -207,7 +206,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
         getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
         // be sure that we have added Dozer Listener
-        getRequestCycleListeners().add(new DozerRequestCycleListener());
+        getRequestCycleListeners().add(new CustomRequestCycleListener());
 
         // additional safety guard for opening in the session the same pages
         Application.get().getComponentInitializationListeners().add(component -> {

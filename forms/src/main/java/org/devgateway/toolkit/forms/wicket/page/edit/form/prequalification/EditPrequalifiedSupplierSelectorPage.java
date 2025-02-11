@@ -2,9 +2,10 @@ package org.devgateway.toolkit.forms.wicket.page.edit.form.prequalification;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -42,7 +43,7 @@ public class EditPrequalifiedSupplierSelectorPage extends BasePage {
     @SpringBean
     private PrequalifiedSupplierService prequalifiedSupplierService;
 
-    private LaddaAjaxButton continueBtn;
+    private AjaxButton continueBtn;
 
     /**
      * Construct.
@@ -112,7 +113,7 @@ public class EditPrequalifiedSupplierSelectorPage extends BasePage {
                 };
         form.add(supplierField);
 
-        continueBtn = new LaddaAjaxButton("continue", new StringResourceModel("continue"), Buttons.Type.Primary) {
+        continueBtn = new AjaxButton("continue", new StringResourceModel("continue")) {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -137,6 +138,8 @@ public class EditPrequalifiedSupplierSelectorPage extends BasePage {
                 setResponsePage(EditPrequalifiedSupplierPage.class, params);
             }
         };
+        continueBtn.add(new AttributeAppender("class", Buttons.Type.Primary));
+
         form.add(continueBtn);
     }
 }

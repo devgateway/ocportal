@@ -5,13 +5,15 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmark
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
@@ -69,11 +71,11 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.jpa.domain.Specification;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.ListJoin;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.ListJoin;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -231,14 +233,16 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         });
         filterForm.add(excelExportBehavior);
 
-        LaddaAjaxLink<Void> exportLink = new LaddaAjaxLink<Void>("excelExport", Buttons.Type.Warning) {
+        AjaxLink<Void> exportLink = new AjaxLink<Void>("excelExport") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 excelExportBehavior.initiate(target);
             }
         };
-        exportLink.setLabel(new StringResourceModel("excelExport.label", this));
-        exportLink.setIconType(FontAwesomeIconType.file_excel_o);
+        exportLink.add(new AttributeAppender("class", Buttons.Type.Warning));
+
+        exportLink.setBody(new StringResourceModel("excelExport.label", this));
+        exportLink.add(new IconBehavior(FontAwesome5IconType.file_excel_s));
         filterForm.add(exportLink);
     }
 
@@ -444,9 +448,8 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         };
 
         button.add(newDraftSchemaWarningTooltipBehavior());
-
+        button.setIconType(FontAwesome5IconType.plus_circle_s);
         return button
-                .setIconType(FontAwesomeIconType.plus_circle)
                 .setLabel(new StringResourceModel("new"));
     }
 
@@ -474,7 +477,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                     "edit", EditPrequalifiedSupplierPage.class, params, Buttons.Type.Primary);
             editPageLink.setEnabled(submittedSchemaModel.getObject());
             editPageLink.add(newDraftSchemaWarningTooltipBehavior());
-            editPageLink.setIconType(FontAwesomeIconType.edit)
+            editPageLink.setIconType(FontAwesome5IconType.edit_r)
                     .setSize(Buttons.Size.Small)
                     .setLabel(new StringResourceModel("edit", ListPrequalifiedSupplierPage.this, null));
             add(editPageLink);
@@ -488,7 +491,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             };
             deleteItemLink.setEnabled(submittedSchemaModel.getObject());
             deleteItemLink.add(newDraftSchemaWarningTooltipBehavior());
-            deleteItemLink.setIconType(FontAwesomeIconType.trash)
+            deleteItemLink.setIconType(FontAwesome5IconType.trash_s)
                     .setSize(Buttons.Size.Small)
                     .setLabel(new StringResourceModel("delete", ListPrequalifiedSupplierPage.this, null));
             add(deleteItemLink);
@@ -500,7 +503,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 new StringResourceModel("confirmDeleteModal.content", this));
         modal.addCloseButton();
 
-        final LaddaAjaxLink<Void> deleteButton = new LaddaAjaxLink<Void>("button", Buttons.Type.Danger) {
+        final AjaxLink<Void> deleteButton = new AjaxLink<Void>("button") {
 
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -508,7 +511,9 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 onDelete(target);
             }
         };
-        deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
+        deleteButton.add(new AttributeAppender("class", Buttons.Type.Danger));
+
+        deleteButton.setBody(new StringResourceModel("confirmDeleteModal.delete", this));
         modal.addButton(deleteButton);
 
         return modal;

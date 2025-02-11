@@ -179,6 +179,16 @@ public class TestAddressRepository implements BaseJpaRepository {
     }
 
     @Override
+    public long delete(Specification spec) {
+        return 0;
+    }
+
+    @Override
+    public Object findBy(Specification spec, Function queryFunction) {
+        return null;
+    }
+
+    @Override
     public Optional findOne(Example example) {
         return Optional.empty();
     }

@@ -3,8 +3,8 @@ package org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Font;
@@ -13,7 +13,9 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -22,7 +24,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.util.time.Duration;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.components.table.SelectFilteredBootstrapPropertyColumn;
 import org.devgateway.toolkit.forms.wicket.components.table.TextFilteredBootstrapPropertyColumn;
@@ -39,8 +40,9 @@ import org.devgateway.toolkit.web.Constants;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -97,19 +99,21 @@ public class ListPrequalificationYearRangePage extends AbstractListPage<Prequali
             PrequalificationYearRange entity = (PrequalificationYearRange) this.getDefaultModelObject();
             AJAXDownload ajaxDownload = exportToExcelAJAX(entity.getId());
 
-            LaddaAjaxLink<Void> downloadExcel = new LaddaAjaxLink<Void>("downloadExcel", Buttons.Type.Warning) {
+            AjaxLink<Void> downloadExcel = new AjaxLink<Void>("downloadExcel") {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
                     ajaxDownload.initiate(target);
                 }
             };
-            downloadExcel.setIconType(FontAwesomeIconType.file_excel_o);
-            downloadExcel.setSize(Buttons.Size.Small);
-            downloadExcel.setLabel(new ResourceModel("download"));
+            downloadExcel.add(new AttributeAppender("class", Buttons.Type.Warning));
+            downloadExcel.add(new AttributeAppender("size", Buttons.Size.Small));
+            downloadExcel.add(new IconBehavior(FontAwesome5IconType.file_excel_s));
+
+            downloadExcel.setBody(new ResourceModel("download"));
             if (!entity.getSchema().isSelectable()) {
                 add(new TooltipBehavior(new ResourceModel("tooltipSchemaInDraft"),
                         new TooltipConfig().withPlacement(TooltipConfig.Placement.left).withDelay(
-                                Duration.milliseconds(200))));
+                                Duration.ofMillis((200)))));
                 downloadExcel.setEnabled(false);
             }
 

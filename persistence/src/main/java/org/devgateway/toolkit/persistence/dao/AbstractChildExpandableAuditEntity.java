@@ -2,7 +2,7 @@ package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 
 /**
  * @author mpostelnicu

@@ -3,7 +3,6 @@ package org.devgateway.toolkit.forms.wicket.page;
 import com.google.common.collect.ImmutableMap;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxLink;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -11,7 +10,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
@@ -46,7 +47,7 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.util.ObjectUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -161,13 +162,15 @@ public class ImportProcurementPlanItemsPage extends BasePage {
         AJAXDownload download = ComponentUtil.createAJAXDownload(
                 fileName, Constants.ContentType.XLSX, getClass());
         add(download);
-        final LaddaAjaxLink<Void> downloadLink = new LaddaAjaxLink<Void>("downloadTemplate", Buttons.Type.Link) {
+        final AjaxLink<Void> downloadLink = new AjaxLink<>("downloadTemplate") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 download.initiate(target);
             }
         };
-        downloadLink.setLabel(new StringResourceModel("downloadTemplate", this));
+        downloadLink.add(new AttributeAppender("class", Buttons.Type.Link));
+
+        downloadLink.setBody(new StringResourceModel("downloadTemplate", this));
         form.add(downloadLink);
     }
 

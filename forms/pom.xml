@@ -30,9 +30,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <wicket.version>8.15.0</wicket.version>
-        <wicketstuff.version>8.15.0</wicketstuff.version>
-        <wicket.bootstrap.version>2.0.15</wicket.bootstrap.version>
+        <wicket.version>10.4.0</wicket.version>
+        <wicketstuff.version>10.4.0</wicketstuff.version>
+        <wicket.bootstrap.version>7.0.9</wicket.bootstrap.version>
+        <wicket.bootstrap-less.version>4.0.4</wicket.bootstrap-less.version>
         <zt.zip.version>1.13</zt.zip.version>
         <wicket.webjars.version>2.0.20</wicket.webjars.version>
         <closure.compiler.version>v20200406</closure.compiler.version>
@@ -61,6 +62,12 @@
         <dependency>
             <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.2.0</version>
         </dependency>
 
         <dependency>
@@ -142,6 +149,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-remoting</artifactId>
+            <version>5.8.16</version>
         </dependency>
 
         <dependency>
@@ -258,7 +266,7 @@
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-less</artifactId>
-            <version>${wicket.bootstrap.version}</version>
+            <version>${wicket.bootstrap-less.version}</version>
         </dependency>
 
         <dependency>
@@ -415,14 +423,23 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-ehcache</artifactId>
+                <version>5.6.15.Final</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ehcache</groupId>
+                        <artifactId>ehcache</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
+                <version>5.6.15.Final</version>
             </dependency>
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate.orm</groupId>
                 <artifactId>hibernate-envers</artifactId>
+                <version>6.6.6.Final</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

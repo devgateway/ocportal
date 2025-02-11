@@ -23,11 +23,10 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
-import de.agilecoders.wicket.core.markup.html.references.RespondJavaScriptReference;
 import de.agilecoders.wicket.core.markup.html.themes.bootstrap.BootstrapCssReference;
 import de.agilecoders.wicket.core.util.CssClassNames;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -51,6 +50,7 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValue;
@@ -294,7 +294,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 Buttons.Type.Default) {
 
         };
-        printLink.setIconType(FontAwesomeIconType.print).setSize(Buttons.Size.Large);
+        printLink.setIconType(FontAwesome5IconType.print_s).setSize(Buttons.Size.Large);
         PopupSettings popupSettings = new PopupSettings(PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS);
         printLink.setPopupSettings(popupSettings);
         add(printLink);
@@ -335,7 +335,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                         return list;
                     }
                 };
-        languageDropDown.setIconType(FontAwesomeIconType.flag);
+        languageDropDown.setIconType(FontAwesome5IconType.flag_r);
         return languageDropDown;
     }
 
@@ -343,7 +343,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         // logout menu
         final NavbarButton<LogoutPage> logoutMenu =
                 new NavbarButton<LogoutPage>(LogoutPage.class, new StringResourceModel("navbar.logout", this, null));
-        logoutMenu.setIconType(FontAwesomeIconType.sign_out);
+        logoutMenu.setIconType(FontAwesome5IconType.sign_out_alt_s);
         MetaDataRoleAuthorizationStrategy.authorize(logoutMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
 
         return logoutMenu;
@@ -362,7 +362,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
         final NavbarButton<EditUserPage> accountMenu =
                 new NavbarButton<>(EditUserPage.class, pageParametersForAccountPage, account);
-        accountMenu.setIconType(FontAwesomeIconType.user);
+        accountMenu.setIconType(FontAwesome5IconType.user_r);
         MetaDataRoleAuthorizationStrategy.authorize(accountMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
 
         return accountMenu;
@@ -372,7 +372,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         // home
         final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class,
                 new StringResourceModel("navbar.home", this));
-        homeMenu.setIconType(FontAwesomeIconType.home);
+        homeMenu.setIconType(FontAwesome5IconType.home_s);
         MetaDataRoleAuthorizationStrategy.authorize(homeMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
         return homeMenu;
     }
@@ -437,88 +437,88 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListDepartmentPage.class,
-                        "navbar.departments", FontAwesomeIconType.bank
+                        "navbar.departments", FontAwesome5IconType.piggy_bank_s
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListProcurementMethodRationalePage.class,
-                        "navbar.procurementMethodRationale", FontAwesomeIconType.bug
+                        "navbar.procurementMethodRationale", FontAwesome5IconType.bug_s
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearBudgetPage.class,
-                        "navbar.fiscalYearBudget", FontAwesomeIconType.money
+                        "navbar.fiscalYearBudget", FontAwesome5IconType.money_bill_alt_r
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearPage.class,
-                        "navbar.fiscalyear", FontAwesomeIconType.calendar_times_o
+                        "navbar.fiscalyear", FontAwesome5IconType.calendar_times_r
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListTargetGroupPage.class,
-                        "navbar.targetgroup", FontAwesomeIconType.object_group
+                        "navbar.targetgroup", FontAwesome5IconType.object_group_r
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListContractDocumentTypePage.class,
-                        "navbar.ContractDocumentType", FontAwesomeIconType.file
+                        "navbar.ContractDocumentType", FontAwesome5IconType.file_r
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListItemPage.class,
-                        "navbar.items", FontAwesomeIconType.list
+                        "navbar.items", FontAwesome5IconType.list_s
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListChargeAccountPage.class,
-                        "navbar.chargeaccounts", FontAwesomeIconType.money
+                        "navbar.chargeaccounts", FontAwesome5IconType.money_bill_s
                 );
 
                 createAddListMenuWithRole(list, ROLE_PROCUREMENT_USER, ListSupplierPage.class,
-                        "navbar.suppliers", FontAwesomeIconType.list
+                        "navbar.suppliers", FontAwesome5IconType.list_s
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListStaffPage.class,
-                        "navbar.stafflist", FontAwesomeIconType.user_times
+                        "navbar.stafflist", FontAwesome5IconType.user_times_s
                 );
 
                 createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListPMCStaffPage.class,
-                        "navbar.pmcStaffList", FontAwesomeIconType.user_times
+                        "navbar.pmcStaffList", FontAwesome5IconType.user_times_s
                 );
 
                 createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListDesignationPage.class,
-                        "navbar.designations", FontAwesomeIconType.certificate
+                        "navbar.designations", FontAwesome5IconType.certificate_s
                 );
 
                 createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListProjectClosureHandoverPage.class,
-                        "navbar.projectClosureHandover", FontAwesomeIconType.list
+                        "navbar.projectClosureHandover", FontAwesome5IconType.list_s
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
-                        "navbar.procuringentitylist", FontAwesomeIconType.list
+                        "navbar.procuringentitylist", FontAwesome5IconType.list_s
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListSubcountyPage.class,
-                        "navbar.subcountylist", FontAwesomeIconType.flag
+                        "navbar.subcountylist", FontAwesome5IconType.flag_r
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListWardPage.class,
-                        "navbar.wardlist", FontAwesomeIconType.flag
+                        "navbar.wardlist", FontAwesome5IconType.flag_r
                 );
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListSubWardPage.class,
-                        "navbar.subwardlist", FontAwesomeIconType.flag
+                        "navbar.subwardlist", FontAwesome5IconType.flag_r
                 );
 
 
                 createAddListMenuWithRole(list, ROLE_ADMIN, ListUnitPage.class,
-                        "navbar.unitlist", FontAwesomeIconType.list
+                        "navbar.unitlist", FontAwesome5IconType.list_s
                 );
 
                 createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationSchemaPage.class,
-                        "navbar.prequalificationSchema", FontAwesomeIconType.list
+                        "navbar.prequalificationSchema", FontAwesome5IconType.list_s
                 );
 
                 createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationYearRangePage.class,
-                        "navbar.prequalificationYearRange", FontAwesomeIconType.list
+                        "navbar.prequalificationYearRange", FontAwesome5IconType.list_s
                 );
 
                 createAddFmListMenuWithRole(list, ROLE_USER, ListPrequalifiedSupplierPage.class,
-                        "navbar.prequalifiedSupplierPage", FontAwesomeIconType.list
+                        "navbar.prequalifiedSupplierPage", FontAwesome5IconType.list_s
                 );
 
 
@@ -526,7 +526,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             }
         };
 
-        metadataMenu.setIconType(FontAwesomeIconType.code);
+        metadataMenu.setIconType(FontAwesome5IconType.code_s);
         MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_USER);
         return metadataMenu;
     }
@@ -559,7 +559,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             }
         };
 
-        formMenu.setIconType(FontAwesomeIconType.wpforms);
+        formMenu.setIconType(FontAwesome5IconType.wpforms);
         MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
 
         return formMenu;
@@ -608,7 +608,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             }
         };
 
-        formMenu.setIconType(FontAwesomeIconType.wpforms);
+        formMenu.setIconType(FontAwesome5IconType.wpforms);
         MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
 
         return formMenu;
@@ -618,7 +618,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             String featureName) {
         StringResourceModel label = new StringResourceModel(resourceKey, this);
         MenuBookmarkablePageLink<T> link = new MenuBookmarkablePageLink<>(pageClass, label);
-        link.setIconType(FontAwesomeIconType.file_text_o);
+        link.setIconType(FontAwesome5IconType.file_code_r);
 
         if (fmService.isFeatureVisible(featureName)) {
             list.add(link);
@@ -635,7 +635,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 BootstrapBookmarkablePageLink<ListUserPage> users =
                         new MenuBookmarkablePageLink<ListUserPage>(ListUserPage.class, null,
                                 new StringResourceModel("navbar.users", this, null))
-                                .setIconType(FontAwesomeIconType.users);
+                                .setIconType(FontAwesome5IconType.users_s);
                 FormSecurityUtil.authorizeRender(users, ROLE_PMC_ADMIN, ROLE_ADMIN);
                 list.add(users);
 
@@ -703,14 +703,14 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 BootstrapBookmarkablePageLink<Void> adminSettings = new MenuBookmarkablePageLink<Void>(
                         EditAdminSettingsPage.class,
                         new StringResourceModel("navbar.adminSettings", BasePage.this, null)
-                ).setIconType(FontAwesomeIconType.briefcase);
+                ).setIconType(FontAwesome5IconType.briefcase_s);
                 MetaDataRoleAuthorizationStrategy.authorize(adminSettings, Component.RENDER, ROLE_ADMIN);
                 list.add(adminSettings);
 
                 BootstrapBookmarkablePageLink<ListAlertPage> feedbackMessages
                         = new MenuBookmarkablePageLink<ListAlertPage>(ListFeedbackMessagePage.class,
                         new StringResourceModel("navbar.feedbackMessages", BasePage.this, null)
-                ).setIconType(FontAwesomeIconType.warning);
+                ).setIconType(FontAwesome5IconType.exclamation_s);
                 MetaDataRoleAuthorizationStrategy.authorize(feedbackMessages, Component.RENDER, ROLE_ADMIN);
                 list.add(feedbackMessages);
 
@@ -718,24 +718,24 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                 BootstrapBookmarkablePageLink<ListAlertPage> navbarAlerts = new MenuBookmarkablePageLink<ListAlertPage>(
                         ListAlertPage.class,
                         new StringResourceModel("navbar.alerts", BasePage.this, null)
-                ).setIconType(FontAwesomeIconType.envelope);
+                ).setIconType(FontAwesome5IconType.envelope_r);
                 MetaDataRoleAuthorizationStrategy.authorize(navbarAlerts, Component.RENDER, ROLE_ADMIN);
                 list.add(navbarAlerts);
 
                 createAddFmListMenuWithRole(list, ROLE_ADMIN, ListFlagHistoryPage.class,
-                        "navbar.redFlagHistory", FontAwesomeIconType.flag);
+                        "navbar.redFlagHistory", FontAwesome5IconType.flag_r);
 
                 BootstrapBookmarkablePageLink<ListAlertsStatisticsPage> alertsStatistics =
                         new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
                                 new StringResourceModel("navbar.alertsStatistics", BasePage.this, null)
-                        ).setIconType(FontAwesomeIconType.mail_reply_all);
+                        ).setIconType(FontAwesome5IconType.reply_all_s);
                 MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
                 list.add(alertsStatistics);
 
                 BootstrapBookmarkablePageLink<AllWorkPage> allWork =
                         new MenuBookmarkablePageLink<AllWorkPage>(AllWorkPage.class,
                                 new StringResourceModel("navbar.allWork", BasePage.this, null)
-                        ).setIconType(FontAwesomeIconType.briefcase);
+                        ).setIconType(FontAwesome5IconType.briefcase_s);
                 MetaDataRoleAuthorizationStrategy.authorize(allWork, Component.RENDER, ROLE_ADMIN);
                 list.add(allWork);
 
@@ -743,7 +743,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
                     BootstrapBookmarkablePageLink<ListFeaturesPage> features =
                             new MenuBookmarkablePageLink<ListFeaturesPage>(ListFeaturesPage.class,
                                     new StringResourceModel("navbar.features", BasePage.this, null)
-                            ).setIconType(FontAwesomeIconType.list);
+                            ).setIconType(FontAwesome5IconType.list_s);
                     MetaDataRoleAuthorizationStrategy.authorize(features, Component.RENDER, ROLE_ADMIN);
                     list.add(features);
                 }
@@ -752,7 +752,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             }
         };
 
-        adminMenu.setIconType(FontAwesomeIconType.cog);
+        adminMenu.setIconType(FontAwesome5IconType.cog_s);
         FormSecurityUtil.authorizeRender(adminMenu, ROLE_ADMIN, ROLE_PMC_ADMIN);
         return adminMenu;
     }
@@ -760,7 +760,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     private NavbarButton<MyWorkPage> newMyWorkMenu() {
         NavbarButton<MyWorkPage> button = new NavbarButton<>(MyWorkPage.class,
                 new StringResourceModel("navbar.myWork", this, null));
-        button.setIconType(FontAwesomeIconType.briefcase);
+        button.setIconType(FontAwesome5IconType.briefcase_s);
         MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
         return button;
     }
@@ -809,19 +809,32 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         super.renderHead(response);
         addPrintWindowJs(response);
 
-        // Load Styles.
+        // Load Styles.  Use static instances where possible for efficiency.
         response.render(CssHeaderItem.forReference(BaseStyles.INSTANCE));
         response.render(CssHeaderItem.forReference(BootstrapCssReference.instance()));
-        response.render(CssHeaderItem.forReference(FontAwesomeCssReference.instance()));
+        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
 
-        // Load Scripts.
-        response.render(RespondJavaScriptReference.headerItem());
-        response.render(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV2()));
+        // Load Scripts.  Respond.js is likely deprecated.  Consider if still needed.
+        // If needed, and you have it as a static resource:
+        // response.render(JavaScriptHeaderItem.forReference(RespondJavaScriptReference.headerItem()));
 
-        // file upload improvement script
-        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
-                BaseStyles.class, "assets/js/fileupload.js")));
+        // If Respond.js is a URL:
+        // response.render(JavaScriptHeaderItem.forUrl("URL_TO_RESPOND_JS")); // Replace with actual URL.
+
+        // JQuery -  Use a consistent, preferably up-to-date version.
+        response.render(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV3()));
+
+        // File upload improvement script.  Use PackageResourceReference for better management.
+        ResourceReference fileuploadJsRef =
+                new PackageResourceReference(BaseStyles.class, "assets/js/fileupload.js");
+        response.render(JavaScriptHeaderItem.forReference(fileuploadJsRef));
+
+
+        // Example of adding inline JavaScript (use sparingly, prefer files)
+        // response.render(JavaScriptHeaderItem.forString("var myVar = 'Hello';"));
     }
+
+
 
     @Override
     protected void onInitialize() {

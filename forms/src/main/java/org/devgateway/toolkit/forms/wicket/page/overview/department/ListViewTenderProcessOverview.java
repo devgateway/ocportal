@@ -7,7 +7,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavior;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -151,10 +151,10 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
     }
 
     @Transactional(readOnly = true)
-    protected Icon createValidationLabel(ListItem<TenderProcess> item) {
+    public Icon createValidationLabel(ListItem<TenderProcess> item) {
         BindingResult validate = tenderProcessService.validate(item.getModelObject());
 
-        Icon validationWarning = new Icon("validationWarning", FontAwesomeIconType.exclamation_triangle);
+        Icon validationWarning = new Icon("validationWarning", FontAwesome5IconType.exclamation_triangle_s);
         if (validate.getAllErrors().size() > 0) {
             TooltipConfig tooltipConfig = new TooltipConfig();
             tooltipConfig.withPlacement(TooltipConfig.Placement.bottom);

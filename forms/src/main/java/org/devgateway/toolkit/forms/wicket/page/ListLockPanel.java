@@ -9,9 +9,10 @@ import java.util.stream.Collectors;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -91,8 +92,8 @@ public class ListLockPanel extends Panel {
         add(filterForm);
         filterForm.add(dataTable);
 
-        final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
-                new Model<>("Submit"), Buttons.Type.Default) {
+        final AjaxButton submit = new AjaxButton("submit",
+                new Model<>("Submit")) {
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -102,6 +103,8 @@ public class ListLockPanel extends Panel {
                 target.add(dataTable);
             }
         };
+        submit.add(new AttributeAppender("class", Buttons.Type.Default));
+
         filterForm.add(submit);
         filterForm.setDefaultButton(submit);
 
@@ -203,7 +206,7 @@ public class ListLockPanel extends Panel {
 
             final BootstrapBookmarkablePageLink<?> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", pageClass, pageParameters, Buttons.Type.Primary);
-            editPageLink.setIconType(FontAwesomeIconType.edit)
+            editPageLink.setIconType(FontAwesome5IconType.edit_r)
                     .setSize(Buttons.Size.Small)
                     .setLabel(new ResourceModel("edit"));
 
@@ -218,7 +221,7 @@ public class ListLockPanel extends Panel {
                     target.add(ListLockPanel.this);
                 }
             };
-            unlockLink.setIconType(FontAwesomeIconType.unlock);
+            unlockLink.setIconType(FontAwesome5IconType.unlock_s);
             unlockLink.setSize(Buttons.Size.Small);
             unlockLink.setLabel(new ResourceModel("unlock"));
             unlockLink.setVisibilityAllowed(!ownerIsPrincipal);

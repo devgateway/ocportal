@@ -4,8 +4,8 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchema;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationSchemaItem;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.Collection;
 
 /**

@@ -15,7 +15,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.util.Attributes;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+//import de.agilecoders.wicket.extensions.markup.html.;
 import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -23,6 +23,8 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -69,8 +71,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
-import javax.persistence.EntityManager;
-import javax.validation.ConstraintViolation;
+import jakarta.persistence.EntityManager;
+import jakarta.validation.ConstraintViolation;
 import java.io.Serializable;
 import java.util.stream.Collectors;
 
@@ -194,7 +196,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 new StringResourceModel("confirmDeleteModal.content", this));
         modal.addCloseButton();
 
-        final LaddaAjaxButton deleteButton = new LaddaAjaxButton("button", Buttons.Type.Danger) {
+        final AjaxButton deleteButton = new AjaxButton("button") {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 super.onSubmit(target);
@@ -204,6 +206,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 onDelete(target);
             }
         };
+        deleteButton.add(new AttributeAppender("class", "btn btn-danger"));
         deleteButton.setDefaultFormProcessing(false);
         deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
         modal.addButton(deleteButton);
@@ -228,12 +231,14 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         final TextContentModal modal = new TextContentModal("deleteFailedModal",
                 new StringResourceModel("deleteFailedModal.content", this));
         modal.header(new ResourceModel("error"));
-        final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+        final AjaxButton okButton = new AjaxButton("button") {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
             }
         };
+        okButton.add(new AttributeAppender("class", Buttons.Type.Danger));
+
         okButton.setDefaultFormProcessing(false);
         okButton.setLabel(new StringResourceModel("deleteFailedModal.ok", this));
         modal.addButton(okButton);
@@ -253,12 +258,14 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
         saveFailedModal = new TextContentModal("saveFailedModal", saveFailedContentModel);
         saveFailedModal.header(new ResourceModel("error"));
-        final LaddaAjaxButton okButton = new LaddaAjaxButton("button", Buttons.Type.Info) {
+        final AjaxButton okButton = new AjaxButton("button") {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 setResponsePage(listPageClass);
             }
         };
+        okButton.add(new AttributeAppender("class", Buttons.Type.Danger));
+
         okButton.setDefaultFormProcessing(false);
         okButton.setLabel(Model.of("OK"));
         saveFailedModal.addButton(okButton);
@@ -649,7 +656,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         return new DeleteEditPageButton("delete", new StringResourceModel("deleteButton", this, null));
     }
 
-    public AbstractEditPage(final PageParameters parameters) {
+    protected AbstractEditPage(final PageParameters parameters) {
         super(parameters);
 
         if (!parameters.get(WebConstants.PARAM_ID).isNull()) {
@@ -709,7 +716,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected void onInitialize() {
         super.onInitialize();
 
-        // we cant do anything if we dont have a jpaService here
+        // we cant do anything if we don't have a jpaService here
         if (jpaService == null) {
             throw new NullJpaServiceException();
         }

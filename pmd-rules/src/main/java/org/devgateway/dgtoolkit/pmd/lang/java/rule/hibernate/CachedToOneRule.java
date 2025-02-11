@@ -30,9 +30,9 @@ public class CachedToOneRule extends AbstractJavaRule {
 
     private boolean isToOneAnnotation(ASTAnnotation a) {
         return a.getAnnotationName().equals("OneToOne")
-                || a.getAnnotationName().equals("javax.persistence.OneToOne")
+                || a.getAnnotationName().equals("jakarta.persistence.OneToOne")
                 || a.getAnnotationName().equals("ManyToOne")
-                || a.getAnnotationName().equals("javax.persistence.ManyToOne");
+                || a.getAnnotationName().equals("jakarta.persistence.ManyToOne");
     }
 
     private boolean isCacheAnnotation(ASTAnnotation a) {

@@ -12,18 +12,26 @@
 package org.devgateway.toolkit.forms;
 
 import org.devgateway.toolkit.persistence.spring.CustomJPAUserDetailsService;
+import org.devgateway.toolkit.web.security.SecurityUtil;
 import org.devgateway.toolkit.web.spring.WebSecurityConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -42,17 +50,28 @@ public class FormsSecurityConfig extends WebSecurityConfig {
      * and ignore security for css/js/images resources, and wicket mounted
      * resources
      */
+
+    @Bean
     @Override
-    public void configure(final WebSecurity web) throws Exception {
-        super.configure(web);
-        web.ignoring().antMatchers("/portal/**", "/ui/**",
-                "/img/**", "/css*/**", "/js*/**", "/assets*/**", "/wicket/resource/**/*.js",
-                "/wicket/resource/**/*.css", "/wicket/resource/**/*.png", "/wicket/resource/**/*.jpg",
-                "/wicket/resource/**/*.woff", "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.ttf",
-                "/favicon.ico", "/error",
-                "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**", "/verifyEmail/**",
-                "/unsubscribeEmail/**", "/resources/**", "/resources/public/**");
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        super.securityFilterChain(http);
+        http.authorizeHttpRequests(auth->auth
+                .requestMatchers("/portal/**", "/ui/**",
+                        "/img/**", "/css*/**", "/js*/**", "/assets*/**", "/wicket/resource/**/*.js",
+                        "/wicket/resource/**/*.css", "/wicket/resource/**/*.png", "/wicket/resource/**/*.jpg",
+                        "/wicket/resource/**/*.woff", "/wicket/resource/**/*.woff2", "/wicket/resource/**/*.ttf",
+                        "/favicon.ico", "/error",
+                        "/wicket/resource/**/*.gif", "/login/**", "/forgotPassword/**", "/verifyEmail/**",
+                        "/unsubscribeEmail/**", "/resources/**", "/resources/public/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated());
+
+        return http.build();
     }
+
+
 
     /**
      * This bean defines the same key in the {@link RememberMeAuthenticationProvider}
@@ -78,22 +97,27 @@ public class FormsSecurityConfig extends WebSecurityConfig {
         return rememberMeServices;
     }
 
+    @Bean
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
-        super.configure(http);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   AuthenticationManager authenticationManager)
+            throws Exception {
+        super.securityFilterChain(http, authenticationManager);
+        http
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.NEVER))
+                // Wicket manages sessions
+                .csrf(AbstractHttpConfigurer::disable)
+                // CSRF protection interferes with some Wicket functionality
+                .headers(headers -> headers
+                        .contentTypeOptions(withDefaults())
+                        .xssProtection(withDefaults())
+                        .cacheControl(withDefaults())
+                        .httpStrictTransportSecurity(withDefaults())
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        // Allow embedding in iframes from the same origin
+                );
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).
-                //we let Wicket create and manage sessions, so we disable
-                //session creation by spring
-                        and().csrf().disable();  // csrf protection interferes with some wicket stuff
-
-        // we enable http rememberMe cookie for autologin
-        // http.rememberMe().key(UNIQUE_SECRET_REMEMBER_ME_KEY);
-
-        // resolved the error Refused to display * in a frame because it set
-        // 'X-Frame-Options' to 'DENY'.
-        http.headers().contentTypeOptions().and().xssProtection().and().cacheControl().and()
-                .httpStrictTransportSecurity().and().frameOptions().sameOrigin();
-
+        return http.build();
     }
 }

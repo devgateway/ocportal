@@ -3,7 +3,7 @@
  */
 package org.devgateway.ocds.web.rest.controller.request;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 /**
  * @author mpostelnicu

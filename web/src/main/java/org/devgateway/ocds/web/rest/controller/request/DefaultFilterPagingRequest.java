@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;

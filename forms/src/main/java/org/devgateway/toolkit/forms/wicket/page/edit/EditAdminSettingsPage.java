@@ -2,9 +2,10 @@ package org.devgateway.toolkit.forms.wicket.page.edit;
 
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.ResourceModel;
@@ -150,7 +151,7 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
     }
 
     private void addCacheClearLink() {
-        final LaddaAjaxButton link = new LaddaAjaxButton("clearCache", Buttons.Type.Primary) {
+        final AjaxButton link = new AjaxButton("clearCache") {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
@@ -158,12 +159,14 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
             }
 
         };
+        link.add(new AttributeAppender("class", Buttons.Type.Primary));
+
         link.setLabel(new ResourceModel("clearBackendCaches"));
         editForm.add(link);
     }
 
     private void addImportToMongoLink() {
-        final LaddaAjaxButton link = new LaddaAjaxButton("importToMongo", Buttons.Type.Primary) {
+        final AjaxButton link = new AjaxButton("importToMongo") {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
@@ -175,12 +178,14 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
                 }
             }
         };
+        link.add(new AttributeAppender("class", Buttons.Type.Primary));
+
         link.setLabel(new ResourceModel("runMongoImport"));
         editForm.add(link);
     }
 
     private void sendValidatorNotifications() {
-        final LaddaAjaxButton link = new LaddaAjaxButton("sendValidatorNotifications", Buttons.Type.Primary) {
+        final AjaxButton link = new AjaxButton("sendValidatorNotifications") {
 
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
@@ -193,6 +198,8 @@ public class EditAdminSettingsPage extends AbstractEditPage<AdminSettings> {
             }
 
         };
+        link.add(new AttributeAppender("class", Buttons.Type.Primary));
+
         link.setLabel(new ResourceModel("sendValidatorNotifications"));
         editForm.add(link);
     }

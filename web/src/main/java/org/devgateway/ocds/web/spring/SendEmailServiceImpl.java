@@ -12,6 +12,7 @@
 package org.devgateway.ocds.web.spring;
 
 import com.google.common.net.InternetDomainName;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.Person;
@@ -28,9 +29,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.mail.internet.MimeMessage; // Changed to jakarta
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -81,13 +81,13 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     /**
-     * Gets domain name. Returns to toplevel domain if the server runs on dgstg.org, returns full domain otherwise
+     * Gets domain name. Returns to top-level domain if the server runs on dgstg.org, returns full domain otherwise
      *
      * @param url
      * @return
      */
     public static String getDomainName(final String url) {
-        URI uri = null;
+        URI uri;
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
@@ -112,24 +112,16 @@ public class SendEmailServiceImpl implements SendEmailService {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             try {
                 mimeMessagePreparator.prepare(mimeMessage);
-                MimeMessageParser parser = new MimeMessageParser(mimeMessage);
-                parser.parse();
-                if (parser.hasPlainContent()) {
-                    logger.info("Prepared Plain Message: " + parser.getPlainContent());
-                }
-                if (parser.hasHtmlContent()) {
-                    logger.info("Prepared Html Message: " + parser.getHtmlContent());
-                }
-
+                // Instead of using MimeMessageParser, you can log the content directly
+                String content = mimeMessage.getContent().toString(); // This may need to be cast to String
+                logger.info("Prepared Mime Message Content: " + content);
             } catch (Exception e) {
                 throw new MailPreparationException(e);
             }
         } else {
             javaMailSender.send(mimeMessagePreparator);
         }
-
     }
-
 
     @Override
     public void send(SimpleMailMessage simpleMessage) throws MailException {
@@ -162,7 +154,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         try {
             javaMailSender.send(msg);
         } catch (MailException e) {
-            e.printStackTrace();
+            logger.error("Failed to send reset password email to " + person.getEmail(), e);
         }
     }
 
@@ -223,8 +215,7 @@ public class SendEmailServiceImpl implements SendEmailService {
             logger.info("Sending email " + msg);
             send(msg);
         } catch (MailException e) {
-            e.printStackTrace();
+            logger.error("Failed to send email to " + to, e);
         }
-
     }
 }

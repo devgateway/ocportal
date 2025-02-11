@@ -21,8 +21,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.SetJoin;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.SetJoin;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
