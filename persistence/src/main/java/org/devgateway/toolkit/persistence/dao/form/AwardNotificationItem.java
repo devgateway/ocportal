@@ -28,7 +28,6 @@ import java.util.stream.Stream;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AwardNotificationItem extends AbstractDocsChildExpAuditEntity<AwardNotification>
         implements ListViewItem {

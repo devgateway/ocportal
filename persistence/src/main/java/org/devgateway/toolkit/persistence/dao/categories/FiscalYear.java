@@ -27,7 +27,6 @@ import java.util.Date;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FiscalYear extends AbstractAuditableEntity implements Labelable {
 
     @NotNull

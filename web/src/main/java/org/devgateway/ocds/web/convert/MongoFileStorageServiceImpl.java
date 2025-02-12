@@ -77,7 +77,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
     }
 
     @Override
-    public Document storeFileAndReferenceAsDocument(FileMetadata fm, String documentType) {
+    public Document reallyStoreFileAndReferenceAsDocument(FileMetadata fm, String documentType) {
         FileMetadata fileMetadata = storeFile(fm);
         if (fileMetadata == null) {
             return null;
@@ -100,7 +100,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
 
     @Override
     public Document storeFileAndReferenceAsDocument(FileMetadata fm, Document.DocumentType documentType) {
-        return storeFileAndReferenceAsDocument(fm, documentType.toString());
+        return reallyStoreFileAndReferenceAsDocument(fm, documentType.toString());
     }
 
 

@@ -1,5 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.feedback;
 
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import org.devgateway.toolkit.persistence.dao.AbstractChildExpandableAuditEntity;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.hibernate.annotations.Cache;
@@ -13,9 +15,9 @@ import jakarta.validation.constraints.NotNull;
 /**
  * @author mpostelnicu
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
+@Table(name = "feedback_message", indexes = {@Index(columnList = "url")})
 public class FeedbackMessage extends AbstractChildExpandableAuditEntity<ReplyableFeedbackMessage> {
 
     @NotNull

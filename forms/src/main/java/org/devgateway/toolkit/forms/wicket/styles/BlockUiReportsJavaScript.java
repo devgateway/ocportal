@@ -40,7 +40,7 @@ public class BlockUiReportsJavaScript extends JavaScriptResourceReference {
     public List<HeaderItem> getDependencies() {
         final List<HeaderItem> dependencies = Lists.newArrayList(super.getDependencies());
 
-        dependencies.add(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV2()));
+        dependencies.add(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV3()));
         dependencies.add(JavaScriptHeaderItem
                 .forReference(new JavaScriptResourceReference(EmptyCss.class, "/assets/js/jquery.blockUI.js")));
 

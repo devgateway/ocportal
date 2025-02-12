@@ -38,8 +38,9 @@
         <wicket.webjars.version>2.0.20</wicket.webjars.version>
         <closure.compiler.version>v20200406</closure.compiler.version>
         <yuicompressor.version>2.4.8</yuicompressor.version>
-        <javamelody.version>1.95.0</javamelody.version>
+        <javamelody.version>2.4.0</javamelody.version>
         <exclude.devtools>false</exclude.devtools>
+        <jakarta-persistence.version>3.1.0</jakarta-persistence.version>
     </properties>
 
     <dependencies>
@@ -47,7 +48,11 @@
             <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>10.4.0</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -64,10 +69,28 @@
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>jakarta.persistence</groupId>-->
+<!--            <artifactId>jakarta.persistence-api</artifactId>-->
+<!--            <version>3.2.0</version>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.2.0</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                    <groupId>org.hibernate</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -278,6 +301,34 @@
             <artifactId>poi</artifactId>
             <version>${poi.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache.modules</groupId>
+            <artifactId>ehcache-api</artifactId>
+            <version>3.10.8</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate</groupId>-->
+<!--            <artifactId>hibernate-ehcache</artifactId>-->
+<!--            <version>5.6.15.Final</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>net.sf.ehcache</groupId>-->
+<!--                    <artifactId>ehcache</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jcache</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -379,7 +430,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -423,23 +474,12 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-ehcache</artifactId>
-                <version>5.6.15.Final</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.ehcache</groupId>
-                        <artifactId>ehcache</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>5.6.15.Final</version>
+                <version>6.0.0.Alpha7</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.orm</groupId>
                 <artifactId>hibernate-envers</artifactId>
-                <version>6.6.6.Final</version>
+                <version>${hibernate.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

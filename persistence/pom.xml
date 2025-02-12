@@ -57,7 +57,7 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-spatial</artifactId>
-            <version>6.6.6.Final</version>
+            <version>${hibernate.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>jakarta.activation</groupId>
@@ -149,36 +149,6 @@
         </dependency>
 
         <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ehcache.modules</groupId>
-            <artifactId>ehcache-management</artifactId>
-            <version>${ehcache.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.terracotta.management</groupId>
-                    <artifactId>nms-agent-entity-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-ehcache</artifactId>
-            <version>5.6.15.Final</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.ehcache</groupId>
-                    <artifactId>ehcache</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.1.1</version>
@@ -188,16 +158,28 @@
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
             <version>${ehcache.version}</version>
+            <classifier>jakarta</classifier>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.6.15.Final</version>
+            <groupId>org.ehcache.modules</groupId>
+            <artifactId>ehcache-api</artifactId>
+            <version>3.10.8</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>jakarta.persistence</groupId>
-                    <artifactId>jakarta.persistence-api</artifactId>
-                </exclusion>
+<!--                <exclusion>-->
+<!--                    <groupId>jakarta.persistence</groupId>-->
+<!--                    <artifactId>jakarta.persistence-api</artifactId>-->
+<!--                </exclusion>-->
                 <exclusion>
                     <groupId>org.jboss.spec.jakarta.transaction</groupId>
                     <artifactId>jboss-transaction-api_1.2_spec</artifactId>
@@ -212,7 +194,7 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-envers</artifactId>
-            <version>6.6.6.Final</version>
+            <version>${hibernate.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>hibernate-entitymanager</artifactId>
@@ -224,7 +206,7 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>6.6.6.Final</version>
+            <version>${hibernate.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -260,6 +242,13 @@
             <version>${embedded.postgres.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jakarta-xml.version}</version>
+        </dependency>
+
 
         <!-- This is used just in case we need bean validation -->
         <!--<dependency>-->
@@ -377,7 +366,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -388,7 +377,7 @@
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
-                <version>3.3.3</version>
+                <version>5.1</version>
                 <executions>
                     <execution>
                         <id>process</id>

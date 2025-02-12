@@ -16,7 +16,6 @@ import jakarta.persistence.Table;
  * <p>
  * The class encapsulates statistics of email alerts processing.
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "numberSentAlerts"), @Index(columnList = "numberErrors")})

@@ -26,8 +26,9 @@ import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
 import de.agilecoders.wicket.webjars.WicketWebjars;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnit;
 import liquibase.integration.spring.SpringLiquibase;
-import nl.dries.wicket.hibernate.dozer.DozerRequestCycleListener;
 import nl.dries.wicket.hibernate.dozer.SessionFinderHolder;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
@@ -68,13 +69,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.select2.ApplicationSettings;
-
-import jakarta.persistence.EntityManagerFactory;
 import java.math.BigDecimal;
-
 /**
  * The web application class also serves as spring boot starting point by using
  * spring boot's EnableAutoConfiguration annotation and providing the main
@@ -99,23 +98,32 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Autowired
     private SessionFinderService sessionFinderService;
+    private SummernoteJpaStorageService summernoteJpaStorageService;
 
 
     @Autowired
-    private SummernoteJpaStorageService summernoteJpaStorageService;
+    public void setSummernoteJpaStorageService(SummernoteJpaStorageService summernoteJpaStorageService) {
+        this.summernoteJpaStorageService = summernoteJpaStorageService;
+    }
+
 
     @Autowired
     private DgFmProperties fmProperties;
+//    @PersistenceUnit(unitName = "prod")
+//    private EntityManagerFactory entityManagerFactory;
+
 
     private static final Logger logger = LoggerFactory.getLogger(FormsWebApplication.class);
+    @Autowired
+    public void setSessionFinderService(SessionFinderService sessionFinderService) {
+        this.sessionFinderService = sessionFinderService;
+    }
 
     @Bean
-    public SpringLiquibaseRunner liquibaseAfterJPA(final SpringLiquibase springLiquibase,
-                                                   final EntityManagerFactory entityManagerFactory) {
-        logger.info("Instantiating SpringLiquibaseRunner after initialization of entityManager using factory "
-                + entityManagerFactory);
+    public SpringLiquibaseRunner liquibaseAfterJPA(final SpringLiquibase springLiquibase) {
+//        logger.info("Instantiating SpringLiquibaseRunner after initialization of entityManager using factory "
+//                + entityManagerFactory);
         return new SpringLiquibaseRunner(springLiquibase);
     }
 
@@ -185,8 +193,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
      */
     private void optimizeForWebPerformance() {
         // add javascript files at the bottom of the page
-        setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("scripts-bucket"));
-
+        getHeaderResponseDecorators().add(new RenderJavaScriptToFooterHeaderResponseDecorator("scripts-bucket"));
         // This is only enabled for deployment configuration
         // -Dwicket.configuration=deployment
         // The default is Development, so this code is not used
@@ -264,9 +271,10 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
         // watch this using the URL
         // http://.../wicket/internal/debug/diskDataStore
-        if (usesDevelopmentConfig()) {
-            DebugDiskDataStore.register(this);
-        }
+        //Removed in wicket 10
+//        if (usesDevelopmentConfig()) {
+//            DebugDiskDataStore.register(this);
+//        }
 
         SessionFinderHolder.setSessionFinder(sessionFinderService);
 

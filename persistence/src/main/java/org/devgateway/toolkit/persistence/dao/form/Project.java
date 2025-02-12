@@ -35,7 +35,6 @@ import java.util.function.Consumer;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "projectForm")

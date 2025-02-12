@@ -42,7 +42,9 @@ public class ImportPrequalificationSchemaPage extends BasePage {
      * @param parameters                    current page parameters
      * @param prequalificationSchemaService
      */
-    public ImportPrequalificationSchemaPage(PageParameters parameters, PrequalificationSchemaService prequalificationSchemaService) {
+    public ImportPrequalificationSchemaPage(PageParameters parameters,
+                                            PrequalificationSchemaService
+                                                    prequalificationSchemaService) {
         super(parameters);
         this.prequalificationSchemaService = prequalificationSchemaService;
     }

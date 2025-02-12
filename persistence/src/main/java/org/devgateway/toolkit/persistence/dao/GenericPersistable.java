@@ -22,6 +22,8 @@ import jakarta.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
@@ -29,6 +31,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
  */
 @JsonIgnoreProperties(value = {"new"})
 @MappedSuperclass
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class GenericPersistable extends AbstractPersistable<Long> implements Serializable {
 
     @Version

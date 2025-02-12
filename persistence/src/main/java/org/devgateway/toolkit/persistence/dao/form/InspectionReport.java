@@ -34,7 +34,6 @@ import java.util.stream.Stream;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "inspectionReportForm")

@@ -22,7 +22,6 @@ import java.math.BigDecimal;
  * @author idobre
  * @since 2019-04-17
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id"),

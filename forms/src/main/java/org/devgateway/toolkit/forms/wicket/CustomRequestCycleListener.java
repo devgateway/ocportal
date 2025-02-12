@@ -9,8 +9,7 @@ public class CustomRequestCycleListener implements IRequestCycleListener {
     public static final MetaDataKey<Boolean> ENDING_REQUEST = new MetaDataKey<Boolean>() {
         private static final long serialVersionUID = 1L;
     };
-    public CustomRequestCycleListener()
-    {
+    public CustomRequestCycleListener() {
     }
     public void onBeginRequest(RequestCycle cycle) {
         cycle.setMetaData(ENDING_REQUEST, false);

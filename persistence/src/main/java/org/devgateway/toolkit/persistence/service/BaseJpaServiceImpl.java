@@ -24,8 +24,11 @@ import java.util.Set;
  * @since 2019-03-04
  */
 public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializable> implements BaseJpaService<T> {
-
     @Autowired
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
+
     private Validator validator;
 
     @Override

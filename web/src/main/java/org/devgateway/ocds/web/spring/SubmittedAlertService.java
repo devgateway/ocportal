@@ -26,7 +26,6 @@ import org.devgateway.toolkit.persistence.service.form.TenderProcessService;
 import org.devgateway.toolkit.persistence.service.form.TenderQuotationEvaluationService;
 import org.devgateway.toolkit.persistence.service.form.TenderService;
 import org.devgateway.toolkit.web.security.SecurityUtil;
-import org.hibernate.proxy.HibernateProxyHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +59,7 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.devgateway.ocds.web.spring.HibernateProxyUtil.getClassWithoutInitializingProxy;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_ME_PAYMENT_VALIDATOR;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PMC_VALIDATOR;
 import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.ROLE_PROCUREMENT_VALIDATOR;
@@ -238,7 +238,8 @@ public class SubmittedAlertService {
                         Map<Class<? extends AbstractClientEntity>, Map<Long, String[]>> departmentMap =
                                 departmentTypeIdTitle
                                         .get(department.getId());
-                        Class clazz = HibernateProxyHelper.getClassWithoutInitializingProxy(e);
+                        Class clazz = getClassWithoutInitializingProxy(e);
+
                         departmentMap.putIfAbsent(clazz, new ConcurrentHashMap<>());
                         Map<Long, String[]> typeMap = departmentMap.get(clazz);
                         typeMap.put(e.getId(), new String[]{e.getLabel(),
@@ -250,6 +251,8 @@ public class SubmittedAlertService {
             return departmentTypeIdTitle;
         }
     }
+
+
 
     @Scheduled(cron = "0 0 23 * * SUN")
     @Async

@@ -36,7 +36,6 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "name")})
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileMetadata extends AbstractAuditableEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, optional = false)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

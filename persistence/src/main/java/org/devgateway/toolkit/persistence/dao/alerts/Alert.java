@@ -24,7 +24,6 @@ import java.util.Set;
  * @author idobre
  * @since 2019-08-21
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "email"),

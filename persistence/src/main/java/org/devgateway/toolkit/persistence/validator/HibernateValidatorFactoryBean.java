@@ -21,6 +21,10 @@ import jakarta.validation.Configuration;
 public class HibernateValidatorFactoryBean extends LocalValidatorFactoryBean {
 
     @Autowired
+    public void setFmConstraintsConfigurer(FMConstraintsConfigurer fmConstraintsConfigurer) {
+        this.fmConstraintsConfigurer = fmConstraintsConfigurer;
+    }
+
     private FMConstraintsConfigurer fmConstraintsConfigurer;
 
     public HibernateValidatorFactoryBean() {

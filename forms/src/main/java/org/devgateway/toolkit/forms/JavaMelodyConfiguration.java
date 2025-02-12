@@ -60,8 +60,7 @@ public class JavaMelodyConfiguration {
     public ServletListenerRegistrationBean<EventListener> monitoringSessionListener(
             final ServletContext servletContext) {
         final ServletListenerRegistrationBean<EventListener> servletListenerRegistrationBean =
-                new ServletListenerRegistrationBean<>(
-                        new SessionListener());
+                new ServletListenerRegistrationBean<>(new SessionListener());
         if (servletContext.getFilterRegistration("javamelody") != null) {
             // if webapp deployed as war in a container with MonitoringFilter and SessionListener already added by
             // web-fragment.xml,

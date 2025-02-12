@@ -1,152 +1,227 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2015 Development Gateway, Inc and others. All rights reserved. This program and the accompanying materials
-    are made available under the terms of the MIT License (MIT) which accompanies this distribution,
-    and is available at https://opensource.org/licenses/MIT
-    Contributors: Development Gateway - initial API and implementation -->
+<config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+        xsi:schemaLocation="
+        http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd
+        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
 
-<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://www.ehcache.org/ehcache.xsd">
+<service>
+        <jsr107:defaults enable-statistics="true"/>
+    </service>
 
-    <diskStore path="ehcache-diskstore"/>
+    <persistence directory="${java.io.tmpdir}/ehcache/" />
 
-    <defaultCache eternal="true" overflowToDisk="false" statistics="true" maxEntriesLocalHeap="100000"/>
+    <thread-pools>
+        <thread-pool alias="defaultDiskPool" min-size="1" max-size="3" default="true"/>
+    </thread-pools>
+    <cache alias="classifications">
+        <key-type>java.lang.Long</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
 
-    <cache name="classifications" eternal="true"
-           statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120"
-    />
-
-    <cache name="feedback" eternal="true"
-           statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120"
-    />
-
-    <cache name="procurementMethodsJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120"
-    />
-
-    <cache name="procurementMethodRationalesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120"
-    />
-
-
-    <cache name="locationTypesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
-    />
-
-    <cache name="fiscalYearsJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120"
-    />
-
-    <cache name="genericPagingRequestJson" eternal="true" statistics="true" maxEntriesLocalHeap="10000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120"
-    />
-
-    <cache name="bidTypesJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120"
-    />
-
-    <cache name="tendersAwardsYears" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120" />
-
-    <cache name="indicatorTypesMappingJson" eternal="true" statistics="true" maxEntriesLocalHeap="1000"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120" />
-
-
-    <cache name="reportsCache"
-           eternal="true"
-           diskPersistent="false"
-           memoryStoreEvictionPolicy="LRU"
-           maxEntriesLocalHeap="100000"
-           statistics="true">
+        </resources>
     </cache>
 
-    <cache name="fmCache"
-           eternal="true"
-           diskPersistent="false"
-           memoryStoreEvictionPolicy="LRU"
-           maxEntriesLocalHeap="2000"
-           statistics="true">
+    <cache alias="feedback">
+        <key-type>java.lang.Long</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
     </cache>
 
-    <cache name="reportsApiCache"
-           eternal="true"
-           diskPersistent="false"
-           diskExpiryThreadIntervalSeconds="120"
-           memoryStoreEvictionPolicy="LRU"
-           maxEntriesLocalHeap="100000"
-           statistics="true">
+    <cache alias="procurementMethodsJson">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
     </cache>
 
-    <cache name="excelChartExport"
-           eternal="true"
-           memoryStoreEvictionPolicy="LRU"
-           maxEntriesLocalHeap="100000"
-           statistics="true"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120" >
+    <cache alias="procurementMethodRationalesJson">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
     </cache>
 
-    <cache name="excelChartHelper"
-           eternal="true"
-           memoryStoreEvictionPolicy="LRU"
-           maxEntriesLocalHeap="100000"
-           statistics="true"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="120" >
+    <cache alias="locationTypesJson">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+        </resources>
     </cache>
 
-    <cache name="excelExportCache"
-           eternal="true"
-           diskPersistent="false"
-           diskExpiryThreadIntervalSeconds="120"
-           memoryStoreEvictionPolicy="LRU"
-           maxEntriesLocalHeap="100000"
-           statistics="true">
+    <cache alias="fiscalYearsJson">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
     </cache>
 
-    <cache name="default-update-timestamps-region"
-           eternal="true"
-           diskPersistent="false"
-           maxEntriesLocalHeap="10000"
-           statistics="true">
+    <cache alias="genericPagingRequestJson">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
     </cache>
 
-    <cache name="default-query-results-region"
-           eternal="true"
-           diskPersistent="false"
-           maxEntriesLocalHeap="10000"
-           statistics="true">
+    <cache alias="bidTypesJson">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
     </cache>
 
-</ehcache>
+    <cache alias="tendersAwardsYears">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
+    </cache>
+
+    <cache alias="indicatorTypesMappingJson">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
+    </cache>
+
+    <cache alias="reportsCache">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+        </resources>
+    </cache>
+
+    <cache alias="fmCache">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+        </resources>
+    </cache>
+
+    <cache alias="reportsApiCache">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+        </resources>
+    </cache>
+
+    <cache alias="excelChartExport">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
+    </cache>
+
+    <cache alias="excelChartHelper">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+
+        </resources>
+    </cache>
+
+    <cache alias="excelExportCache">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+        </resources>
+    </cache>
+
+    <cache alias="default-update-timestamps-region">
+        <key-type>java.lang.Long</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+        </resources>
+    </cache>
+
+    <cache alias="default-query-results-region">
+        <key-type>java.lang.String</key-type>
+        <value-type>java.lang.Object</value-type>
+        <expiry>
+            <ttl unit="seconds">120</ttl>
+        </expiry>
+        <resources>
+            <offheap unit="MB">100</offheap><disk unit="MB">120</disk><heap unit="entries">1</heap>
+        </resources>
+    </cache>
+
+</config>

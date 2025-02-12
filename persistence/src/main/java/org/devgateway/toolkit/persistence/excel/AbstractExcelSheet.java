@@ -115,9 +115,9 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
      * <p>
      * There is only one Cell object otherwise the Heap Space will fill really quickly.
      *
-     * @param value
-     * @param row
-     * @param column
+     * @param value: the value type
+     * @param row: the row
+     * @param column:the column
      */
     @Override
     public void writeCell(final Object value, final Row row, final int column) {
@@ -164,9 +164,9 @@ public abstract class AbstractExcelSheet implements ExcelSheet {
     /**
      * Create a header cell with a particular style.
      *
-     * @param value
-     * @param row
-     * @param column
+     * @param value:  value
+     * @param row: the row
+     * @param column: the column
      */
     protected void writeHeaderCell(final Object value, final Row row, final int column) {
         this.writeCell(value, row, column);

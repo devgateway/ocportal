@@ -16,8 +16,11 @@ import java.io.InputStream;
 public class SummernoteJpaStorageService implements SummernoteStorage {
 
     public static final String STORAGE_ID = "jpaStorage";
-
     @Autowired
+    public void setFileMetadataService(FileMetadataService fileMetadataService) {
+        this.fileMetadataService = fileMetadataService;
+    }
+
     private FileMetadataService fileMetadataService;
 
     @Override

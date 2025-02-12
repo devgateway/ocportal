@@ -30,7 +30,6 @@ import java.util.Collections;
 
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"),
         @Index(columnList = "number"),
         @Index(columnList = "name")})

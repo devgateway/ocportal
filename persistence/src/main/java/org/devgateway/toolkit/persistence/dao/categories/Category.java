@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @DiscriminatorColumn(length = Category.DTYPE_COLUMN_LENGTH)
 @Table(indexes = {@Index(columnList = "label"), @Index(columnList = "DTYPE"), @Index(columnList = "code")})
 @JsonInclude(JsonInclude.Include.NON_NULL)

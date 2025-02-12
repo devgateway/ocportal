@@ -48,7 +48,6 @@ import java.util.function.Consumer;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id"),
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")}, uniqueConstraints =

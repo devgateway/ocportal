@@ -12,7 +12,6 @@ import jakarta.persistence.Entity;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AdminSettings extends AbstractAuditableEntity {
     private static final long serialVersionUID = -1051140524022133178L;
 

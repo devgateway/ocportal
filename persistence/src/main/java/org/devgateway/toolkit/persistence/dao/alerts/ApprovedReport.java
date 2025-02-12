@@ -13,7 +13,6 @@ import org.hibernate.envers.Audited;
 /**
  * @author Octavian Ciubotaru
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 public class ApprovedReport extends AbstractAuditableEntity {

@@ -47,11 +47,16 @@ public interface ExcelSheet {
     /**
      * Write the objects and return the first row index.
      * Used to (possible) create a document link between sheets.
+     * @return the first row index
+     * @param clazz : the class
+     *  @param objects: a list
+     * @param : parentFeatureName heheh
      */
+
     int writeSheetGetLink(Class clazz, List<Object> objects, String parentFeatureName);
 
     /**
-     * Returns the Sheet name.
+     * @return : Returns the Sheet name.
      */
     String getExcelSheetName();
 

@@ -12,7 +12,6 @@ import jakarta.persistence.Entity;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SupplierContact extends AbstractContact<Supplier> {
 
     public SupplierContact() {

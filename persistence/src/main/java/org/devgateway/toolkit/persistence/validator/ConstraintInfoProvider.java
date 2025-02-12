@@ -35,7 +35,13 @@ public class ConstraintInfoProvider {
     private DgFmService dgFmService;
 
     @Autowired
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+
+    }
+
     private EntityManagerFactory entityManagerFactory;
+
 
     public Constraints getConstraints() {
         Collector collector = new Collector();

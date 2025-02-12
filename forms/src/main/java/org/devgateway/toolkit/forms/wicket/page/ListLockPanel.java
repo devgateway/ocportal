@@ -41,7 +41,8 @@ import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.service.PersonService;
 import org.devgateway.toolkit.persistence.service.form.ClientEntityServiceResolver;
 import org.devgateway.toolkit.web.security.SecurityUtil;
-import org.hibernate.proxy.HibernateProxyHelper;
+
+import static org.devgateway.toolkit.forms.wicket.page.HibernateProxyUtil.getClassWithoutInitializingProxy;
 
 /**
  * @author Octavian Ciubotaru
@@ -68,7 +69,7 @@ public class ListLockPanel extends Panel {
                 new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
         columns.add(new LambdaColumn<>(new StringResourceModel("formType", this),
-                l -> getString(HibernateProxyHelper.getClassWithoutInitializingProxy(l).getSimpleName())));
+                l -> getString(getClassWithoutInitializingProxy(l).getSimpleName())));
 
         columns.add(new LambdaColumn<>(new StringResourceModel("formLabel", this), Lockable::getLabel));
 
@@ -200,7 +201,7 @@ public class ListLockPanel extends Panel {
             final PageParameters pageParameters = new PageParameters();
             pageParameters.set(WebConstants.PARAM_ID, lockable.getId());
 
-            Class<?> entityClass = HibernateProxyHelper.getClassWithoutInitializingProxy(lockable);
+            Class<?> entityClass = getClassWithoutInitializingProxy(lockable);
             String entityName = entityClass.getSimpleName();
             Class<? extends GenericWebPage<?>> pageClass = TranslateField.MAP_BEAN_WICKET_PAGE.get(entityName);
 

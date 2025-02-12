@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 /**
  * @author Octavian Ciubotaru
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 public class PrequalifiedSupplierItemContact extends AbstractContact<PrequalifiedSupplierItem> {

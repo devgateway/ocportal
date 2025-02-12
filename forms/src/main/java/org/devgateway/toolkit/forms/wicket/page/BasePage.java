@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.wicket.page;
 
+import de.agilecoders.wicket.core.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
@@ -286,6 +287,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
         createGoogleAnalyticsTracker();
     }
+
 
     protected Component createPrintLink(String id) {
         PageParameters pp = new PageParameters(getPageParameters());

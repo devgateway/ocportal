@@ -41,7 +41,6 @@ import java.util.Set;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "project_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderProcess extends AbstractAuditableEntity implements Labelable, ProjectAttachable,

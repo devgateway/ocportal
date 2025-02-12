@@ -163,7 +163,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+    public SecurityFilterChain securityFilterChain2(HttpSecurity http,
                                                    AuthenticationManager authenticationManager)
             throws Exception {
         http
@@ -193,10 +193,10 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) {
-        return http.getSharedObject(AuthenticationManager.class);
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(HttpSecurity http) {
+//        return http.getSharedObject(AuthenticationManager.class);
+//    }
 
     private SecurityExpressionHandler<FilterInvocation> webExpressionHandler() {
         DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();

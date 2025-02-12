@@ -13,7 +13,6 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Table(indexes = {@Index(columnList = "releaseId"), @Index(columnList = "flaggedDate")})
 public class ReleaseFlagHistory extends GenericPersistable implements Serializable {

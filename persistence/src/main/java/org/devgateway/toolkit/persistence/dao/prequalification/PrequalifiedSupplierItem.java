@@ -18,7 +18,6 @@ import jakarta.validation.constraints.NotNull;
 /**
  * @author Octavian Ciubotaru
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")},

@@ -20,7 +20,6 @@ import java.util.Objects;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfessionalOpinionItem extends AbstractDocsChildExpAuditEntity<ProfessionalOpinion>
         implements ListViewItem {

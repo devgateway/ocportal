@@ -28,7 +28,6 @@ import java.util.Set;
 
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "name")})
 @Form(featureName = "prequalificationSchemaForm")
 @UniquePrequalificationSchema(groups = NonDraft.class,

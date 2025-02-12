@@ -36,7 +36,6 @@ import java.util.Set;
 /**
  * @author mpostelnicu
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 public class TestForm extends AbstractStatusAuditableEntity {

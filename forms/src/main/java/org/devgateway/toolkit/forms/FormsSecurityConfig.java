@@ -99,10 +99,10 @@ public class FormsSecurityConfig extends WebSecurityConfig {
 
     @Bean
     @Override
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+    public SecurityFilterChain securityFilterChain2(HttpSecurity http,
                                                    AuthenticationManager authenticationManager)
             throws Exception {
-        super.securityFilterChain(http, authenticationManager);
+        super.securityFilterChain2(http, authenticationManager);
         http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.NEVER))

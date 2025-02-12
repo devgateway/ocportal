@@ -26,7 +26,6 @@ import java.io.Serializable;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "authority")})
 public class Role extends GenericPersistable implements Comparable<Role>, Labelable {
     private static final long serialVersionUID = -6007958105920327142L;

@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 /**
  * @author mpostelnicu
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})

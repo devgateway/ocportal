@@ -15,7 +15,6 @@ import jakarta.persistence.Transient;
  * @author idobre
  * @since 2019-03-22
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "test_form_id")})

@@ -40,7 +40,6 @@ import java.util.Set;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")},
         uniqueConstraints = @UniqueConstraint(columnNames = {"department_id", "fiscal_year_id"}))
 @Document

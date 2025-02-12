@@ -21,7 +21,6 @@ import java.util.List;
  * @author gmutuhu
  */
 
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id")})

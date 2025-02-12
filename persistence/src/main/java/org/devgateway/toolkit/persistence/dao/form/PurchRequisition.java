@@ -24,7 +24,6 @@ import java.util.List;
 
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(indexes = {@Index(columnList = "parent_id")})
 public class PurchRequisition extends AbstractDocsChildExpAuditEntity

@@ -30,7 +30,6 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-05
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id")})

@@ -20,10 +20,8 @@ import java.util.List;
 /**
  * @author mpostelnicu
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
-@Table(indexes = {@Index(columnList = "url")})
 public class ReplyableFeedbackMessage extends FeedbackMessage {
 
     private String url;
