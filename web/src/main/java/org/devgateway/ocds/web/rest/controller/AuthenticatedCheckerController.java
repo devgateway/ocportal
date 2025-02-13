@@ -45,7 +45,7 @@ public class AuthenticatedCheckerController {
 
     @Operation(summary = "Returns true if the user is authenticated, false otherwise")
     @RequestMapping(value = "/isAuthenticated", method = {RequestMethod.GET, RequestMethod.POST})
-    public AuthenticatedCheckerResponse isAuthenticated(final HttpServletResponse response) throws IOException {
+    public AuthenticatedCheckerResponse isAuthenticated(final HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         AuthenticatedCheckerResponse r = new AuthenticatedCheckerResponse();

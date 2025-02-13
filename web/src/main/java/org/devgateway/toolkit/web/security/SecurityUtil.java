@@ -84,7 +84,7 @@ public final class SecurityUtil {
 
     public static Boolean getDisabledApiSecurity(AdminSettingsRepository adminSettingsRepository) {
         List<AdminSettings> all = adminSettingsRepository.findAll();
-        if (all == null || all.size() == 0) {
+        if (all == null || all.isEmpty()) {
             return false;
         }
         if (all.size() > 1) {

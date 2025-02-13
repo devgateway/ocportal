@@ -35,7 +35,7 @@
         <wicket.bootstrap.version>7.0.9</wicket.bootstrap.version>
         <wicket.bootstrap-less.version>4.0.4</wicket.bootstrap-less.version>
         <zt.zip.version>1.13</zt.zip.version>
-        <wicket.webjars.version>2.0.20</wicket.webjars.version>
+        <wicket.webjars.version>4.0.6</wicket.webjars.version>
         <closure.compiler.version>v20200406</closure.compiler.version>
         <yuicompressor.version>2.4.8</yuicompressor.version>
         <javamelody.version>2.4.0</javamelody.version>
@@ -312,6 +312,8 @@
             <version>3.10.8</version>
         </dependency>
 
+
+
 <!--        <dependency>-->
 <!--            <groupId>org.hibernate</groupId>-->
 <!--            <artifactId>hibernate-ehcache</artifactId>-->
@@ -475,6 +477,17 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-ehcache</artifactId>
                 <version>6.0.0.Alpha7</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>4.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>4.0.0</version>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.hibernate.orm</groupId>

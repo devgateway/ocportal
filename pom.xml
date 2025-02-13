@@ -26,7 +26,6 @@
         <spring.boot.version>3.4.2</spring.boot.version>
         <derby.version>10.14.2.0</derby.version>
         <pg.version>42.5.4</pg.version>
-        <poi.version>5.4.0</poi.version>
         <embedded.postgres.version>2.10</embedded.postgres.version>
         <docker.image.prefix>devgateway/toolkit</docker.image.prefix>
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
@@ -107,6 +106,8 @@
             <artifactId>cglib-nodep</artifactId>
             <version>3.3.0</version>
         </dependency>
+
+
     </dependencies>
 
     <dependencyManagement>
