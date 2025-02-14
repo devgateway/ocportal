@@ -9,9 +9,9 @@ import {
   Route, Redirect,
 } from 'react-router-dom';
 import './style.scss';
-import OCEMakueni from './oceClient';
-import MakueniTenders from '../oce/portal/tenders/clientTenders';
-import MakueniProcurementPlans from '../oce/portal/procurementPlan/clientProcurementPlans';
+import OceClient from './oceClient';
+import ClientTenders from '../oce/portal/tenders/clientTenders';
+import ClientProcurementPlans from '../oce/portal/procurementPlan/clientProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -154,21 +154,21 @@ const OceSwitcherLoader = () => {
             />
           </Route>
           <Route path="/portal/tender">
-            <MakueniTenders
+            <ClientTenders
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
           <Route path="/portal/procurement-plan">
-            <MakueniProcurementPlans
+            <ClientProcurementPlans
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
           <Route path="/portal/m-and-e/:selected?">
-            <OCEMakueni
+            <OceClient
               styling={styling}
               t={t}
               i18n={i18n}
@@ -189,7 +189,7 @@ const OceSwitcherLoader = () => {
             />
           </Route>
           <Route path="/portal/procurement-plan">
-            <MakueniProcurementPlans
+            <ClientProcurementPlans
               styling={styling}
               t={t}
               i18n={i18n}

@@ -17,21 +17,9 @@ public class CustomRequestCycleListener implements IRequestCycleListener {
     }
     @Override
     public void onBeginRequest(RequestCycle cycle) {
-        String nonce = generateNonce();
         cycle.setMetaData(ENDING_REQUEST, false);
-        cycle.setMetaData(new MetaDataKey<>() {
-        }, nonce);
-        HttpServletResponse response = (HttpServletResponse)
-                cycle.getResponse().getContainerResponse();
-        response.setHeader("Content-Security-Policy",
-                "script-src 'self' 'nonce-" + nonce + "'");
     }
 
-    private String generateNonce() {
-        byte[] nonceBytes = new byte[16];
-        new SecureRandom().nextBytes(nonceBytes);
-        return Base64.getEncoder().encodeToString(nonceBytes);
-    }
 
     @Override
     public void onEndRequest(RequestCycle cycle) {

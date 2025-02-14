@@ -12,7 +12,7 @@ class PortalVideos extends CRDPage {
           styling={this.props.styling}
           selected="docs"
         />
-        <div className="makueni-procurement-plan content row">
+        <div className="client-procurement-plan content row">
 
           <div className="col-md-4 col-md-offset-5">
             <h1>{t('portalVideos:title')}</h1>

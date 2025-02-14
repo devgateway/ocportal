@@ -94,7 +94,7 @@ public class ClientDataController extends GenericOCDSController {
     @Autowired
     private GridFsOperations gridFsOperations;
 
-    private List<AggregationOperation> makueniTenderOperations(ClientFilterPagingRequest filter) {
+    private List<AggregationOperation> clientTenderOperations(ClientFilterPagingRequest filter) {
         final Criteria criteria = new Criteria().andOperator(
                 createFilterCriteria("department._id", filter.getDepartment()),
                 createFilterCriteria("fiscalYear._id", filter.getFiscalYear()));
@@ -133,18 +133,18 @@ public class ClientDataController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @Cacheable
-    public List<Document> makueniTenders(@ModelAttribute @Valid final ClientFilterPagingRequest filter) {
-        List<AggregationOperation> aggregationOperations = makueniTenderOperations(filter);
+    public List<Document> clientTenders(@ModelAttribute @Valid final ClientFilterPagingRequest filter) {
+        List<AggregationOperation> aggregationOperations = clientTenderOperations(filter);
         aggregationOperations.addAll(Arrays.asList(
                 sort(Sort.Direction.DESC, "tender.closingDate"),
                 skip(filter.getSkip()),
                 limit(filter.getPageSize()))
         );
-        return mongoTemplate.aggregate(newAggregation(aggregationOperations).withOptions(makueniAggOptions()),
+        return mongoTemplate.aggregate(newAggregation(aggregationOperations).withOptions(clientAggOptions()),
                 "procurementPlan", Document.class).getMappedResults();
     }
 
-    private AggregationOptions makueniAggOptions() {
+    private AggregationOptions clientAggOptions() {
         return Aggregation.newAggregationOptions().allowDiskUse(true).build();
     }
 
@@ -153,17 +153,17 @@ public class ClientDataController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @Cacheable
-    public Integer makueniTendersCount(@ModelAttribute @Valid final ClientFilterPagingRequest filter) {
-        List<AggregationOperation> aggregationOperations = makueniTenderOperations(filter);
+    public Integer clientTendersCount(@ModelAttribute @Valid final ClientFilterPagingRequest filter) {
+        List<AggregationOperation> aggregationOperations = clientTenderOperations(filter);
         aggregationOperations.add(group().count().as("count"));
 
         Document doc = mongoTemplate.aggregate(newAggregation(aggregationOperations)
-                .withOptions(makueniAggOptions()), "procurementPlan", Document.class).getUniqueMappedResult();
+                .withOptions(clientAggOptions()), "procurementPlan", Document.class).getUniqueMappedResult();
 
         return doc == null ? 0 : (Integer) doc.get("count");
     }
 
-    private List<AggregationOperation> makueniPlanOperations(ClientFilterPagingRequest filter) {
+    private List<AggregationOperation> clientPlanOperations(ClientFilterPagingRequest filter) {
 
         final Criteria criteria = new Criteria().andOperator(
                 createFilterCriteria("department._id", filter.getDepartment()),
@@ -182,9 +182,9 @@ public class ClientDataController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @Cacheable
-    public List<ProcurementPlan> makueniProcurementPlans(
+    public List<ProcurementPlan> clientProcurementPlans(
             @ModelAttribute @Valid final ClientFilterPagingRequest filter) {
-        List<AggregationOperation> aggregationOperations = makueniPlanOperations(filter);
+        List<AggregationOperation> aggregationOperations = clientPlanOperations(filter);
 
         BasicDBObject customSorting = new BasicDBObject();
         customSorting.put("fiscalYear.startDate", -1);
@@ -194,7 +194,7 @@ public class ClientDataController extends GenericOCDSController {
                 new CustomSortingOperation(customSorting), skip(filter.getSkip()), limit(filter.getPageSize())));
 
         return mongoTemplate.aggregate(newAggregation(aggregationOperations)
-                .withOptions(makueniAggOptions()), "procurementPlan", ProcurementPlan.class)
+                .withOptions(clientAggOptions()), "procurementPlan", ProcurementPlan.class)
                 .getMappedResults();
     }
 
@@ -203,12 +203,12 @@ public class ClientDataController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET},
             produces = "application/json")
     @Cacheable
-    public Integer makueniProcurementPlansCount(@ModelAttribute @Valid final ClientFilterPagingRequest filter) {
-        List<AggregationOperation> aggregationOperations = makueniPlanOperations(filter);
+    public Integer clientProcurementPlansCount(@ModelAttribute @Valid final ClientFilterPagingRequest filter) {
+        List<AggregationOperation> aggregationOperations = clientPlanOperations(filter);
         aggregationOperations.add(group().count().as("count"));
 
         final Document doc = mongoTemplate.aggregate(
-                newAggregation(aggregationOperations).withOptions(makueniAggOptions()),
+                newAggregation(aggregationOperations).withOptions(clientAggOptions()),
                 "procurementPlan", Document.class).getUniqueMappedResult();
 
         return doc == null ? 0 : (Integer) doc.get("count");
@@ -264,7 +264,7 @@ public class ClientDataController extends GenericOCDSController {
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     @Operation(summary = "Fetch Contract Stats")
     @Cacheable
-    public Document makueniContractStats() {
+    public Document clientContractStats() {
         final AggregationOptions options = Aggregation.newAggregationOptions().allowDiskUse(true).build();
 
         final Aggregation aggregation = newAggregation(
@@ -299,7 +299,7 @@ public class ClientDataController extends GenericOCDSController {
         final List<Document> results = new ArrayList<>();
         final List<Department> departments = departmentService.findAll();
 
-        departments.stream().forEach(item -> results.add(new Document()
+        departments.forEach(item -> results.add(new Document()
                 .append("id", item.getId())
                 .append("label", item.getLabel())));
 
@@ -336,11 +336,10 @@ public class ClientDataController extends GenericOCDSController {
         final List<Document> results = new ArrayList<>();
         final List<Item> items = itemService.findAll()
                 .parallelStream()
-                .filter(item -> item.getLabel() != null).collect(Collectors.toList());
+                .filter(item -> item.getLabel() != null)
+                .sorted(Comparator.comparing(Category::getLabel)).toList();
 
-        items.sort(Comparator.comparing(Category::getLabel));
-
-        items.stream().forEach(item -> results.add(new Document()
+        items.forEach(item -> results.add(new Document()
                 .append("id", item.getId())
                 .append("label", item.getLabel())));
 
@@ -357,7 +356,7 @@ public class ClientDataController extends GenericOCDSController {
 
         items.sort(Comparator.comparing(Category::getLabel));
 
-        items.stream().forEach(item -> results.add(new Document()
+        items.forEach(item -> results.add(new Document()
                 .append("id", item.getId())
                 .append("label", item.getLabel())));
 

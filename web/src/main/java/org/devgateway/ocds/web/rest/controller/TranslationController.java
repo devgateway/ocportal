@@ -25,8 +25,7 @@ public class TranslationController {
     @Operation(summary = "Returns a json with the merged translations, based on language specified")
     @RequestMapping(value = "/api/translations/{language}", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Map<String, String> translations(final HttpServletResponse response,
-                                            @PathVariable String language) throws IOException {
+    public Map<String, String> translations(@PathVariable("language") String language) {
         return translationService.getAllTranslationsForLanguage(language);
     }
 

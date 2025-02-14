@@ -27,4 +27,8 @@ public class FmRequestParam implements Serializable {
     public void setFmPrefixes(List<String> fmPrefixes) {
         this.fmPrefixes = fmPrefixes;
     }
+    @Override
+    public String toString() {
+        return "FmRequestParam{fmNames=" + fmNames + ", fmPrefixes=" + fmPrefixes + "}";
+    }
 }

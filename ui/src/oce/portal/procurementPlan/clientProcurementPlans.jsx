@@ -115,7 +115,7 @@ const ClientProcurementPlans = (props) => {
         selected="procurement-plan"
       />
 
-      <div className="makueni-procurement-plan content row">
+      <div className="client-procurement-plan content row">
         <div className="col-md-3 col-sm-3 filters">
           <div className="row" data-intro={t('tables:procurementPlans:dataIntro')} data-step="8">
             <div className="filters-hint col-md-12">

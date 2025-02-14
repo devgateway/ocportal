@@ -17,6 +17,7 @@ package org.devgateway.toolkit.forms.wicket.page.user;
 import de.agilecoders.wicket.core.markup.html.bootstrap.common.NotificationPanel;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
@@ -84,6 +85,7 @@ public class LoginPage extends BasePage {
         private String username;
 
         private String password;
+
         public String getUsername() {
             return username;
         }
@@ -108,16 +110,8 @@ public class LoginPage extends BasePage {
         private TextFieldBootstrapFormComponent<String> username;
 
         private PasswordFieldBootstrapFormComponent password;
+
         private String referrer;
-
-        private TextFieldBootstrapFormComponent<String> usernameField;
-        private PasswordFieldBootstrapFormComponent passwordField;
-
-        LoginForm(final String id) {
-            super(id);
-
-            pageTitle.setVisible(false);
-        }
 
         LoginForm(final String componentId, final IModel<LoginBean> model) {
             super(componentId, model);
@@ -126,18 +120,22 @@ public class LoginPage extends BasePage {
         @Override
         protected void onInitialize() {
             super.onInitialize();
+
             pageTitle.setVisible(false);
+
             retrieveReferrerFromSavedRequestIfPresent();
 
-            NotificationPanel notificationPanel = new NotificationPanel("loginFeedback");
+            final NotificationPanel notificationPanel = new NotificationPanel("loginFeedback");
             notificationPanel.hideAfter(Duration.ofSeconds(HIDE_NOTIFICATION_SECONDS));
             notificationPanel.setOutputMarkupId(true);
             add(notificationPanel);
 
             username = ComponentUtil.addTextLoginField(this, "username");
+            username.getBorder().add(AttributeModifier.append("class", "required-field"));
             username.required();
 
             password = ComponentUtil.addTextPasswordField(this, "password");
+            password.getBorder().add(AttributeModifier.append("class", "required-field"));
             password.required();
             password.getField().setResetPassword(false);
 
@@ -173,7 +171,7 @@ public class LoginPage extends BasePage {
                             setResponsePage(getApplication().getHomePage());
                         }
                     } else if (session.getAe().getMessage().equalsIgnoreCase("User is disabled")) {
-                        notificationPanel.error(getString("userIsDisabled"));
+                        notificationPanel.error(session.getAe().getMessage());
                         target.add(notificationPanel);
                     } else {
                         notificationPanel.error(getString("bad_credentials"));

@@ -18,7 +18,7 @@ class SMSHelp extends CRDPage {
           styling={this.props.styling}
           selected="smshelp"
         />
-        <div className="makueni-procurement-plan content">
+        <div className="client-procurement-plan content">
           <div className="row">
             <div className="col-md-8 col-md-offset-2 makueni-form">
               <GoBack t={this.props.t} />

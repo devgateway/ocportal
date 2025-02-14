@@ -13,7 +13,7 @@ class Docs extends CRDPage {
           styling={this.props.styling}
           selected="docs"
         />
-        <div className="makueni-procurement-plan content row">
+        <div className="client-procurement-plan content row">
 
           <div className="col-md-6 col-md-offset-3 text-justify">
             <h1 className="text-center">{t('privacyPolicy:title')}</h1>

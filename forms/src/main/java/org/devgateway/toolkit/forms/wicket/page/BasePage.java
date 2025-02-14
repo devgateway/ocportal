@@ -26,6 +26,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.core.markup.html.themes.bootstrap.BootstrapCssReference;
 import de.agilecoders.wicket.core.util.CssClassNames;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.ColorPickerTextFieldCssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.Component;
@@ -49,6 +50,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -248,6 +250,7 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         add(new HtmlTag("html"));
 
         // Add javascript files.
+//        add(new HeaderResponseContainer("scripts-container", "scripts-bucket"));
         add(new HeaderResponseContainer("scripts-container", "scripts-bucket"));
 
         feedbackPanel = createFeedbackPanel();
@@ -809,7 +812,13 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     @Override
     public void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
-        addPrintWindowJs(response);
+//        addPrintWindowJs(response);
+        response.render(CssHeaderItem.forReference(
+                new CssResourceReference(
+                        ColorPickerTextFieldCssReference.class,
+                        "css/bootstrap-colorpicker.css"
+                )
+        ));
 
         // Load Styles.  Use static instances where possible for efficiency.
         response.render(CssHeaderItem.forReference(BaseStyles.INSTANCE));
@@ -834,13 +843,19 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
         // Example of adding inline JavaScript (use sparingly, prefer files)
         // response.render(JavaScriptHeaderItem.forString("var myVar = 'Hello';"));
+        response.render(JavaScriptHeaderItem.forReference(
+                new JavaScriptResourceReference(
+                        ColorPickerTextFieldCssReference.class,
+                        "js/bootstrap-colorpicker.js"
+                )
+        ));
     }
 
 
 
-    @Override
-    protected void onInitialize() {
-        super.onInitialize();
-        redirectForInvisibleFm();
-    }
+//    @Override
+//    protected void onInitialize() {
+//        super.onInitialize();
+//        redirectForInvisibleFm();
+//    }
 }

@@ -8,10 +8,7 @@ import org.devgateway.toolkit.persistence.repository.form.AbstractClientEntityRe
 import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -23,34 +20,34 @@ public abstract class AbstractClientEntityServiceImpl<T extends AbstractClientEn
 
 
     @Transactional
-    public AbstractClientEntityRepository<T> makueniRepository() {
+    public AbstractClientEntityRepository<T> clientRepository() {
         return (AbstractClientEntityRepository<T>) repository();
     }
 
     @Override
     public List<T> findByFiscalYear(final FiscalYear fiscalYear) {
-        return makueniRepository().findByFiscalYear(fiscalYear);
+        return clientRepository().findByFiscalYear(fiscalYear);
     }
 
     @Override
     public Stream<? extends AbstractClientEntity> getAllSubmitted() {
-        return makueniRepository().findByStatus(DBConstants.Status.SUBMITTED);
+        return clientRepository().findByStatus(DBConstants.Status.SUBMITTED);
     }
 
     @Override
     public List<T> getAllLocked(Person person) {
-        return makueniRepository().getAllLockedByPerson(person);
+        return clientRepository().getAllLockedByPerson(person);
     }
 
     @Override
     public List<T> getAllLocked() {
-        return makueniRepository().getAllLocked();
+        return clientRepository().getAllLocked();
     }
 
     @Override
     @Transactional
     public void unlock(Long id) {
-        T one = makueniRepository().getOne(id);
+        T one = clientRepository().getOne(id);
         one.setOwner(null);
     }
 }

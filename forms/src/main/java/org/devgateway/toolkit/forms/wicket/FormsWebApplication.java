@@ -29,21 +29,29 @@ import de.agilecoders.wicket.webjars.WicketWebjars;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 import liquibase.integration.spring.SpringLiquibase;
+import nl.dries.wicket.hibernate.dozer.DozerRequestCycleListener;
 import nl.dries.wicket.hibernate.dozer.SessionFinderHolder;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
+import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPDirectiveSrcValue;
+import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.Folder;
@@ -83,11 +91,8 @@ import java.math.BigDecimal;
  */
 @EnableScheduling
 @SpringBootApplication(exclude = {org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration.class})
-@ComponentScan(value = "org.devgateway", excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = org.devgateway.jocds.ValidatorConfiguration.class))
+@ComponentScan("org.devgateway.toolkit")
 @PropertySource("classpath:/org/devgateway/toolkit/forms/application.properties")
-@EnableCaching
 public class FormsWebApplication extends AuthenticatedWebApplication {
 
 
@@ -178,10 +183,10 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         WicketWebjars.install(this);
 
         // use the Paper bootstrap theme
-        final ThemeProvider themeProvider = new BootswatchThemeProvider(BootswatchTheme.Litera);
+//        final ThemeProvider themeProvider = new BootswatchThemeProvider(BootswatchTheme.Litera);
         final IBootstrapSettings settings = new BootstrapSettings();
         settings.useCdnResources(false);
-        settings.setThemeProvider(themeProvider);
+//        settings.setThemeProvider(themeProvider);
 
         Bootstrap.install(this, settings);
         BootstrapLess.install(this);
@@ -193,7 +198,9 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
      */
     private void optimizeForWebPerformance() {
         // add javascript files at the bottom of the page
-        getHeaderResponseDecorators().add(new RenderJavaScriptToFooterHeaderResponseDecorator("scripts-bucket"));
+//        getHeaderResponseDecorators().add(new RenderJavaScriptToFooterHeaderResponseDecorator("scripts-bucket"));
+        getHeaderResponseDecorators().add(response ->
+                new JavaScriptFilteredIntoFooterHeaderResponse(response, "scripts-bucket"));
         // This is only enabled for deployment configuration
         // -Dwicket.configuration=deployment
         // The default is Development, so this code is not used
@@ -241,7 +248,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
     protected void init() {
         super.init();
 
-
+        // add allowed woff2 extension
         IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
         if (packageResourceGuard instanceof SecurePackageResourceGuard) {
             SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
@@ -263,7 +270,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         }
 
         getApplicationSettings().setUploadProgressUpdatesEnabled(true);
-        getApplicationSettings().setAccessDeniedPage(Homepage.class);
+        getApplicationSettings().setAccessDeniedPage(AccessDeniedPage.class);
 
         configureBootstrap();
         configureSummernote();
@@ -271,14 +278,31 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
         // watch this using the URL
         // http://.../wicket/internal/debug/diskDataStore
-        //Removed in wicket 10
-//        if (usesDevelopmentConfig()) {
-//            DebugDiskDataStore.register(this);
-//        }
+        if (usesDevelopmentConfig()) {
+            getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+        }
 
         SessionFinderHolder.setSessionFinder(sessionFinderService);
 
         useCustomizedSelect2Version();
+
+        configureCsp();
+    }
+
+    private void configureCsp() {
+        getCspSettings().blocking().clear()
+                .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.UNSAFE_INLINE)
+                .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.UNSAFE_INLINE)
+                .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.CONNECT_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.FRAME_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE);
     }
 
     /**

@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * https://opensource.org/licenses/MIT
  *
- * Contributors:
+ * Contributors:CacheCo
  * Development Gateway - initial API and implementation
  *******************************************************************************/
 package org.devgateway.toolkit.forms;
@@ -107,7 +107,8 @@ public class FormsSecurityConfig extends WebSecurityConfig {
                         .contentTypeOptions(Customizer.withDefaults())
                         .xssProtection(Customizer.withDefaults())
                         .contentSecurityPolicy(csp -> csp
-                                .policyDirectives("script-src 'self' 'nonce-{GENERATED_NONCE}'; style-src 'self'"))
+                                .policyDirectives("script-src 'self' "
+                                        + "'unsafe-inline' 'strict-dynamic' style-src 'self'"))
                         .cacheControl(Customizer.withDefaults())
                 );
 

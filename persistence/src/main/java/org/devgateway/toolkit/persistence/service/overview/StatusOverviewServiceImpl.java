@@ -1,5 +1,8 @@
 package org.devgateway.toolkit.persistence.service.overview;
 
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
@@ -258,17 +261,31 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
         return tenderProcessService.count();
     }
 
-    public Specification<TenderProcess> getTenderProcessViewSpecification(Department department,
-                                                                          FiscalYear fiscalYear, String title) {
-            return (r, cq, cb) -> cb.and(
-                    department == null ? cb.and()
-                            : cb.equal(r.join(TenderProcess_.procurementPlan)
-                                    .get(ProcurementPlan_.department), department),
-                    cb.equal(r.join(TenderProcess_.procurementPlan).get(ProcurementPlan_.fiscalYear), fiscalYear),
-                    cb.isNull(r.get(TenderProcess_.project)),
-                    ObjectUtils.isEmpty(title) ? cb.and() : cb.like(
-                            cb.lower(r.join(TenderProcess_.tender).get(Tender_.tenderTitle)),
-                            "%" + title.toLowerCase() + "%"));
+    public Specification<TenderProcess> getTenderProcessViewSpecification(
+            Department department, FiscalYear fiscalYear, String title) {
+        return (r, cq, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (department != null) {
+                Join<TenderProcess, ProcurementPlan> planJoin = r.join(TenderProcess_.procurementPlan, JoinType.LEFT);
+                predicates.add(cb.equal(planJoin.get(ProcurementPlan_.department), department));
+            }
+
+            if (fiscalYear != null) {
+                Join<TenderProcess, ProcurementPlan> planJoin = r.join(TenderProcess_.procurementPlan, JoinType.LEFT);
+                predicates.add(cb.equal(planJoin.get(ProcurementPlan_.fiscalYear), fiscalYear));
+            }
+
+            predicates.add(cb.isNull(r.get(TenderProcess_.project)));
+
+            if (!ObjectUtils.isEmpty(title)) {
+                Join<TenderProcess, Tender> tenderJoin = r.join(TenderProcess_.tender, JoinType.LEFT);
+                predicates.add(cb.like(cb.lower(tenderJoin.get(Tender_.tenderTitle)), "%"
+                        + title.toLowerCase() + "%"));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     /**
@@ -282,7 +299,7 @@ public class StatusOverviewServiceImpl implements StatusOverviewService {
                 return DBConstants.Status.TERMINATED;
             }
 
-            if (statuses.size() == 0) {
+            if (statuses.isEmpty()) {
                 return DBConstants.Status.NOT_STARTED;
             }
 
