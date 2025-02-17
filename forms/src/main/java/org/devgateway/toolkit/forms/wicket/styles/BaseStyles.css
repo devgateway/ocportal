@@ -46,6 +46,11 @@ body {
     z-index: 1001;
 }
 
+.navbar-brand img {
+    max-height: 40px;
+    width: auto;
+}
+
 @media only screen and (max-width: 767px){
     .mainHeader.with-navbar-fixed-top{
         position: relative;

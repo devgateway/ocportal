@@ -16,9 +16,14 @@
             <div wicket:id="subcounties" class="col-sm-3"></div>
             <div wicket:id="wards" class="col-sm-3"></div>
         </div>
-        <button wicket:id="submit">[[submit]]</button>
+        <span wicket:id="submit">
+                    <button type="submit">[[submit]]</button>
+        </span>
 
-        <a wicket:id="excelExport">[[excel export]]</a>
+
+        <span wicket:id="excelExport">
+        <button class="btn-info">[[excel export]]</button>
+        </span>
     </form>
 
     <div wicket:id="draftSchemaWarning" class="alert alert-warning" role="alert">

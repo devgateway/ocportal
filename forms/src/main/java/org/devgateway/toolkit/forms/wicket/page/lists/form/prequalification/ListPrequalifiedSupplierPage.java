@@ -325,9 +325,10 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         public Specification<PrequalifiedSupplierItem> getSpecification() {
             return (root, cq, cb) -> {
 
-                Subquery<PrequalifiedSupplier> sub = cq.subquery(PrequalifiedSupplier.class).distinct(true);
+                Subquery<PrequalifiedSupplier> sub = cq.subquery(PrequalifiedSupplier.class);
                 Root<PrequalifiedSupplier> subRoot = sub.from(PrequalifiedSupplier.class);
                 sub.select(subRoot);
+                sub.distinct(true);
 
                 List<Predicate> subPredicates = new ArrayList<>();
 

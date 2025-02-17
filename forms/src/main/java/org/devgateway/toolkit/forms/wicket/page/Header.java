@@ -78,8 +78,8 @@ public class Header extends Panel {
 //        navbar.setInverted(true);
         navbar.setPosition(Navbar.Position.TOP);
 
-//        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
-//                new StringResourceModel("brandImageAltText", this, null));
+        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
+                new StringResourceModel("brandImageAltText", this, null));
         navbar.setBrandName(new StringResourceModel("brandName", this, null));
 
         // Add menu components to the right side of the navbar
