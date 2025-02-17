@@ -207,9 +207,11 @@ public class EditUserPage extends AbstractEditPage<Person> {
         FormSecurityUtil.authorizeRender(roles, ROLE_PMC_ADMIN);
 
         enabled = ComponentUtil.addCheckToggle(editForm, "enabled");
+        enabled.setOutputMarkupId(true);
         MetaDataRoleAuthorizationStrategy.authorize(enabled, Component.RENDER, ROLE_PMC_ADMIN);
 
         changePasswordNextSignIn = ComponentUtil.addCheckToggle(editForm, "changePasswordNextSignIn");
+        changePasswordNextSignIn.setOutputMarkupId(true);
         MetaDataRoleAuthorizationStrategy.authorize(changePasswordNextSignIn, Component.RENDER, ROLE_PMC_ADMIN);
 
         changeProfilePassword = new CheckBoxToggleBootstrapFormComponent("changeProfilePassword") {
@@ -222,6 +224,7 @@ public class EditUserPage extends AbstractEditPage<Person> {
                 target.add(plainPasswordCheck);
             }
         };
+        changeProfilePassword.setOutputMarkupId(true);
         editForm.add(changeProfilePassword);
 
         plainPassword = ComponentUtil.addTextPasswordField(editForm, "plainPassword");

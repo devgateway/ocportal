@@ -22,7 +22,6 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteS
 import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.webjars.WicketWebjars;
 import liquibase.integration.spring.SpringLiquibase;
-import nl.dries.wicket.hibernate.dozer.SessionFinderHolder;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
@@ -45,7 +44,6 @@ import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.Folder;
 import org.devgateway.toolkit.forms.serializer.SpringDevToolsSerializer;
-import org.devgateway.toolkit.forms.service.SessionFinderService;
 import org.devgateway.toolkit.forms.wicket.components.form.SummernoteJpaStorageService;
 import org.devgateway.toolkit.forms.wicket.converters.NonNumericFilteredBigDecimalConverter;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
@@ -91,7 +89,6 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private SessionFinderService sessionFinderService;
     private SummernoteJpaStorageService summernoteJpaStorageService;
 
 
@@ -108,10 +105,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
 
 
     private static final Logger logger = LoggerFactory.getLogger(FormsWebApplication.class);
-    @Autowired
-    public void setSessionFinderService(SessionFinderService sessionFinderService) {
-        this.sessionFinderService = sessionFinderService;
-    }
+
 
     @Bean
     public SpringLiquibaseRunner liquibaseAfterJPA(final SpringLiquibase springLiquibase) {
@@ -270,7 +264,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
             getDebugSettings().setDevelopmentUtilitiesEnabled(true);
         }
 
-        SessionFinderHolder.setSessionFinder(sessionFinderService);
+//        SessionFinderHolder.setSessionFinder(sessionFinderService);
 
         useCustomizedSelect2Version();
 

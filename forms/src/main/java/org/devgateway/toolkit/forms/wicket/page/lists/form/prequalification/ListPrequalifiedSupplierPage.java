@@ -7,7 +7,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipBehavi
 import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
-import nl.dries.wicket.hibernate.dozer.DozerModel;
+//import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -121,7 +121,12 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
     public ListPrequalifiedSupplierPage(PageParameters parameters) {
         super(parameters);
 
-        filterModel = new DozerModel<>(new Filter());
+        filterModel = new LoadableDetachableModel<Filter>(new Filter()) {
+            @Override
+            protected Filter load() {
+                return null;
+            }
+        };
     }
 
     @Override

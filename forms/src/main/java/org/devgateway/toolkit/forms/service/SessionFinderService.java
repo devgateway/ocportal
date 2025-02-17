@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.service;
 
-import nl.dries.wicket.hibernate.dozer.DozerModel;
-import nl.dries.wicket.hibernate.dozer.SessionFinder;
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.springframework.stereotype.Component;
@@ -27,8 +25,8 @@ import jakarta.persistence.PersistenceContext;
  * @author mpostelnicu
  * @see DozerModel
  */
-@Component
-public class SessionFinderService implements SessionFinder {
+//@Component
+public class SessionFinderService {
 
     @PersistenceContext
     private EntityManager em;
@@ -40,7 +38,7 @@ public class SessionFinderService implements SessionFinder {
      * nl.dries.wicket.hibernate.dozer.SessionFinder#getHibernateSession(java
      * .lang.Class)
      */
-    @Override
+//    @Override
     public Session getHibernateSession(final Class<?> clazz) {
         return em.unwrap(SessionImplementor.class);
     }

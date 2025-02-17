@@ -16,7 +16,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.dialog.TextContentModal;
 import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.util.Attributes;
 //import de.agilecoders.wicket.extensions.markup.html.;
-import nl.dries.wicket.hibernate.dozer.DozerModel;
+//import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -34,12 +34,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.IModelComparator;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
@@ -729,12 +724,25 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         IModel<T> model = null;
 
         if (entityId != null) {
-            model = new DozerModel<>(jpaService.findById(entityId)
-                    .orElseThrow(() -> new RestartResponseException(getApplication().getHomePage())));
+            model = new LoadableDetachableModel<T>() {
+                @Override
+                protected T load() {
+                    logger.info("Loading model for entity ID: " + entityId);
+
+                    T entity = jpaService.findById(entityId)
+                            .orElseThrow(() -> {
+                                logger.warn("Entity not found, redirecting...");
+                                return new RestartResponseException(getApplication().getHomePage());
+                            });
+
+                    logger.info("Entity loaded successfully: " + entity);
+                    return entity;
+                }
+            };
         } else {
             final T instance = newInstance();
             if (instance != null) {
-                model = new DozerModel<>(instance);
+                model = Model.of(instance);
             }
         }
 
@@ -752,9 +760,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         super.renderHead(response);
 
         // block UI
-        if (!ComponentUtil.isPrintMode()) {
-            response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
-        }
+//        if (!ComponentUtil.isPrintMode()) {
+//            response.render(JavaScriptHeaderItem.forReference(BlockUiJavaScript.INSTANCE));
+//        }
     }
 
     @Override

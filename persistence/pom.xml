@@ -230,12 +230,6 @@
             </exclusions>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>nl.dries.wicket.hibernate</groupId>-->
-<!--            <artifactId>dozer-hibernate-model</artifactId>-->
-<!--            <version>${dozer.hibernate.model.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
