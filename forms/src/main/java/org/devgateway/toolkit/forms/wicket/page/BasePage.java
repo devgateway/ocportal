@@ -411,8 +411,8 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 //        ));
 
         // Load Styles.  Use static instances where possible for efficiency.
-//        response.render(CssHeaderItem.forReference(BootstrapCssReference.instance()));
-//        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
+        response.render(CssHeaderItem.forReference(BootstrapCssReference.instance()));
+        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
         response.render(CssHeaderItem.forReference(BaseStyles.INSTANCE));
 
         // Load Scripts.  Respond.js is likely deprecated.  Consider if still needed.

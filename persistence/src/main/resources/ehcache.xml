@@ -16,7 +16,7 @@
         <thread-pool alias="defaultDiskPool" min-size="1" max-size="3" default="true"/>
     </thread-pools>
     <cache alias="classifications">
-        <key-type>java.lang.Long</key-type>
+        <key-type>java.lang.Object</key-type>
         <value-type>java.lang.Object</value-type>
         <expiry>
             <ttl unit="seconds">120</ttl>
@@ -28,7 +28,7 @@
     </cache>
 
     <cache alias="feedback">
-        <key-type>java.lang.Long</key-type>
+        <key-type>java.lang.Object</key-type>
         <value-type>java.lang.Object</value-type>
         <expiry>
             <ttl unit="seconds">120</ttl>
@@ -203,7 +203,7 @@
     </cache>
 
     <cache alias="default-update-timestamps-region">
-        <key-type>java.lang.Long</key-type>
+        <key-type>java.lang.Object</key-type>
         <value-type>java.lang.Object</value-type>
         <expiry>
             <ttl unit="seconds">120</ttl>

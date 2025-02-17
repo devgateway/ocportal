@@ -275,6 +275,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         getCspSettings().blocking().clear()
                 .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.UNSAFE_INLINE)
+                .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.UNSAFE_EVAL)
                 .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.STYLE_SRC, "https:")
                 .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.UNSAFE_INLINE)

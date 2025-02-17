@@ -203,7 +203,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         };
         deleteButton.add(new AttributeAppender("class", "btn btn-danger"));
         deleteButton.setDefaultFormProcessing(false);
-        deleteButton.setLabel(new StringResourceModel("confirmDeleteModal.delete", this));
+        deleteButton.setDefaultModel(new StringResourceModel("confirmDeleteModal.delete", this));
         modal.addButton(deleteButton);
 
         return modal;
@@ -375,6 +375,12 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     protected BootstrapCancelButton getCancelButton() {
         return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
             private static final long serialVersionUID = -249084359200507749L;
+
+            @Override
+            protected void onInitialize() {
+                this.setDefaultModel(new StringResourceModel("cancelButton", this, null));
+                super.onInitialize();
+            }
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
