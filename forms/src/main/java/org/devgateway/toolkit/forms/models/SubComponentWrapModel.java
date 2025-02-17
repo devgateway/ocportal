@@ -43,7 +43,7 @@ public class SubComponentWrapModel<T> implements IWrapModel<T> {
 
     @Override
     public void setObject(final T object) {
-        if (parent!=null) {
+        if (parent!=null &&object!=null) {
             parent.setDefaultModelObject(object);
         }
     }
