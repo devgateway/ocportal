@@ -30,6 +30,7 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.ColorPickerTe
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5CssReference;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
@@ -44,6 +45,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.pages.RedirectPage;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -245,49 +247,60 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     public BasePage(final PageParameters parameters) {
         super(parameters);
 
-        selectLanguage();
-
-        add(new HtmlTag("html"));
-
-        // Add javascript files.
-//        add(new HeaderResponseContainer("scripts-container", "scripts-bucket"));
+//        selectLanguage();
+//
+//        add(new HtmlTag("html"));
+//
+//        // Add javascript files.
         add(new HeaderResponseContainer("scripts-container", "scripts-bucket"));
-
+//        add(new HeaderResponseContainer("scripts-container", "scripts-bucket"));
+//
         feedbackPanel = createFeedbackPanel();
         add(feedbackPanel);
-
+//
+//
+//
+//        mainHeader = new Header("mainHeader");
+//        add(mainHeader);
+//
+//        navbar = newNavbar("navbar");
+//        mainHeader.add(navbar);
+//
+//
+////        mainHeader.setVisibilityAllowed(!ComponentUtil.isPrintMode());
+//
+//        // Add information about navbar position on mainHeader element.
+////        if (navbar.getPosition().equals(Navbar.Position.DEFAULT)) {
+////            mainHeader.add(new CssClassNameAppender("with-navbar-default"));
+////        } else {
+////            mainHeader.add(new CssClassNameAppender("with-" + navbar.getPosition().cssClassName()));
+////        }
+//
+//
+//        mainContainer = new TransparentWebMarkupContainer("mainContainer");
+//        add(mainContainer);
+//
+//        // Set the bootstrap container class.
+//        // @see https://getbootstrap.com/css/#grid
+//
+//
+        mainFooter = new Footer("mainFooter");
+        add(mainFooter);
+        mainFooter.setVisibilityAllowed(!ComponentUtil.isPrintMode());
+//
+        pageTitle = new Label("pageTitle", new ResourceModel("page.title"));
+        add(pageTitle);
         mainContainer = new TransparentWebMarkupContainer("mainContainer");
-        add(mainContainer);
-
-        // Set the bootstrap container class.
-        // @see https://getbootstrap.com/css/#grid
         if (fluidContainer()) {
             mainContainer.add(new CssClassNameAppender(CssClassNames.Grid.containerFluid));
         } else {
             mainContainer.add(new CssClassNameAppender(CssClassNames.Grid.container));
         }
+        add(mainContainer);
 
-        mainHeader = new Header("mainHeader", this.getPageParameters());
-        add(mainHeader);
+//
 
-        navbar = newNavbar("navbar");
-        mainHeader.add(navbar);
-        mainHeader.setVisibilityAllowed(!ComponentUtil.isPrintMode());
-
-        // Add information about navbar position on mainHeader element.
-        if (navbar.getPosition().equals(Navbar.Position.DEFAULT)) {
-            mainHeader.add(new CssClassNameAppender("with-navbar-default"));
-        } else {
-            mainHeader.add(new CssClassNameAppender("with-" + navbar.getPosition().cssClassName()));
-        }
-
-        mainFooter = new Footer("mainFooter");
-        add(mainFooter);
-        mainFooter.setVisibilityAllowed(!ComponentUtil.isPrintMode());
-
-        pageTitle = new Label("pageTitle", new ResourceModel("page.title"));
-        add(pageTitle);
-
+        add(new Header("mainHeader"));
         createGoogleAnalyticsTracker();
     }
 
@@ -344,431 +357,9 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         return languageDropDown;
     }
 
-    private NavbarButton<LogoutPage> newLogoutMenu() {
-        // logout menu
-        final NavbarButton<LogoutPage> logoutMenu =
-                new NavbarButton<LogoutPage>(LogoutPage.class, new StringResourceModel("navbar.logout", this, null));
-        logoutMenu.setIconType(FontAwesome5IconType.sign_out_alt_s);
-        MetaDataRoleAuthorizationStrategy.authorize(logoutMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
 
-        return logoutMenu;
-    }
 
-    private NavbarButton<EditUserPage> newAccountMenu() {
-        final PageParameters pageParametersForAccountPage = new PageParameters();
-        final Person person = FormSecurityUtil.getCurrentAuthenticatedPerson();
 
-        // account menu
-        Model<String> account = null;
-        if (person != null) {
-            account = Model.of(person.getFirstName());
-            pageParametersForAccountPage.add(WebConstants.PARAM_ID, person.getId());
-        }
-
-        final NavbarButton<EditUserPage> accountMenu =
-                new NavbarButton<>(EditUserPage.class, pageParametersForAccountPage, account);
-        accountMenu.setIconType(FontAwesome5IconType.user_r);
-        MetaDataRoleAuthorizationStrategy.authorize(accountMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-
-        return accountMenu;
-    }
-
-    private NavbarButton<Homepage> newHomeMenu() {
-        // home
-        final NavbarButton<Homepage> homeMenu = new NavbarButton<>(Homepage.class,
-                new StringResourceModel("navbar.home", this));
-        homeMenu.setIconType(FontAwesome5IconType.home_s);
-        MetaDataRoleAuthorizationStrategy.authorize(homeMenu, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        return homeMenu;
-    }
-
-
-    private <L extends AbstractBaseListPage<?>> BootstrapBookmarkablePageLink<L>
-    createListMenu(Class<L> clazz, String resourceKey, IconType iconType) {
-        return new MenuBookmarkablePageLink<L>(clazz, null,
-                new StringResourceModel(resourceKey, this, null))
-                .setIconType(iconType);
-    }
-
-    private <L extends AbstractBaseListPage<?>> BootstrapBookmarkablePageLink<L>
-    createAddListMenu(List<AbstractLink> list, Class<L> clazz, String resourceKey, IconType iconType) {
-
-        if (fmService.isFeatureVisible(resourceKey)) {
-            BootstrapBookmarkablePageLink<L> menu = new MenuBookmarkablePageLink<L>(clazz, null,
-                    new StringResourceModel(resourceKey, this, null))
-                    .setIconType(iconType);
-            list.add(menu);
-            return menu;
-        }
-        return null;
-    }
-
-    private <L extends AbstractBaseListPage<?>> void
-    createAddFmListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
-                              IconType iconType) {
-        if (fmService.isFeatureVisible(resourceKey)) {
-            createAddListMenuWithRole(list, role, clazz, resourceKey, iconType);
-        }
-    }
-
-    private <L extends AbstractBaseListPage<?>> void
-    createAddListMenuWithRole(List<AbstractLink> list, String role, Class<L> clazz, String resourceKey,
-                              IconType iconType) {
-        BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
-        if (menu != null) {
-            MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
-        }
-    }
-
-    private <L extends AbstractBaseListPage<?>> void
-    createAddListMenuWithRoles(List<AbstractLink> list, Collection<String> roles, Class<L> clazz, String resourceKey,
-                               IconType iconType) {
-        BootstrapBookmarkablePageLink<L> menu = createAddListMenu(list, clazz, resourceKey, iconType);
-        for (String role : roles) {
-            MetaDataRoleAuthorizationStrategy.authorize(menu, Component.RENDER, role);
-        }
-    }
-
-
-
-    private NavbarDropDownButton newMetadataMenu() {
-        // metadata menu
-        final NavbarDropDownButton metadataMenu = new NavbarDropDownButton(
-                new StringResourceModel("navbar.metadata", this, null)) {
-
-            @Override
-            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
-                final List<AbstractLink> list = new ArrayList<>();
-
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListDepartmentPage.class,
-                        "navbar.departments", FontAwesome5IconType.piggy_bank_s
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListProcurementMethodRationalePage.class,
-                        "navbar.procurementMethodRationale", FontAwesome5IconType.bug_s
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearBudgetPage.class,
-                        "navbar.fiscalYearBudget", FontAwesome5IconType.money_bill_alt_r
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListFiscalYearPage.class,
-                        "navbar.fiscalyear", FontAwesome5IconType.calendar_times_r
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListTargetGroupPage.class,
-                        "navbar.targetgroup", FontAwesome5IconType.object_group_r
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListContractDocumentTypePage.class,
-                        "navbar.ContractDocumentType", FontAwesome5IconType.file_r
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListItemPage.class,
-                        "navbar.items", FontAwesome5IconType.list_s
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListChargeAccountPage.class,
-                        "navbar.chargeaccounts", FontAwesome5IconType.money_bill_s
-                );
-
-                createAddListMenuWithRole(list, ROLE_PROCUREMENT_USER, ListSupplierPage.class,
-                        "navbar.suppliers", FontAwesome5IconType.list_s
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListStaffPage.class,
-                        "navbar.stafflist", FontAwesome5IconType.user_times_s
-                );
-
-                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListPMCStaffPage.class,
-                        "navbar.pmcStaffList", FontAwesome5IconType.user_times_s
-                );
-
-                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListDesignationPage.class,
-                        "navbar.designations", FontAwesome5IconType.certificate_s
-                );
-
-                createAddListMenuWithRoles(list, PMC_METADATA_ROLES, ListProjectClosureHandoverPage.class,
-                        "navbar.projectClosureHandover", FontAwesome5IconType.list_s
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListProcuringEntityPage.class,
-                        "navbar.procuringentitylist", FontAwesome5IconType.list_s
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListSubcountyPage.class,
-                        "navbar.subcountylist", FontAwesome5IconType.flag_r
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListWardPage.class,
-                        "navbar.wardlist", FontAwesome5IconType.flag_r
-                );
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListSubWardPage.class,
-                        "navbar.subwardlist", FontAwesome5IconType.flag_r
-                );
-
-
-                createAddListMenuWithRole(list, ROLE_ADMIN, ListUnitPage.class,
-                        "navbar.unitlist", FontAwesome5IconType.list_s
-                );
-
-                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationSchemaPage.class,
-                        "navbar.prequalificationSchema", FontAwesome5IconType.list_s
-                );
-
-                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListPrequalificationYearRangePage.class,
-                        "navbar.prequalificationYearRange", FontAwesome5IconType.list_s
-                );
-
-                createAddFmListMenuWithRole(list, ROLE_USER, ListPrequalifiedSupplierPage.class,
-                        "navbar.prequalifiedSupplierPage", FontAwesome5IconType.list_s
-                );
-
-
-                return list;
-            }
-        };
-
-        metadataMenu.setIconType(FontAwesome5IconType.code_s);
-        MetaDataRoleAuthorizationStrategy.authorize(metadataMenu, Component.RENDER, ROLE_USER);
-        return metadataMenu;
-    }
-
-    private NavbarDropDownButton newImplementationFormMenu() {
-        // form menu
-        final NavbarDropDownButton formMenu = new NavbarDropDownButton(
-                new StringResourceModel("navbar.implementationForms", this, null)) {
-
-            @Override
-            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
-                final List<AbstractLink> list = new ArrayList<>();
-
-                addFormMenuItem(list, ListAdministratorReportPage.class,
-                        "navbar.administratorReport", "navbar.administratorReport");
-
-                addFormMenuItem(list, ListInspectionReportPage.class,
-                        "navbar.inspectionReport", "navbar.inspectionReport");
-
-                addFormMenuItem(list, ListPMCReportPage.class,
-                        "navbar.pmcReport", "navbar.pmcReport");
-
-                addFormMenuItem(list, ListMEReportPage.class,
-                        "navbar.meReport", "navbar.meReport");
-
-                addFormMenuItem(list, ListPaymentVoucherPage.class,
-                        "navbar.paymentVoucher", "navbar.paymentVoucher");
-
-                return list;
-            }
-        };
-
-        formMenu.setIconType(FontAwesome5IconType.wpforms);
-        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
-
-        return formMenu;
-    }
-
-    private NavbarDropDownButton newProcurementFormMenu() {
-        // form menu
-        final NavbarDropDownButton formMenu = new NavbarDropDownButton(
-                new StringResourceModel("navbar.forms", this, null)) {
-
-            @Override
-            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
-                final List<AbstractLink> list = new ArrayList<>();
-
-                addFormMenuItem(list, ListProcurementPlanPage.class,
-                        "navbar.procurementPlan", "navbar.procurementPlan");
-
-                addFormMenuItem(list, ListCabinetPaperPage.class,
-                        "navbar.cabinetpapers", "navbar.cabinetPapers");
-
-                addFormMenuItem(list, ListProjectPage.class,
-                        "navbar.project", "navbar.project");
-
-                addFormMenuItem(list, ListPurchaseRequisitionGroupPage.class,
-                        "navbar.tenderProcess", "navbar.tenderProcess");
-
-                addFormMenuItem(list, ListTenderPage.class,
-                        "navbar.tenderdocument", "navbar.tenderDocument");
-
-                addFormMenuItem(list, ListTenderQuotationEvaluationPage.class,
-                        "navbar.tenderquotationevaluation", "navbar.tenderQuotationEvaluation");
-
-                addFormMenuItem(list, ListProfessionalOpinionPage.class,
-                        "navbar.professionalopinion", "navbar.professionalOpinion");
-
-                addFormMenuItem(list, ListAwardNotificationPage.class,
-                        "navbar.awardnotification", "navbar.awardNotification");
-
-                addFormMenuItem(list, ListAwardAcceptancePage.class,
-                        "navbar.awardacceptance", "navbar.awardAcceptance");
-
-                addFormMenuItem(list, ListContractPage.class,
-                        "navbar.contract", "navbar.contract");
-
-                return list;
-            }
-        };
-
-        formMenu.setIconType(FontAwesome5IconType.wpforms);
-        MetaDataRoleAuthorizationStrategy.authorize(formMenu, Component.RENDER, ROLE_USER);
-
-        return formMenu;
-    }
-
-    private <T extends BasePage> void addFormMenuItem(List<AbstractLink> list, Class<T> pageClass, String resourceKey,
-            String featureName) {
-        StringResourceModel label = new StringResourceModel(resourceKey, this);
-        MenuBookmarkablePageLink<T> link = new MenuBookmarkablePageLink<>(pageClass, label);
-        link.setIconType(FontAwesome5IconType.file_code_r);
-
-        if (fmService.isFeatureVisible(featureName)) {
-            list.add(link);
-        }
-    }
-
-    private NavbarDropDownButton newAdminMenu() {
-        // admin menu
-        final NavbarDropDownButton adminMenu = new NavbarDropDownButton(
-                new StringResourceModel("navbar.admin", this, null)) {
-            @Override
-            protected List<AbstractLink> newSubMenuButtons(final String arg0) {
-                final List<AbstractLink> list = new ArrayList<>();
-                BootstrapBookmarkablePageLink<ListUserPage> users =
-                        new MenuBookmarkablePageLink<ListUserPage>(ListUserPage.class, null,
-                                new StringResourceModel("navbar.users", this, null))
-                                .setIconType(FontAwesome5IconType.users_s);
-                FormSecurityUtil.authorizeRender(users, ROLE_PMC_ADMIN, ROLE_ADMIN);
-                list.add(users);
-
-                /*
-                list.add(new MenuBookmarkablePageLink<ListTestFormPage>(ListTestFormPage.class, null,
-                        new StringResourceModel("navbar.testcomponents", this, null))
-                        .setIconType(FontAwesomeIconType.android));
-
-                list.add(new MenuDivider());
-
-                final BootstrapBookmarkablePageLink swagger = new MenuBookmarkablePageLink<Void>(
-                        SwaggerPage.class,
-                        new StringResourceModel("navbar.swagger", BasePage.this, null))
-                        .setIconType(FontAwesomeIconType.code);
-                MetaDataRoleAuthorizationStrategy.authorize(swagger, Component.RENDER,
-                        SecurityConstants.Roles.ROLE_ADMIN);
-                list.add(swagger);
-
-                final BootstrapBookmarkablePageLink javamelody = new MenuBookmarkablePageLink<Void>(
-                        JavamelodyPage.class, new StringResourceModel("navbar.javamelody",
-                        BasePage.this, null)).setIconType(FontAwesomeIconType.eye);
-                MetaDataRoleAuthorizationStrategy.authorize(javamelody, Component.RENDER,
-                        SecurityConstants.Roles.ROLE_ADMIN);
-                list.add(javamelody);
-
-                list.add(new MenuBookmarkablePageLink<SpringEndpointsPage>(SpringEndpointsPage.class, null,
-                        new StringResourceModel("navbar.springendpoints", this, null))
-                        .setIconType(FontAwesomeIconType.anchor));
-
-                list.add(new MenuBookmarkablePageLink<JminixRedirectPage>(JminixRedirectPage.class, null,
-                        new StringResourceModel("navbar.jminix", this, null))
-                        .setIconType(FontAwesomeIconType.bug));
-
-                final MenuBookmarkablePageLink<HalBrowserHALRedirectPage> halBrowserLink =
-                        new MenuBookmarkablePageLink<HALRedirectPage>(HALRedirectPage.class, null,
-                                new StringResourceModel("navbar.halbrowser", this, null)) {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            protected void onComponentTag(final ComponentTag tag) {
-                                super.onComponentTag(tag);
-                                tag.put("target", "_blank");
-                            }
-                        };
-                halBrowserLink.setIconType(FontAwesomeIconType.rss).setEnabled(true);
-
-                list.add(halBrowserLink);
-
-                final MenuBookmarkablePageLink<UIRedirectPage> uiBrowserLink =
-                        new MenuBookmarkablePageLink<UIRedirectPage>(
-                                UIRedirectPage.class, null, new StringResourceModel("navbar.ui", this, null)) {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            protected void onComponentTag(final ComponentTag tag) {
-                                super.onComponentTag(tag);
-                                tag.put("target", "_blank");
-                            }
-                        };
-                uiBrowserLink.setIconType(FontAwesomeIconType.rocket).setEnabled(true);
-                list.add(uiBrowserLink);
-                */
-                list.add(new MenuDivider());
-
-                BootstrapBookmarkablePageLink<Void> adminSettings = new MenuBookmarkablePageLink<Void>(
-                        EditAdminSettingsPage.class,
-                        new StringResourceModel("navbar.adminSettings", BasePage.this, null)
-                ).setIconType(FontAwesome5IconType.briefcase_s);
-                MetaDataRoleAuthorizationStrategy.authorize(adminSettings, Component.RENDER, ROLE_ADMIN);
-                list.add(adminSettings);
-
-                BootstrapBookmarkablePageLink<ListAlertPage> feedbackMessages
-                        = new MenuBookmarkablePageLink<ListAlertPage>(ListFeedbackMessagePage.class,
-                        new StringResourceModel("navbar.feedbackMessages", BasePage.this, null)
-                ).setIconType(FontAwesome5IconType.exclamation_s);
-                MetaDataRoleAuthorizationStrategy.authorize(feedbackMessages, Component.RENDER, ROLE_ADMIN);
-                list.add(feedbackMessages);
-
-
-                BootstrapBookmarkablePageLink<ListAlertPage> navbarAlerts = new MenuBookmarkablePageLink<ListAlertPage>(
-                        ListAlertPage.class,
-                        new StringResourceModel("navbar.alerts", BasePage.this, null)
-                ).setIconType(FontAwesome5IconType.envelope_r);
-                MetaDataRoleAuthorizationStrategy.authorize(navbarAlerts, Component.RENDER, ROLE_ADMIN);
-                list.add(navbarAlerts);
-
-                createAddFmListMenuWithRole(list, ROLE_ADMIN, ListFlagHistoryPage.class,
-                        "navbar.redFlagHistory", FontAwesome5IconType.flag_r);
-
-                BootstrapBookmarkablePageLink<ListAlertsStatisticsPage> alertsStatistics =
-                        new MenuBookmarkablePageLink<ListAlertsStatisticsPage>(ListAlertsStatisticsPage.class,
-                                new StringResourceModel("navbar.alertsStatistics", BasePage.this, null)
-                        ).setIconType(FontAwesome5IconType.reply_all_s);
-                MetaDataRoleAuthorizationStrategy.authorize(alertsStatistics, Component.RENDER, ROLE_ADMIN);
-                list.add(alertsStatistics);
-
-                BootstrapBookmarkablePageLink<AllWorkPage> allWork =
-                        new MenuBookmarkablePageLink<AllWorkPage>(AllWorkPage.class,
-                                new StringResourceModel("navbar.allWork", BasePage.this, null)
-                        ).setIconType(FontAwesome5IconType.briefcase_s);
-                MetaDataRoleAuthorizationStrategy.authorize(allWork, Component.RENDER, ROLE_ADMIN);
-                list.add(allWork);
-
-                if (WebApplication.get().usesDevelopmentConfig()) {
-                    BootstrapBookmarkablePageLink<ListFeaturesPage> features =
-                            new MenuBookmarkablePageLink<ListFeaturesPage>(ListFeaturesPage.class,
-                                    new StringResourceModel("navbar.features", BasePage.this, null)
-                            ).setIconType(FontAwesome5IconType.list_s);
-                    MetaDataRoleAuthorizationStrategy.authorize(features, Component.RENDER, ROLE_ADMIN);
-                    list.add(features);
-                }
-
-                return list;
-            }
-        };
-
-        adminMenu.setIconType(FontAwesome5IconType.cog_s);
-        FormSecurityUtil.authorizeRender(adminMenu, ROLE_ADMIN, ROLE_PMC_ADMIN);
-        return adminMenu;
-    }
-
-    private NavbarButton<MyWorkPage> newMyWorkMenu() {
-        NavbarButton<MyWorkPage> button = new NavbarButton<>(MyWorkPage.class,
-                new StringResourceModel("navbar.myWork", this, null));
-        button.setIconType(FontAwesome5IconType.briefcase_s);
-        MetaDataRoleAuthorizationStrategy.authorize(button, Component.RENDER, SecurityConstants.Roles.ROLE_USER);
-        return button;
-    }
 
     /**
      * creates a new {@link Navbar} instance
@@ -776,54 +367,53 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
      * @param markupId The components markup id.
      * @return a new {@link Navbar} instance
      */
-    protected Navbar newNavbar(final String markupId) {
-        final Navbar navbar = new Navbar(markupId);
-
-        /**
-         * Make sure to update the BaseStyles when the navbar position changes.
-         *
-         * @see org.devgateway.toolkit.forms.wicket.styles.BaseStyles
-         */
-        navbar.setPosition(Navbar.Position.TOP);
-        navbar.setInverted(true);
-
-        // add brand image
-        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
-                new StringResourceModel("brandImageAltText", this, null));
-        navbar.setBrandName(new StringResourceModel("brandName", this, null));
-
-        navbar.addComponents(
-                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newProcurementFormMenu(),
-                        newImplementationFormMenu(),
-                        newMetadataMenu(), newAdminMenu(), newMyWorkMenu(), newAccountMenu(), newLogoutMenu()
-                ));
-
-        // navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT, newLanguageMenu()));
-
-        return navbar;
-    }
-
-    public void addPrintWindowJs(final IHeaderResponse response) {
-        if (ComponentUtil.isPrintMode()) {
-            response.render(OnLoadHeaderItem.forScript("window.print();"));
-        }
-    }
+//    protected Navbar newNavbar(final String markupId) {
+//        final Navbar navbar = new Navbar(markupId);
+//
+//
+//        /**
+//         * Make sure to update the BaseStyles when the navbar position changes.
+//         *
+//         * @see org.devgateway.toolkit.forms.wicket.styles.BaseStyles
+//         */
+//        navbar.setPosition(Navbar.Position.TOP);
+//        navbar.setInverted(true);
+//
+//        // add brand image
+//        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
+//                new StringResourceModel("brandImageAltText", this, null));
+//        navbar.setBrandName(new StringResourceModel("brandName", this, null));
+//
+//        navbar.addComponents(
+//                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newProcurementFormMenu(),
+//                        newImplementationFormMenu(),
+//                        newMetadataMenu(), newAdminMenu(), newMyWorkMenu(), newAccountMenu(), newLogoutMenu()
+//                ));
+//
+//        return navbar;
+//    }
+//
+//    public void addPrintWindowJs(final IHeaderResponse response) {
+//        if (ComponentUtil.isPrintMode()) {
+//            response.render(OnLoadHeaderItem.forScript("window.print();"));
+//        }
+//    }
 
     @Override
     public void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
 //        addPrintWindowJs(response);
-        response.render(CssHeaderItem.forReference(
-                new CssResourceReference(
-                        ColorPickerTextFieldCssReference.class,
-                        "css/bootstrap-colorpicker.css"
-                )
-        ));
+//        response.render(CssHeaderItem.forReference(
+//                new CssResourceReference(
+//                        ColorPickerTextFieldCssReference.class,
+//                        "css/bootstrap-colorpicker.css"
+//                )
+//        ));
 
         // Load Styles.  Use static instances where possible for efficiency.
+//        response.render(CssHeaderItem.forReference(BootstrapCssReference.instance()));
+//        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
         response.render(CssHeaderItem.forReference(BaseStyles.INSTANCE));
-        response.render(CssHeaderItem.forReference(BootstrapCssReference.instance()));
-        response.render(CssHeaderItem.forReference(FontAwesome5CssReference.instance()));
 
         // Load Scripts.  Respond.js is likely deprecated.  Consider if still needed.
         // If needed, and you have it as a static resource:
@@ -836,19 +426,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         response.render(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV3()));
 
         // File upload improvement script.  Use PackageResourceReference for better management.
-        ResourceReference fileuploadJsRef =
-                new PackageResourceReference(BaseStyles.class, "assets/js/fileupload.js");
-        response.render(JavaScriptHeaderItem.forReference(fileuploadJsRef));
+//        ResourceReference fileuploadJsRef =
+//                new PackageResourceReference(BaseStyles.class, "assets/js/fileupload.js");
+//        response.render(JavaScriptHeaderItem.forReference(fileuploadJsRef));
 
-
-        // Example of adding inline JavaScript (use sparingly, prefer files)
-        // response.render(JavaScriptHeaderItem.forString("var myVar = 'Hello';"));
-        response.render(JavaScriptHeaderItem.forReference(
-                new JavaScriptResourceReference(
-                        ColorPickerTextFieldCssReference.class,
-                        "js/bootstrap-colorpicker.js"
-                )
-        ));
     }
 
 
@@ -859,3 +440,5 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 //        redirectForInvisibleFm();
 //    }
 }
+
+

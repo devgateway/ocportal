@@ -129,8 +129,7 @@ public class WebSecurityConfig {
                                 "/favicon.ico", "/error/**",
                                 "/forgotPassword/**", "/verifyEmail/**",
                                 "/unsubscribeEmail/**", "/resources/**",
-                                "/portal/**", "/ui/**",
-                                "/img/**", "/css*/**", "/js*/**", "/assets*/**"
+                                "/ui/**", "/img/**", "/assets*/**"
                         ).permitAll()
                         .requestMatchers("/api/user/forgotPassword").permitAll()
                         .requestMatchers(allowedApiEndpoints).permitAll()

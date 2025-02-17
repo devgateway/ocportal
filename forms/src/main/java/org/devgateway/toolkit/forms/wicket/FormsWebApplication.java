@@ -13,29 +13,20 @@ package org.devgateway.toolkit.forms.wicket;
 
 import com.google.javascript.jscomp.CompilationLevel;
 import de.agilecoders.wicket.core.Bootstrap;
-import de.agilecoders.wicket.core.markup.html.RenderJavaScriptToFooterHeaderResponseDecorator;
 import de.agilecoders.wicket.core.request.resource.caching.version.Adler32ResourceVersion;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
-import de.agilecoders.wicket.core.settings.ThemeProvider;
 import de.agilecoders.wicket.extensions.javascript.GoogleClosureJavaScriptCompressor;
-import de.agilecoders.wicket.extensions.javascript.YuiCssCompressor;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteConfig;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.editor.SummernoteStoredImageResourceReference;
 import de.agilecoders.wicket.less.BootstrapLess;
-import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
-import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
 import de.agilecoders.wicket.webjars.WicketWebjars;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceUnit;
 import liquibase.integration.spring.SpringLiquibase;
-import nl.dries.wicket.hibernate.dozer.DozerRequestCycleListener;
 import nl.dries.wicket.hibernate.dozer.SessionFinderHolder;
 import org.apache.wicket.Application;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
@@ -47,11 +38,9 @@ import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.AccessDeniedPage;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
-import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.Folder;
@@ -64,6 +53,7 @@ import org.devgateway.toolkit.forms.wicket.page.Homepage;
 import org.devgateway.toolkit.forms.wicket.page.lists.fm.ListFeatureFilePage;
 import org.devgateway.toolkit.forms.wicket.page.user.LoginPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
+import org.devgateway.toolkit.forms.wicket.styles.CustomCssCompressor;
 import org.devgateway.toolkit.persistence.fm.DgFmProperties;
 import org.devgateway.toolkit.persistence.spring.SpringLiquibaseRunner;
 import org.slf4j.Logger;
@@ -71,16 +61,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.select2.ApplicationSettings;
+
 import java.math.BigDecimal;
 /**
  * The web application class also serves as spring boot starting point by using
@@ -207,7 +195,7 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
         if (usesDeploymentConfig()) {
             getResourceSettings().setJavaScriptCompressor(
                     new GoogleClosureJavaScriptCompressor(CompilationLevel.SIMPLE_OPTIMIZATIONS));
-            getResourceSettings().setCssCompressor(new YuiCssCompressor());
+            getResourceSettings().setCssCompressor(new CustomCssCompressor());
             getResourceSettings().setUseMinifiedResources(true);
 
             getMarkupSettings().setStripComments(true);
@@ -294,10 +282,14 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
                 .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.UNSAFE_INLINE)
                 .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.STYLE_SRC, "https:")
                 .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.UNSAFE_INLINE)
                 .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.IMG_SRC, "data:")
+                .add(CSPDirective.IMG_SRC, "https:")
                 .add(CSPDirective.CONNECT_SRC, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.FONT_SRC, "https:")
                 .add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)

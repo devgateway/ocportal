@@ -21,7 +21,7 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
+//import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -42,22 +42,7 @@ public class GenericPersistable extends AbstractPersistable<Long> implements Ser
      * Custom serialization for id is needed since Spring Data JPA 2.x AbstractPersistable no longer implements
      * Serializable.
      */
-    private void writeObject(final ObjectOutputStream out) throws IOException {
-        out.writeObject((this instanceof Proxied) ? null : getId());
-        out.defaultWriteObject();
-    }
 
-    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Long id = (Long) in.readObject();
-
-        // If this entity was proxied by dozer-hibernate-model then do not restore the id since it will raise a
-        // NullPointerException. The other properties were not stored anyway.
-        if (!(this instanceof Proxied)) {
-            setId(id);
-        }
-
-        in.defaultReadObject();
-    }
 
     public Integer getVersion() {
         return version;

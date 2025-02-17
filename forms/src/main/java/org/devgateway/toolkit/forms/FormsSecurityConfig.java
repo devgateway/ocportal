@@ -96,6 +96,7 @@ public class FormsSecurityConfig extends WebSecurityConfig {
                                 "/wicket/resource/**/*.gif",
                                 "/resources/public/**"
                         ).permitAll()
+                        .requestMatchers("/wicket/bookmarkable/**").authenticated()
                 )
                 .formLogin(form ->
                         form.loginPage("/login").permitAll()

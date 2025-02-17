@@ -1,8 +1,6 @@
 import React from 'react';
 
 // Create a context to require images from the specified directory
-const images = require.context('./resources', false, /\.(png|jpe?g|svg)$/);
-
 const DynamicLogo = () => {
   // Get the logo image name from the environment variable
   const logoImage = process.env.REACT_APP_LOGO_IMAGE_NAME;
@@ -11,8 +9,10 @@ const DynamicLogo = () => {
   let logoSrc = ''; // Initialize logoSrc to an empty string
   if (logoImage) {
     try {
-      logoSrc = images(`./${logoImage}`);
-      console.log('Image is: ', logoSrc);
+      const imageModule = `./resources/${logoImage}`;
+      console.log('Module loaded', imageModule);
+      logoSrc = imageModule.default;
+      console.log('Ret Image is: ', logoSrc);
     } catch (error) {
       console.error(`Image not found: ${logoImage}`, error);
     }
@@ -23,7 +23,7 @@ const DynamicLogo = () => {
   return (
     <div>
       {logoSrc ? (
-        <img src={logoSrc} alt="@ORG_NAME@" />
+        <img src={logoSrc} alt={process.env.ORG_NAME} />
       ) : (
         <p>Logo not found</p>
       )}

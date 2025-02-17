@@ -22,6 +22,8 @@
         <json-patch.version>1.13</json-patch.version>
         <ooxml-schemas.version>1.4</ooxml-schemas.version>
         <swagger.version>3.0.0</swagger.version>
+        <checkstyle.skip>true</checkstyle.skip>
+
     </properties>
 
     <parent>

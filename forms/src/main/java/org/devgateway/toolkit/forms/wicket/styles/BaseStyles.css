@@ -11,14 +11,11 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 50px !important;
-
     /*
      * Always show page scroll-bar to prevent side-movement when hovering over items that are extending their height and
      * suddenly the content doesn't fit above the fold.
      */
     overflow-y: scroll;
-    font-size: 14px;
-
 }
 
 .mainHeader.with-navbar-default .navbar-default {
@@ -31,117 +28,194 @@ body {
     border-radius: 0;
 }
 
-.navbar-default {
-    height: 80px;
-    padding-top: 15px;
-    padding-left: 1em;
-    padding-right: 1em;
-    align-items: normal !important;
-}
-
-.navbar-border{
-    border: 1px solid #d4d2d2;
-}
-
-.well{
-    min-height: 20px;
-    padding: 19px;
-    margin-bottom: 20px;
-    background-color: #f5f5f5;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
-.mainHeader.with-fixed-top {
+.mainHeader.with-navbar-fixed-top {
     /*
      * The mainHeader doesn't have any height when the navbar is fixed, and other elements are behind it.
      *
      * HACK: The default bootstrap navbar is 50px height and has a bottom margin of 20px for the default font size.
      *
-     * TODO: Convert to LESS and use Bootstrap variables.
      * @see: Navbar.Position.TOP
      * @see: bootstrap::navbar.less
      */
-    min-height: 80px;
-    margin-bottom: 32px;
-}
-
-.rebootAlert {
+    min-height: 50px;
+    margin-bottom: 15px;
+    height: 60px;
+    overflow: visible;
     position: fixed;
-    top: 50px;
-    padding: 6px;
-    text-align: center;
+    top: 0;
+    z-index: 1001;
+}
+
+@media only screen and (max-width: 767px){
+    .mainHeader.with-navbar-fixed-top{
+        position: relative;
+    }
+}
+
+.mainHeader .navbar {
+    background: #223a49;
+    box-shadow: none;
+    padding-bottom: 12px;
+    padding-top: 12px;
+}
+
+.mainHeader .navbar.navbar-inverse {
+    border-color: #223a49;
+}
+@media only screen and (max-width: 767px){
+    .mainHeader .navbar.navbar-inverse{
+        position: relative;
+        width: 100%;
+    }
+}
+
+.mainHeader .navbar.navbar-inverse .navbar-nav > .active > a {
+    background-color: transparent;
+}
+
+.mainHeader .navbar .container {
     width: 100%;
-    border-width: 1px;
-    border-style: solid;
-    z-index: 1029;
 }
 
-.navbar-brand {
-    padding: 0px;
+@media (min-width: 768px){
+    .navbar-right {
+        float: right !important;
+        margin-right: -5px;
+    }
 }
 
-.navbar-brand > img {
-    height: 100%;
+@media (max-width: 1130px){
+    .navbar-right {
+        width: 65%;
+    }
 }
 
-.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-    color: #555;
-    background-color: #e7e7e7;
-}
 .mainContainer {
     /*
      * The main page content should have some height.
      */
     min-height: 20em;
-    padding-bottom: 40px;
+    padding-bottom: 15px;
+}
+@media (min-width: 768px) {
+    .mainContainer {
+        margin-top: 75px;
+    }
 }
 
 .mainFooter {
     /*
      * Add some spacing around the footer.
      */
-    margin-top: -20px;
-    padding: 20px 0;
-    min-height: 80px;
+    margin-top: 2em;
     position: absolute;
     bottom: 0;
     width: 100%;
-    /* Set the fixed height of the footer here */
-    height: 50px;
-    background-color: #175372;
+    background-color: #095a14;
 }
 
+.mainFooter a{
+    color: #ffffff;
+}
+.mainFooter a:hover{
+    color: #eeeeee;
+}
 .mainFooter .text-muted {
-    color: #acdef7;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #eeeeee;
 }
 
-.required-field::before {
-    content: "*";
-    color: red;
-    margin-right: 4px;
+.navbar-header .navbar-brand {
+    /*height: auto;*/
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+@media (min-width: 768px){
+    .navbar-header{
+        width: 25%;
+    }
+}
+
+.navbar-header .navbar-brand img {
+    display: block;
+    float: left;
+    width: 45px;
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.navbar-header .navbar-brand span {
+    color: #fff;
+    display: block;
+    font-size: 14px;
     font-weight: 700;
+    left: 70px;
+    line-height: 135%;
+    margin-top: 10px;
+    padding-left: 0;
+    width: 450px;
+    margin-left: 10px;
 }
 
-label{
-    font-weight: 600 !important;
+@media (max-width: 768px){
+    .navbar-header .navbar-brand img{
+        margin-top: -10px;
+    }
+    .navbar-header .navbar-brand span{
+        margin-top: -5px;
+        margin-left: 10px;
+    }
 }
 
-.pull-right{
-    float: right !important;
+@media (max-width: 412px){
+    .navbar-header .navbar-brand img{
+        margin-top: -75px;
+    }
 }
+
+h1.pageTitle {
+    border-bottom: 1px solid #eeeeee;
+    font-size: 23px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    text-align:center
+}
+
+.navbar-inverse .navbar-nav > li > a{
+    font-size: 14px;
+    padding-left: 9px;
+    padding-right: 9px;
+}
+
+@media (max-width: 1130px){
+    .navbar-inverse .navbar-nav > li > a{
+        font-size: 12px;
+        padding-top:5px;
+        padding-bottom: 0;
+    }
+}
+
 /* file upload
 -------------------------------------------------- */
 .file-preview.loading {
     background: transparent url('./assets/img/ajax-loader.gif') no-repeat scroll center center content-box !important;
 }
 
-.revision-data-div {
-    width: 50em;
-    overflow-x: auto;
-    white-space: nowrap;
+/* List View Styles
+-------------------------------------------------- */
+button.list-edit-button {
+    margin-bottom: 5px;
+    min-width: 70px;
+}
+
+button.list-delete-button {
+    margin-bottom: 5px;
+    min-width: 70px;
 }
 
 /* Edit Entity Styles
@@ -155,14 +229,13 @@ label{
 .autosave {
     display: block;
     margin-bottom: 12px;
-    color: #ADADAD;
 }
 
 hr.edit-separator {
     margin: 0;
     padding: 0;
     border: 0;
-    height: 1px;
+    height: 2px;
     background-image: linear-gradient(to right, rgba(220, 220, 220, 0), rgba(220, 220, 220, 0.75), rgba(220, 220, 220, 0));
 }
 
@@ -171,28 +244,15 @@ hr.edit-separator {
     margin-bottom: 0px;
 }
 
-.sleep-mode .sleep-value {
-    padding-top: 5px;
-    font-weight: bold;
-    color: #00589e;
-    font-size: 0.9em;
-}
-
-.sleep-mode {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.sleep-label {
-    font-weight: bold;
-}
-
-/* List View Styles
--------------------------------------------------- */
 .section-bordered {
     margin-top: 20px;
     margin-bottom: 20px;
-    border-bottom: 1px dashed #00589e;
+    border-bottom: 1px solid #eeeeee;
+}
+
+
+.red-icon {
+    color: red;
 }
 
 .pane {
@@ -208,6 +268,31 @@ hr.edit-separator {
     font-weight: bold;
     color: #00589e;
     float: left;
+}
+.pane.title h4 .fa {
+    color: #000000;
+}
+.panel-body .pane.title h4{
+    margin-left: 20px;
+}
+.panel-body .btn.btn-info{
+    margin-left: 20px;
+    margin-bottom: 5px;
+    margin-top: -5px;
+}
+.panel-body input.form-control,
+.panel-body input[type=text]{
+    font-size: 14px;
+}
+.panel-body .panel.panel-info{
+    margin-bottom: 10px;
+}
+.panel-body .pane .show-all{
+    margin-right: 20px;
+}
+.panel-body .panel-group{
+    margin-left: 2%;
+    width: 96%;
 }
 
 .pane .count {
@@ -230,14 +315,19 @@ hr.edit-separator {
     font-size: 12px;
     font-style: italic;
     font-weight: bold;
+    line-height: 120%;
+    margin-right: 10px;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+@media (max-width: 1024px) {
+    .accordion-toggle .show-all{
+        margin-right: 30px;
+    }
 }
 
 .show-all:hover {
     color: #66b558;
-}
-
-.select2.select2-container {
-    width: 100% !important;
 }
 
 .list-wrapper .accordion-toggle .form-group {
@@ -254,165 +344,348 @@ hr.edit-separator {
     padding-left: 10px;
 }
 
+.plan-items .list-wrapper .list-number {
+    padding: 30px;
+    background-color: #e4e4e4;
+}
+
 .section-title {
     color: #2e6da4;
     font-size: 12pt;
     font-weight: bold !important;
+    margin: 25px 0 15px 0;
 }
 
-/*  Pageable table
+.section-title .fa {
+    color: #000000;
+}
+
+.sleep-mode {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.department .sleep-mode .sleep-value {
+    padding-top: 5px;
+    font-weight: bold;
+    color: #00589e;
+    font-size: 18px;
+}
+
+@media (min-width: 768px) {
+    .plan-items .form-inline .control-label {
+        margin-bottom: 5px;
+    }
+}
+
+.form-wrapper label {
+    color: #1e6491;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-wrapper [type=text].form-control,
+.form-wrapper input.form-control,
+.form-wrapper input[type=text] {
+    border: 1px solid #eeeeee;
+    box-shadow: none;
+    padding-left: 10px;
+}
+
+.form-wrapper textarea[disabled],
+.form-wrapper textarea.form-control[disabled] {
+    padding: 10px;
+}
+
+.form-group textarea.form-control {
+    border: 1px solid #eeeeee;
+}
+
+.form-wrapper .input-group .form-control,
+.form-wrapper .input-group .form-control:first-child {
+    border: 1px solid #eeeeee;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.form-wrapper .panel {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.form-wrapper .panel-info {
+    border-color: #eeeeee;
+    border-radius: 0;
+}
+
+.form-wrapper .panel-group > .panel-default > .panel-heading {
+    background-color: #f6f6f6;
+    border-radius: 0;
+    padding: 0;
+}
+
+.form-wrapper .panel-info > .panel-heading {
+    background-color: transparent;
+    color: #38b349;
+    border: none;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.form-wrapper .panel-group .panel {
+    border-radius: 0;
+}
+
+.form-wrapper .header-field {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.autosave {
+    color: #2097f0;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+.label-term {
+    background-color: #8a0f13;
+}
+
+.label-term[href]:hover,
+.label-term[href]:focus {
+    background-color: #730d10;
+}
+
+.label.label-success,
+.label.label-danger,
+.label.label-warning,
+.label.label-term {
+    font-size: 10px;
+    padding: 10px 20px;
+}
+
+/* Selector Styles (Select 2)
+-------------------------------------------------- */
+.select2.select2-container {
+    width: 100% !important;
+}
+
+.form-wrapper .select2-container--bootstrap.select2-container--focus .select2-selection,
+.form-wrapper .select2-container--bootstrap.select2-container--open .select2-selection {
+    border-color: #eeeeee;
+    box-shadow: inset 0 1px 1px rgba(59, 123, 177, 0.2), 0 0 8px rgba(59, 123, 177, 0.2);
+}
+
+.select2-container--open .select2-dropdown--below {
+    box-shadow: 0 6px 12px rgba(59, 123, 177, 0.2);
+    border-color: #eeeeee;
+}
+
+.select2-container--bootstrap .select2-search--dropdown .select2-search__field {
+    border: 1px solid #eeeeee;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.select2-container--bootstrap .select2-selection {
+    border: 1px solid #eeeeee;
+    box-shadow: none;
+}
+
+.select2-dropdown {
+    border-radius: 0;
+}
+
+/* Buttons
 -------------------------------------------------- */
 
-.with-error {
-    color: #a94442;
+@media (max-width: 768px) {
+    form.edit-form .btn{
+        margin-bottom: 10px !important;
+    }
 }
-.pagination > li.with-error > a {
-    color: #a94442;
+
+.btn.btn-delete {
+    background-color: #d02929;
+    border: 1px solid #d02929;
+    border-radius: 3px;
+    text-transform: capitalize;
 }
-.pagination > li.active.with-error > a {
-    background-color: #eeb9b8;
-    border-color: #a94442;
+
+.btn.btn-info {
+    background-color: #3b7bb1;
+    border: 1px solid #3b7bb1;
+    border-radius: 3px;
+    text-transform: capitalize;
+}
+
+.btn .btn-default {
+    background-color: #8d8d8d;
+    border-radius: 3px;
+    color: #ffffff;
+    text-transform: capitalize;
+}
+
+.toggle-handle.btn.btn-default {
+    background-color: #ffffff;
+    border-radius: 3px;
+    box-shadow: none;
+    text-transform: capitalize;
+}
+
+.btn.btn-cancel.btn-default {
+    background: #8d8d8d;
+    border: 1px solid #8d8d8d;
+    border-radius: 3px;
+    color: #ffffff;
+    text-transform: capitalize;
+}
+
+.btn.btn-green.btn-primary {
+    background-color: #38b349;
+    border: 1px solid #38b349;
+    border-radius: 3px;
+    text-transform: capitalize;
+}
+
+.btn.btn-green.btn-primary:hover,
+.btn.btn-cancel.btn-default:hover,
+.btn .btn-default:hover,
+.btn.btn-info:hover,
+.btn.btn-info:hover,
+.btn.btn-delete:hover {
+    background-color: #333333;
+    border: 1px solid #333333;
+}
+
+.btn {
+    box-shadow: none;
+}
+
+.btn:active, .btn.active,
+.btn-danger.active {
+    box-shadow: none;
+}
+
+.btn-file {
+    background-color: #36af47;
+    border: 1px solid #36af47;
+    color: #ffffff;
+}
+
+.btn-file:hover {
+    background-color: #333333;
+    border: 1px solid #333333;
+    color: #ffffff;
+}
+
+.status-section {
+    margin-bottom: 35px;
+}
+
+.status-section .status {
+    padding-top: 25px;
+}
+
+.status-section .checkbox {
+    display: inline;
+    overflow: hidden;
+}
+
+.status-section label {
+    float: left;
+    margin-right: 10px;
+    display: inline;
+}
+
+.status-section .checkbox label {
+    margin-top: -3px;
+}
+
+.status-section .toggle-group label {
+    margin-top: 0;
+}
+@media (max-width: 1024px){
+    table.table.table-hover.list-table{
+        table-layout: fixed;
+    }
+    table.table.table-hover.list-table>tbody>tr>td{
+        font-size: 11px;
+    }
+}
+
+.toggle-group{
+    width: 215%;
+}
+
+@media (max-width: 768px) {
+    .toggle-group label.btn {
+        margin-bottom: 0 !important;
+    }
+}
+
+/* Submitted Page styles
+-------------------------------------------------- */
+
+.verify-email-message {
+    padding-top: 60px;
+    padding-bottom: 20px;
+}
+
+.verify-email-submessage {
+    padding-top: 20px;
+}
+
+.fa.fa-envelope.verify-email-icon {
+    font-size: 7em;
+    color: #21ad59;
+}
+
+.verify-email-link {
+    color: #5dbca7;
+}
+
+.verify-error {
+    margin-top: 60px !important;
+}
+
+.verify-error-link {
+    color: #21ad59 !important;
+}
+
+.fa.fa-frown-o.unsubscribe {
+    font-size: 7em;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .row.bottom-form-btns{
+        padding-bottom: 30px;
+    }
+    .row.list-form-wrapper{
+        padding-bottom: 50px;
+    }
 }
 
 /*
 -------------------------------------------------- */
 
-.bigLinkContainer .bigLinkItem {
-    padding: 15px;
-}
+.p-t-xs { padding-top: .25em; }
 
-button .btn-home-desc {
-    padding-top: 0;
-    width: 140px;
-    font-size: 12px;
-    text-transform: none;
-    white-space: normal;
-}
-
-button .btn-home-label {
-    white-space: normal;
-    line-height: 20px;
-}
-
-.btn-homepage {
-    width: 250px;
-    height: 250px;
-    margin: 0 auto;
-    padding: 10px;
-    display: inline-block;
-    line-height: 15px;
-    text-align: center;
-}
-
-.homepage-btn{
-    color: #333 !important;
-    background-color: #fff !important;
-    border-color: #ccc !important;
-}
-
-
-div.parentElement{text-align: center;}
-
-button .btn-home-desc {
-    padding-top: 0;
-    width: 140px;
-    font-size: 12px;
-    text-transform: none;
-    white-space: normal;
-}
-
-button .btn-home-label {
-    white-space: normal;
-    line-height: 20px;
-}
-
-.feedbackPanel, .form-wrapper {
-    margin: 10px 5px 10px 0px;
-}
-
-.error-row {
-    color: red;
-}
-
-.color-box {
-    width: 40px;
-    height: 30px;
-    display: inline-block;
-    margin-right: 5px;
-}
-
-.required .control-label:before {
-    content: "*";
-    color: #a94442;
-    display: inline;
-    margin-right: 5px;
-}
-
-.row-list-item-button {
-    min-height: 58px;
-}
-
-.pull-down {
-    position: absolute;
-    bottom: 0;
-}
-
-.label-translation-margin {
-    margin-right: 5px;
-}
-
-.label-translation-description {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-style: italic;
-}
-
-.breadcrumb {
-    background-color: #ffffff;
-    padding-top: 20px;
-    padding-bottom: 0px;
-    padding-left: 12px;
-    margin-bottom: 0px;
-}
-
-.breadcrumb .btn-link {
-    padding-left: 0px;
-    padding-right: 0px;
-    font-size: 12px;
-    font-weight: 700;
-    margin-left: -7px;
-    color: #aaaaaa;
-}
-
-.breadcrumb a[disabled=disabled] {
-    color: #000000;
-    font-weight: 800;
-    margin-bottom: 1px;
-}
-
-.breadcrumb > li + li:before {
-    padding: 0 2px;
-    color: #aaaaaa;
-    content: "/\00a0";
-    font-weight: 700;
-}
-
-/*-----------------Color picker --------------------*/
-.colorpicker-saturation {
-    background:
-            linear-gradient(to bottom right, rgba(255, 255, 255, 0), rgba(0, 0, 0, 1)),
-            linear-gradient(to top right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-}
-
-.colorpicker-hue {
-    background: linear-gradient(to bottom, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
-
-}
-
-/*Media Queries*/
-@media (min-width: 768px) {
-    .navbar-default{
-        padding-left: 2em;
-        padding-right: 2em;
+@media (min-width: 767px) {
+    .row.display-flex {
+        display: flex;
+        flex-wrap: wrap;
     }
+
+    .row.display-flex > [class*='col-'] {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.btn.text-left {
+    text-align: left;
 }

@@ -49,9 +49,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+
     @Autowired
     private JavaMailSender javaMailSender;
-
     @Autowired
     private HttpServletRequest request;
 
