@@ -75,7 +75,7 @@ public class LoginPage extends BasePage {
     protected void onInitialize() {
         super.onInitialize();
 
-        pageTitle.setVisible(false);
+        pageTitle.setVisible(true);
 
         final LoginForm loginForm = new LoginForm("loginform", new CompoundPropertyModel<>(loginBean));
         add(loginForm);
@@ -121,7 +121,7 @@ public class LoginPage extends BasePage {
         protected void onInitialize() {
             super.onInitialize();
 
-            pageTitle.setVisible(false);
+            pageTitle.setVisible(true);
 
             retrieveReferrerFromSavedRequestIfPresent();
 

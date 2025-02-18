@@ -307,10 +307,10 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 modal.close(target);
             }
         };
-        checkoutButton.add(new AttributeAppender("class", Buttons.Type.Primary));
+        checkoutButton.add(new AttributeAppender("class","btn btn-primary"));
 
         checkoutButton.setDefaultFormProcessing(false);
-        checkoutButton.setLabel(new ResourceModel("checkoutModal.edit"));
+        checkoutButton.setModel(new StringResourceModel("checkoutModal.edit"));
 
         modal.addButton(checkoutButton);
 
@@ -597,7 +597,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     @Override
     protected SaveEditPageButton getSaveEditPageButton() {
-        final SaveEditPageButton button = new SaveEditPageButton("save",
+        return new SaveEditPageButton("save",
                 new StringResourceModel("saveButton", this, null)) {
 
             @Override
@@ -613,8 +613,6 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 super.onSubmit(target);
             }
         };
-
-        return button;
     }
 
     private SaveEditPageButton getSaveSubmitPageButton() {

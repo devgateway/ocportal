@@ -144,7 +144,6 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
     private TransparentWebMarkupContainer mainContainer;
 
-    private Header mainHeader;
 
     private Footer mainFooter;
 
@@ -194,12 +193,6 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         return isFmVisible(super::isVisible);
     }
 
-//    @Override
-//    public MarkupContainer add(Component... children) {
-//        MarkupContainer ret = super.add(children);
-//        attachFmForChildren(children);
-//        return ret;
-//    }
 
     /**
      * Determines if this page has a fluid container for the content or not.
@@ -247,47 +240,16 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
     public BasePage(final PageParameters parameters) {
         super(parameters);
 
-//        selectLanguage();
-//
-//        add(new HtmlTag("html"));
-//
+        selectLanguage();
+        add(new HtmlTag("html"));
 //        // Add javascript files.
         add(new HeaderResponseContainer("scripts-container", "scripts-bucket"));
-//        add(new HeaderResponseContainer("scripts-container", "scripts-bucket"));
-//
         feedbackPanel = createFeedbackPanel();
         add(feedbackPanel);
-//
-//
-//
-//        mainHeader = new Header("mainHeader");
-//        add(mainHeader);
-//
-//        navbar = newNavbar("navbar");
-//        mainHeader.add(navbar);
-//
-//
-////        mainHeader.setVisibilityAllowed(!ComponentUtil.isPrintMode());
-//
-//        // Add information about navbar position on mainHeader element.
-////        if (navbar.getPosition().equals(Navbar.Position.DEFAULT)) {
-////            mainHeader.add(new CssClassNameAppender("with-navbar-default"));
-////        } else {
-////            mainHeader.add(new CssClassNameAppender("with-" + navbar.getPosition().cssClassName()));
-////        }
-//
-//
-//        mainContainer = new TransparentWebMarkupContainer("mainContainer");
-//        add(mainContainer);
-//
-//        // Set the bootstrap container class.
-//        // @see https://getbootstrap.com/css/#grid
-//
-//
+
         mainFooter = new Footer("mainFooter");
         add(mainFooter);
         mainFooter.setVisibilityAllowed(!ComponentUtil.isPrintMode());
-//
         pageTitle = new Label("pageTitle", new ResourceModel("page.title"));
         add(pageTitle);
         mainContainer = new TransparentWebMarkupContainer("mainContainer");
@@ -297,8 +259,6 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
             mainContainer.add(new CssClassNameAppender(CssClassNames.Grid.container));
         }
         add(mainContainer);
-
-//
 
         add(new Header("mainHeader"));
         createGoogleAnalyticsTracker();
@@ -359,56 +319,10 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
 
 
 
-
-
-    /**
-     * creates a new {@link Navbar} instance
-     *
-     * @param markupId The components markup id.
-     * @return a new {@link Navbar} instance
-     */
-//    protected Navbar newNavbar(final String markupId) {
-//        final Navbar navbar = new Navbar(markupId);
-//
-//
-//        /**
-//         * Make sure to update the BaseStyles when the navbar position changes.
-//         *
-//         * @see org.devgateway.toolkit.forms.wicket.styles.BaseStyles
-//         */
-//        navbar.setPosition(Navbar.Position.TOP);
-//        navbar.setInverted(true);
-//
-//        // add brand image
-//        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
-//                new StringResourceModel("brandImageAltText", this, null));
-//        navbar.setBrandName(new StringResourceModel("brandName", this, null));
-//
-//        navbar.addComponents(
-//                NavbarComponents.transform(Navbar.ComponentPosition.RIGHT, /*newHomeMenu(),*/ newProcurementFormMenu(),
-//                        newImplementationFormMenu(),
-//                        newMetadataMenu(), newAdminMenu(), newMyWorkMenu(), newAccountMenu(), newLogoutMenu()
-//                ));
-//
-//        return navbar;
-//    }
-//
-//    public void addPrintWindowJs(final IHeaderResponse response) {
-//        if (ComponentUtil.isPrintMode()) {
-//            response.render(OnLoadHeaderItem.forScript("window.print();"));
-//        }
-//    }
-
     @Override
     public void renderHead(final IHeaderResponse response) {
         super.renderHead(response);
-//        addPrintWindowJs(response);
-//        response.render(CssHeaderItem.forReference(
-//                new CssResourceReference(
-//                        ColorPickerTextFieldCssReference.class,
-//                        "css/bootstrap-colorpicker.css"
-//                )
-//        ));
+
 
         // Load Styles.  Use static instances where possible for efficiency.
         response.render(CssHeaderItem.forReference(BootstrapCssReference.instance()));
@@ -425,20 +339,12 @@ public abstract class BasePage extends GenericWebPage<Void> implements DgFmFormC
         // JQuery -  Use a consistent, preferably up-to-date version.
         response.render(JavaScriptHeaderItem.forReference(JQueryResourceReference.getV3()));
 
-        // File upload improvement script.  Use PackageResourceReference for better management.
-//        ResourceReference fileuploadJsRef =
-//                new PackageResourceReference(BaseStyles.class, "assets/js/fileupload.js");
-//        response.render(JavaScriptHeaderItem.forReference(fileuploadJsRef));
 
     }
 
 
 
-//    @Override
-//    protected void onInitialize() {
-//        super.onInitialize();
-//        redirectForInvisibleFm();
-//    }
+
 }
 
 
