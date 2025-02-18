@@ -193,7 +193,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                     final Boolean show = list.size() != list.getModelObject()
                             .parallelStream()
                             .filter(ListViewItem::getExpanded).count();
-                    if (list.size() > 0) {
+                    if (!list.getModelObject().isEmpty()) {
                         for (int i = 0; i < list.size(); i++) {
                             final TransparentWebMarkupContainer accordion =
                                     (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
@@ -251,7 +251,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 // we add the rest of the items in the listItem
                 populateCompoundListItem(item);
 
-                addAcordion(item);
+                addAccordion(item);
 
                 item.visitChildren(new DgFmAttachingVisitor());
                 checkAndSendEventForDisableEditing(item);
@@ -280,7 +280,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     }
 
 
-    private void addAcordion(final ListItem<T> item) {
+    private void addAccordion(final ListItem<T> item) {
         Label showDetailsLabel = createShowDetailsLabel();
 
         // the section that will collapse
@@ -292,14 +292,16 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         final AjaxLink<Void> showDetailsLink = new AjaxLink<Void>("showDetailsLink") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
-                if (!foldable) {
+                if (Boolean.FALSE.equals(foldable)) {
                     return;
                 }
-                final T modelObject = item.getModelObject();
-                if (modelObject.getExpanded()) {
-                    hideSection(modelObject, target, hideableContainer, showDetailsLabel);
-                } else {
-                    showSection(modelObject, target, hideableContainer, showDetailsLabel);
+                if (!listView.getModelObject().isEmpty()) {
+                    final T modelObject = item.getModelObject();
+                    if (Boolean.TRUE.equals(modelObject.getExpanded())) {
+                        hideSection(modelObject, target, hideableContainer, showDetailsLabel);
+                    } else {
+                        showSection(modelObject, target, hideableContainer, showDetailsLabel);
+                    }
                 }
             }
         };
