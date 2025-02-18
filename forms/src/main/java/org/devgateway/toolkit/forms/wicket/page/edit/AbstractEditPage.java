@@ -325,15 +325,19 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             setOutputMarkupId(true);
 
             saveButton = getSaveEditPageButton();
+            saveButton.setDefaultModel(new StringResourceModel("saveButton"));
             add(saveButton);
 
             deleteButton = getDeleteEditPageButton();
+            deleteButton.setDefaultModel(new StringResourceModel("deleteButton"));
             add(deleteButton);
 
             deleteModal = createDeleteModal();
+            deleteModal.setDefaultModel(new StringResourceModel("confirmDeleteModal.content"));
             add(deleteModal);
 
             deleteFailedModal = createDeleteFailedModal();
+            deleteFailedModal.setDefaultModel(new StringResourceModel("deleteFailedModal.content"));
             add(deleteFailedModal);
 
             addSaveFailedModal(this);

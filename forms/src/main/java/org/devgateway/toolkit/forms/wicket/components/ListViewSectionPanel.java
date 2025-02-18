@@ -182,7 +182,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 new StringResourceModel("totalEntries", this).setParameters(
                         (IModel<Integer>) () -> ListViewSectionPanel.this.getModel().getObject().size())));
 
-        showHideAllEntries = new AjaxLink<Void>("showHideAllEntries") {
+        showHideAllEntries = new AjaxLink<>("showHideAllEntries") {
             @Override
             public void onClick(final AjaxRequestTarget target) {
                 // take the list of elements from the path: listWrapper/list
@@ -192,23 +192,24 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                     // determine if we need to show or hide all the elements
                     final Boolean show = list.size() != list.getModelObject()
                             .parallelStream()
-                            .filter(item -> item.getExpanded()).count();
+                            .filter(ListViewItem::getExpanded).count();
+                    if (list.size() > 0) {
+                        for (int i = 0; i < list.size(); i++) {
+                            final TransparentWebMarkupContainer accordion =
+                                    (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
 
-                    for (int i = 0; i < list.size(); i++) {
-                        final TransparentWebMarkupContainer accordion =
-                                (TransparentWebMarkupContainer) list.get("" + i).get(ID_ACCORDION);
+                            if (accordion != null) {
+                                final Label showDetailsLink =
+                                        (Label) accordion.get(ID_ACCORDION_TOGGLE).get("showDetailsLink")
+                                                .get("showDetailsLabel");
 
-                        if (accordion != null) {
-                            final Label showDetailsLink =
-                                    (Label) accordion.get(ID_ACCORDION_TOGGLE).get("showDetailsLink")
-                                            .get("showDetailsLabel");
-
-                            if (show) {
-                                showSection(list.getModelObject().get(i), target,
-                                        accordion.get(ID_HIDEABLE_CONTAINER), showDetailsLink);
-                            } else {
-                                hideSection(list.getModelObject().get(i), target,
-                                        accordion.get(ID_HIDEABLE_CONTAINER), showDetailsLink);
+                                if (Boolean.TRUE.equals(show)) {
+                                    showSection(list.getModelObject().get(i), target,
+                                            accordion.get(ID_HIDEABLE_CONTAINER), showDetailsLink);
+                                } else {
+                                    hideSection(list.getModelObject().get(i), target,
+                                            accordion.get(ID_HIDEABLE_CONTAINER), showDetailsLink);
+                                }
                             }
                         }
                     }
@@ -241,7 +242,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 item.add(new Label("headerNo", 1 + item.getIndex()));
 
                 // just keep the last element editable and expanded, unless non foldable
-                if (!foldable || item.getIndex() == getModel().getObject().size() - 1) {
+                if (Boolean.TRUE.equals(!foldable) || item.getIndex() == getModel().getObject().size() - 1) {
                     item.getModelObject().setExpanded(true);
                     item.getModelObject().setEditable(true);
                 }

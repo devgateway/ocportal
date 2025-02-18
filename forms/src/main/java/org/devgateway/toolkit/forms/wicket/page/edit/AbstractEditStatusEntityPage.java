@@ -600,6 +600,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         return new SaveEditPageButton("save",
                 new StringResourceModel("saveButton", this, null)) {
 
+
             @Override
             protected String getOnClickScript() {
                 return WebConstants.DISABLE_FORM_LEAVING_JS;
