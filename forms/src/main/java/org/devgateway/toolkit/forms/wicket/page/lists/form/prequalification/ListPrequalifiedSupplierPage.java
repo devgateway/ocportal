@@ -121,12 +121,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
     public ListPrequalifiedSupplierPage(PageParameters parameters) {
         super(parameters);
 
-        filterModel = new LoadableDetachableModel<Filter>(new Filter()) {
-            @Override
-            protected Filter load() {
-                return null;
-            }
-        };
+        filterModel = new CompoundPropertyModel<>(new Filter());
     }
 
     @Override
@@ -189,7 +184,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
         filterForm.add(new Select2MultiChoiceBootstrapFormComponent<>("wards",
                 new GenericPersistableJpaTextChoiceProvider<>(wardService)));
 
-        filterForm.add(new BootstrapSubmitButton("submit", new ResourceModel("submit")) {
+        filterForm.add(new BootstrapSubmitButton("submit", new StringResourceModel("submit")) {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 getDataTable().setCurrentPage(0);
@@ -244,7 +239,7 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
                 excelExportBehavior.initiate(target);
             }
         };
-        exportLink.add(new AttributeAppender("class", Buttons.Type.Warning));
+        exportLink.add(new AttributeAppender("class", " btn-warning "));
 
         exportLink.setBody(new StringResourceModel("excelExport.label", this));
         exportLink.add(new IconBehavior(FontAwesome5IconType.file_excel_s));

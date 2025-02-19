@@ -48,6 +48,7 @@ import org.devgateway.toolkit.persistence.service.form.TenderItemService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -158,14 +159,10 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         final TooltipLabel tooltipLabel = new TooltipLabel("tooltipLabel", "timingOfActivities");
         item.add(tooltipLabel);
 
-        ComponentUtil.addBigDecimalField(item, "quarter1st")
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        ComponentUtil.addBigDecimalField(item, "quarter2nd")
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        ComponentUtil.addBigDecimalField(item, "quarter3rd")
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
-        ComponentUtil.addBigDecimalField(item, "quarter4th")
-                .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        for (String string : Arrays.asList("quarter1st", "quarter2nd", "quarter3rd", "quarter4th")) {
+            ComponentUtil.addBigDecimalField(item, string)
+                    .getField().add(RangeValidator.minimum(BigDecimal.ZERO), new BigDecimalValidator());
+        }
     }
 
     @Override
@@ -175,7 +172,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
 
     @Override
     protected BootstrapAddButton getAddNewChildButton() {
-        final AddNewChildButton addNewChildButton = new AddNewChildButton("newButton", new ResourceModel("newButton")) {
+        return new AddNewChildButton("newButton", new ResourceModel("newButton")) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 // make sure that we have cleared the messages.
@@ -186,34 +183,11 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                 final PanelValidationVisitor panelValidationVisitor = new PanelValidationVisitor(target);
                 PlanItemPanel.this.visitChildren(GenericBootstrapFormComponent.class, panelValidationVisitor);
 
-                if (panelValidationVisitor.getFormErrors()) {
+                if (Boolean.TRUE.equals(panelValidationVisitor.getFormErrors())) {
                     final ValidationError error = new ValidationError();
                     error.addKey("planItemHasErrors");
                     error(error);
                 } else {
-                    /*Boolean descriptionError = false;
-                    // check that we have unique descriptions (at least the last element)
-                    final List<PlanItem> planItems = PlanItemPanel.this.getModelObject();
-                    if (planItems.size() > 2) {
-                        final PlanItem lastElement = planItems.get(planItems.size() - 1);
-                        for (int i = 0; i < planItems.size() - 1; i++) {
-                            final PlanItem planItem = planItems.get(i);
-
-                            if (planItem.getDescription() != null && lastElement.getDescription() != null
-                                    && planItem.getDescription().replaceAll("\\s+", "")
-                                    .equals(lastElement.getDescription().replaceAll("\\s+", ""))) {
-                                descriptionError = true;
-                            }
-                        }
-                    }
-
-                    if (descriptionError) {
-                        final ValidationError error = new ValidationError();
-                        error.addKey("descriptionError");
-                        error(error);
-                    } else {
-                        super.onSubmit(target);
-                    } */
 
                     super.onSubmit(target);
                 }
@@ -221,8 +195,6 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                 target.add(addButtonNotificationPanel);
             }
         };
-
-        return addNewChildButton;
     }
 
     @Override
@@ -236,7 +208,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                 if (!item.isNew()) {
                     final List<PurchaseItem> purchaseItems = purchaseItemService.findByPlanItem(item);
 
-                    if (purchaseItems.size() > 0) {
+                    if (!purchaseItems.isEmpty()) {
                         final ValidationError error = new ValidationError();
                         error.addKey("planItemErrorPurchase");
                         error(error);
@@ -244,7 +216,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     }
 
                     final List<TenderItem> tenderItems = tenderItemService.findByPlanItem(item);
-                    if (tenderItems.size() > 0) {
+                    if (!tenderItems.isEmpty()) {
                         final ValidationError error = new ValidationError();
                         error.addKey("planItemErrorTender");
                         error(error);
@@ -308,6 +280,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
                     "filterItem", choiceProvider) {
                 @Override
                 public void onEvent(IEvent event) {
+                    // TODO document why this method is empty
                 }
             };
 
@@ -346,6 +319,7 @@ public class PlanItemPanel extends ListViewSectionPanel<PlanItem, ProcurementPla
         private static final String ALLOWED_START_CHARACTERS_ONE = "1";
 
         public SourceOfFundsValidator() {
+            // TODO document why this constructor is empty
         }
 
         @Override

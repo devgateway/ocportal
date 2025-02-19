@@ -262,7 +262,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         listView.setOutputMarkupId(true);
         listWrapper.add(listView);
 
-        final BootstrapAddButton addButton = getAddNewChildButton();
+        BootstrapAddButton addButton = getAddNewChildButton();
         add(addButton);
 
         addButtonNotificationPanel = new NotificationPanel("addButtonNotificationPanel");
@@ -454,7 +454,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
      * Returns the new child button.
      */
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", new ResourceModel("newButton"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newButton"));
     }
 
     public class AddNewChildButton extends BootstrapAddButton {

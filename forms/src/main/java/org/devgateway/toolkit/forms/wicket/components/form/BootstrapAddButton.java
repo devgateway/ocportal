@@ -31,6 +31,9 @@ public abstract class BootstrapAddButton extends DgFmAjaxButton {
 
     private static final long serialVersionUID = 8306451874943978003L;
 
+    protected BootstrapAddButton(final String id) {
+        super(id);
+    }
     /**
      * @param id
      * @param model

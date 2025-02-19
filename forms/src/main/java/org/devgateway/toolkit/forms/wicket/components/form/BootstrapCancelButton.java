@@ -36,7 +36,7 @@ public abstract class BootstrapCancelButton extends DgFmAjaxButton {
      */
     public BootstrapCancelButton(final String id, final IModel<String> model) {
         super(id, model);
-        add(new AttributeAppender("class", Buttons.Type.Default));
+        add(new AttributeAppender("class", " btn-secondary "));
 
         setDefaultFormProcessing(false);
         add(new IconBehavior(FontAwesome5IconType.ban_s));

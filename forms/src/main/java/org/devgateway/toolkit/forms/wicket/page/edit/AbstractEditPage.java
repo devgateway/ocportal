@@ -377,12 +377,12 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     }
 
     protected BootstrapCancelButton getCancelButton() {
-        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton", this, null)) {
+        return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton")) {
             private static final long serialVersionUID = -249084359200507749L;
 
             @Override
             protected void onInitialize() {
-                this.setDefaultModel(new StringResourceModel("cancelButton", this, null));
+                this.setDefaultModel(new StringResourceModel("cancelButton"));
                 super.onInitialize();
             }
 
@@ -658,7 +658,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      * @return
      */
     protected DeleteEditPageButton getDeleteEditPageButton() {
-        return new DeleteEditPageButton("delete", new StringResourceModel("deleteButton", this, null));
+        return new DeleteEditPageButton("delete", new StringResourceModel("deleteButton"));
     }
 
     protected AbstractEditPage(final PageParameters parameters) {

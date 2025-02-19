@@ -36,7 +36,7 @@ public abstract class BootstrapSubmitButton extends DgFmAjaxButton {
      */
     protected BootstrapSubmitButton(final String id, final IModel<String> model) {
         super(id, model);
-        add(new AttributeAppender("class", Buttons.Type.Primary));
+        add(new AttributeAppender("class", " btn-primary "));
         add(new IconBehavior(FontAwesome5IconType.save_r));
     }
 

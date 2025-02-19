@@ -618,7 +618,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private SaveEditPageButton getSaveSubmitPageButton() {
         final SaveEditPageButton button = new SaveEditPageButton("saveSubmit",
-                new StringResourceModel("saveSubmit", this, null)) {
+                new StringResourceModel("saveSubmit")) {
             @Override
             protected String getOnClickScript() {
                 return WebConstants.DISABLE_FORM_LEAVING_JS;
@@ -630,10 +630,9 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
                 super.onSubmit(target);
             }
         };
+        button.setDefaultModel(new StringResourceModel("saveSubmit"));
         button.add(new IconBehavior(FontAwesome5IconType.paper_plane_s));
 
-
-//        button.setIconType(FontAwesomeIconType.send);
         return button;
     }
 
@@ -683,7 +682,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private SaveEditPageButton getSaveDraftAndContinueButton() {
         final SaveEditPageButton button = new SaveEditPageButton("saveContinue",
-                new StringResourceModel("saveContinue", this, null)) {
+                new StringResourceModel("saveContinue")) {
 
             @Override
             protected String getOnClickScript() {
@@ -721,7 +720,7 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
 
     private SaveEditPageButton getSaveApprovePageButton() {
         final SaveEditPageButton saveEditPageButton = new SaveEditPageButton("approve",
-                new StringResourceModel("approve", this, null)) {
+                new StringResourceModel("approve")) {
 
             @Override
             protected String getOnClickScript() {

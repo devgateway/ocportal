@@ -32,16 +32,11 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @JsonIgnoreProperties(value = {"new"})
 @MappedSuperclass
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class GenericPersistable extends AbstractPersistable<Long> implements Serializable {
+public class GenericPersistable extends CustomAbstractPersistable<Long> implements Serializable {
 
     @Version
     @Column(name = "optlock", columnDefinition = "integer default 0")
     private Integer version;
-
-    /**
-     * Custom serialization for id is needed since Spring Data JPA 2.x AbstractPersistable no longer implements
-     * Serializable.
-     */
 
 
     public Integer getVersion() {

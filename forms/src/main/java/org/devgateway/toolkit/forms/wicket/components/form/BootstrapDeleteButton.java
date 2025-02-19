@@ -41,7 +41,7 @@ public abstract class BootstrapDeleteButton extends DgFmAjaxButton {
      */
     public BootstrapDeleteButton(final String id, final IModel<String> model) {
         super(id, model);
-       add(new AttributeAppender("class", Buttons.Type.Danger));
+       add(new AttributeAppender("class", " btn-danger "));
 
     }
 
