@@ -188,10 +188,11 @@ public class ListPrequalifiedSupplierPage extends AbstractBaseListPage<Prequalif
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 getDataTable().setCurrentPage(0);
-
-                Long id = filterForm.getModelObject().getYearRange().getId();
-                PrequalificationYearRange yearRange = prequalificationYearRangeService.findById(id).orElse(null);
-                submittedSchemaModel.setObject(yearRange.getSchema().getStatus().equals(DBConstants.Status.SUBMITTED));
+                if (filterForm.getModelObject().getYearRange()!=null) {
+                    Long id = filterForm.getModelObject().getYearRange().getId();
+                    PrequalificationYearRange yearRange = prequalificationYearRangeService.findById(id).orElse(null);
+                    submittedSchemaModel.setObject(yearRange.getSchema().getStatus().equals(DBConstants.Status.SUBMITTED));
+                }
 
                 target.add(getDataTable(), getTopAddButton(), getBottomAddButton(), draftSchemaWarning);
             }

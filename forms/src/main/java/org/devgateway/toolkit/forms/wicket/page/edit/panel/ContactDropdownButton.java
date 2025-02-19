@@ -34,7 +34,7 @@ public abstract class ContactDropdownButton<T extends AbstractContact<?>> extend
 
             protected ButtonList newButtonList(final String markupId) {
                 final ButtonList buttonList = new ButtonList(markupId,
-                        new LoadableDetachableModel<List<AbstractLink>>() {
+                        new LoadableDetachableModel<>() {
                             @Override
                             protected List<AbstractLink> load() {
                                 return newSubMenuButtons(ButtonList.getButtonMarkupId());
