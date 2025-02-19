@@ -263,6 +263,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
         listWrapper.add(listView);
 
         BootstrapAddButton addButton = getAddNewChildButton();
+        addButton.add(new Label("addButtonLabel", new StringResourceModel("newButton", this)));
         add(addButton);
 
         addButtonNotificationPanel = new NotificationPanel("addButtonNotificationPanel");
@@ -437,7 +438,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
     protected BootstrapDeleteButton getRemoveChildButton(final T item,
                                                          final NotificationPanel removeButtonNotificationPanel) {
         final BootstrapDeleteButton removeButton = new BootstrapDeleteButton("remove",
-                new ResourceModel("removeButton")) {
+                new StringResourceModel("removeButton", this, null)) {
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
                 ListViewSectionPanel.this.getModelObject().remove(item);
@@ -454,12 +455,13 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
      * Returns the new child button.
      */
     protected BootstrapAddButton getAddNewChildButton() {
-        return new AddNewChildButton("newButton", new StringResourceModel("newButton"));
+        return new AddNewChildButton("newButton", new StringResourceModel("newButton",this));
     }
 
     public class AddNewChildButton extends BootstrapAddButton {
         public AddNewChildButton(final String id, final IModel<String> model) {
             super(id, model);
+
         }
 
         @Override
