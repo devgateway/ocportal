@@ -244,22 +244,28 @@ public abstract class AbstractEditStatusEntityPage<T extends AbstractStatusAudit
         entityButtonsFragment.add(fragment);
 
         saveSubmitButton = getSaveSubmitPageButton();
+        saveSubmitButton.add(new Label("saveSubmitLabel", new StringResourceModel("saveSubmit")));
         entityButtonsFragment.add(saveSubmitButton);
 
         submitAndNext = getSubmitAndNextPageButton();
+        submitAndNext.add(new Label("submitAndNextLabel", new StringResourceModel("submitAndNext")));
         entityButtonsFragment.add(submitAndNext);
 
         saveApproveButton = getSaveApprovePageButton();
+        saveApproveButton.add(new Label("saveApproveLabel", new StringResourceModel("approve")));
         entityButtonsFragment.add(saveApproveButton);
 
         saveDraftContinueButton = getSaveDraftAndContinueButton();
+        saveDraftContinueButton.add(new Label("saveDraftContinueLabel", new StringResourceModel("saveContinue")));
         entityButtonsFragment.add(saveDraftContinueButton);
 
         revertToDraftPageButton = getRevertToDraftPageButton();
+        revertToDraftPageButton.add(new Label("revertToDraftPageLabel", new StringResourceModel("revertToDraft")));
         entityButtonsFragment.add(revertToDraftPageButton);
 
 
         saveTerminateButton = getSaveTerminateButton();
+        saveTerminateButton.add(new Label("saveTerminateLabel", new StringResourceModel("terminate")));
         entityButtonsFragment.add(saveTerminateButton);
         entityButtonsFragment.add(terminateModal);
 

@@ -611,6 +611,7 @@ $borderColor: #eeeeee;
             top: 0;
             left: 0;
             width: $popupWidth;
+            z-index: 1001;
             height: 150px;
 
             hr {

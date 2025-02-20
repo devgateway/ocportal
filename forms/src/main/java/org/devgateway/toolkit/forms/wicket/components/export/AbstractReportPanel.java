@@ -68,8 +68,7 @@ public abstract class AbstractReportPanel<T> extends Panel {
         });
         dataExportForm.add(excelExportBehavior);
 
-        final AjaxButton excelButton = new AjaxButton("excelButton",
-                new StringResourceModel("export", this)) {
+        final AjaxButton excelButton = new AjaxButton("excelButton") {
             @Override
             protected void onConfigure() {
                 super.onConfigure();
@@ -100,6 +99,7 @@ public abstract class AbstractReportPanel<T> extends Panel {
                 ajaxFormListener.onError(target);
             }
         };
+        excelButton.add(new Label("excelButtonLabel",new StringResourceModel("export",this)));
         excelButton.add(new AttributeAppender("class", Buttons.Type.Success));
         excelButton.add(new IconBehavior(FontAwesome5IconType.download_s));
 

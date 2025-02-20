@@ -89,8 +89,7 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
                 new ResettingFilterForm<>("filterForm", dataProvider, dataTable);
 
         // create custom submit button in order to prevent form submission
-        final AjaxButton submit = new AjaxButton("submit",
-                new StringResourceModel("submit")) {
+        final AjaxButton submit = new AjaxButton("submit") {
 
 
             @Override
@@ -101,6 +100,7 @@ public abstract class AbstractBaseListPage<T extends GenericPersistable & Serial
                 target.add(dataTable);
             }
         };
+        submit.add(new Label("submitLabel",new StringResourceModel("submit", this)));
         submit.add(new AttributeAppender("class", Buttons.Type.Default));
 
 

@@ -325,11 +325,11 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             setOutputMarkupId(true);
 
             saveButton = getSaveEditPageButton();
-            saveButton.setDefaultModel(new StringResourceModel("saveButton"));
+            saveButton.add(new Label("saveLabel", new StringResourceModel("saveButton")));
             add(saveButton);
 
             deleteButton = getDeleteEditPageButton();
-            deleteButton.setDefaultModel(new StringResourceModel("deleteButton"));
+            deleteButton.add(new Label("deleteLabel", new StringResourceModel("deleteButton")));
             add(deleteButton);
 
             deleteModal = createDeleteModal();
@@ -346,8 +346,10 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             if (entityId == null) {
                 deleteButton.setVisibilityAllowed(false);
             }
+            AjaxButton cancelButton = getCancelButton();
+            cancelButton.add(new Label("cancelLabel", new StringResourceModel("cancelButton", this)));
 
-            add(getCancelButton());
+            add(cancelButton);
         }
 
         /**
@@ -380,11 +382,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         return new BootstrapCancelButton("cancel", new StringResourceModel("cancelButton")) {
             private static final long serialVersionUID = -249084359200507749L;
 
-            @Override
-            protected void onInitialize() {
-                this.setDefaultModel(new StringResourceModel("cancelButton"));
-                super.onInitialize();
-            }
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -648,7 +645,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
      * @return
      */
     protected SaveEditPageButton getSaveEditPageButton() {
-        return new SaveEditPageButton("save", new StringResourceModel("saveButton", this, null));
+        return new SaveEditPageButton("save", new StringResourceModel("saveButton"));
     }
 
     /**

@@ -446,6 +446,7 @@ public abstract class ListViewSectionPanel<T extends AbstractAuditableEntity & L
                 target.add(listWrapper);
             }
         };
+        removeButton.add(new Label("removeButtonLabel", new StringResourceModel("removeButton", this)));
 
         removeButton.setOutputMarkupPlaceholderTag(true);
         return removeButton;
