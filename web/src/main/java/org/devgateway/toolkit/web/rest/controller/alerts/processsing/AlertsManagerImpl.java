@@ -1,10 +1,8 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
-import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
-import org.ehcache.Cache;
-import org.ehcache.CacheManager;
 import org.bson.Document;
 import org.devgateway.ocds.web.spring.SendEmailService;
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.alerts.AlertsStatistics;
@@ -13,12 +11,13 @@ import org.devgateway.toolkit.persistence.service.alerts.AlertsStatisticsService
 import org.devgateway.toolkit.persistence.service.filterstate.alerts.AlertFilterState;
 import org.devgateway.toolkit.web.rest.controller.alerts.AlertsEmailService;
 import org.devgateway.toolkit.web.rest.controller.alerts.exception.AlertsProcessingException;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
@@ -39,10 +38,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
