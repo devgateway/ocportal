@@ -20,6 +20,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -32,6 +33,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.WebConstants;
+import org.devgateway.toolkit.forms.util.MyDotenv;
 import org.devgateway.toolkit.forms.wicket.page.edit.EditAdminSettingsPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.AbstractBaseListPage;
 import org.devgateway.toolkit.forms.wicket.page.lists.ListFiscalYearBudgetPage;
@@ -51,8 +53,11 @@ import org.devgateway.toolkit.forms.wicket.page.user.EditUserPage;
 import org.devgateway.toolkit.forms.wicket.page.user.LogoutPage;
 import org.devgateway.toolkit.forms.wicket.styles.BaseStyles;
 import org.devgateway.toolkit.persistence.dao.Person;
+import org.devgateway.toolkit.persistence.excel.ExcelFieldImportService;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,19 +71,23 @@ import static org.devgateway.toolkit.web.security.SecurityConstants.Roles.*;
  */
 
 public class Header extends Panel {
+
+    private static final Logger logger = LoggerFactory.getLogger(Header.class);
+
     private static final long serialVersionUID = 1L;
     @SpringBean
     protected DgFmService fmService;
 
 
 
+
     public Header(final String markupId) {
         super(markupId);
         Navbar navbar = new Navbar("navbar");
-//        navbar.setInverted(true);
-        navbar.setPosition(Navbar.Position.TOP);
 
-        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
+        String logoPath = MyDotenv.getVariable("/.env","LOGO_PATH","assets/img/defaultLogo.png");
+        logger.info("Logo path: " + logoPath);
+        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, logoPath),
                 new StringResourceModel("brandImageAltText", this, null));
         navbar.setBrandName(new StringResourceModel("brandName", this, null));
 

@@ -1,5 +1,6 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.bson.Document;
@@ -17,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
@@ -78,7 +79,7 @@ public class AlertsManagerImpl implements AlertsManager {
     @Transactional
     public synchronized void sendAlerts() {
         final List<Long> alertIds = getAlertableUsers().stream()
-                .map(AbstractPersistable::getId)
+                .map(CustomAbstractPersistable::getId)
                 .collect(Collectors.toList());
 
         logger.info(alertIds.size() + " alerts(s) will be processed.");

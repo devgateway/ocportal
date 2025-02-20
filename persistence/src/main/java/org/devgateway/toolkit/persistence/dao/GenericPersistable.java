@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //import nl.dries.wicket.hibernate.dozer.proxy.Proxied;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 
 /**
  * @author mpostelnicu, ociubotaru
