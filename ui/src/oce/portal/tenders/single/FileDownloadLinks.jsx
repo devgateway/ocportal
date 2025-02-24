@@ -13,10 +13,10 @@ const FileDownloadLinks = ({ files, useDash }) => {
         <Tooltip id="download-tooltip">
           Click to download the file
         </Tooltip>
-      )}
+          )}
     >
 
-      <a className="download-file" href={doc.url} target="_blank">
+      <a className="download-file" href={doc.url} target="_blank" rel="noreferrer">
         <i className="glyphicon glyphicon-download" />
         <span>{doc.name}</span>
       </a>

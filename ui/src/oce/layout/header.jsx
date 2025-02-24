@@ -14,7 +14,7 @@ import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
 import { getGaId } from '../api/Api';
 import fmConnect from '../fm/fm';
-import DynamicLogo from '../logo';
+import clientLOgo from '../resources/nandi-logo.png';
 
 const initGA = (gaId) => {
   ReactGA.initialize(gaId);
@@ -24,7 +24,6 @@ const initGA = (gaId) => {
 };
 
 const noScroll = () => window.scrollTo(0, 0);
-
 const showIntroJs = () => {
   window.scrollTo(0, 0);
   introJs()
@@ -130,7 +129,7 @@ const Header = ({
       <header className="branding row">
         <div className="col-md-6 col-sm-6 col-xs-12">
           <a className="portal-logo-wrapper" href="/portal/">
-            <DynamicLogo />
+            <img src={clientLOgo} alt="Nandi" />
             <span data-step="1" data-intro={t('header:title:intro')}>
               {t('header:title')}
             </span>

@@ -1,20 +1,32 @@
-import { Marker } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
 
-export default class Location extends Marker {
-  componentDidMount() {
-    super.componentDidMount();
-    this.leafletElement.on('popupopen', (e) => {
-      const map = this.leafletElement._map;
-      const px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
-      px.y -= e.popup._container.clientHeight / 2; // find the height of the popup container, divide by 2, subtract from the Y axis of marker location
+const Location = ({ position, data }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const marker = L.marker(position).addTo(map);
+
+    const onPopupOpen = (e) => {
+      const px = map.project(e.target.getLatLng()); // find the pixel location on the map where the popup anchor is
+      px.y -= e.target._container.clientHeight / 2; // find the height of the popup container, divide by 2, subtract from the Y axis of marker location
       map.panTo(map.unproject(px), { animate: true }); // pan to new center
-    });
-  }
+    };
 
-  componentDidUpdate(prevProps) {
-    super.componentDidUpdate(prevProps);
-    if (prevProps.data !== this.props.data) {
-      this.leafletElement.options.data = this.props.data;
-    }
-  }
-}
+    marker.on('popupopen', onPopupOpen);
+
+    return () => {
+      marker.off('popupopen', onPopupOpen);
+      marker.remove(); // Clean up the marker on unmount
+    };
+  }, [map, position]);
+
+  return (
+    <Marker position={position} data={data}>
+      <Popup>{data.content}</Popup>
+    </Marker>
+  );
+};
+
+export default Location;

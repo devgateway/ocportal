@@ -14,6 +14,7 @@ package org.devgateway.toolkit.persistence.mongo.spring;
 import com.mongodb.DBObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -49,6 +50,7 @@ import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.MON
         type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration"))
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/mongo/application.properties")
 @EnableCaching
+@EntityScan(basePackages = "org.devgateway.ocds.persistence.mongo")
 public class MongoPersistenceApplication {
 
     public static void main(final String[] args) {

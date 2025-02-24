@@ -1,7 +1,7 @@
 import { Typeahead } from 'react-bootstrap-typeahead';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { ControlLabel, FormGroup } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { fetch } from '../../api/Api';
 import { identity } from '../../tools';
@@ -12,7 +12,12 @@ const FilterItemTypeAhead = (props) => {
   const mapper = props.mapper || identity;
 
   useEffect(() => {
-    fetch(props.ep, props.epParams).then((data) => setOptions(data.map(mapper)));
+    fetch(props.ep, props.epParams)
+      .then((data) => setOptions(data.map(mapper)))
+      .catch((err) => {
+        console.error('Failed to fetch options:', err);
+        setOptions([]);
+      });
   }, [props.ep, props.epParams, mapper]);
 
   const handleChange = (filterVal) => {
@@ -29,8 +34,8 @@ const FilterItemTypeAhead = (props) => {
   const { t } = useTranslation();
 
   return (
-    <FormGroup>
-      <ControlLabel>{props.labelKey && t(props.labelKey)}</ControlLabel>
+    <Form.Group>
+      <Form.Label>{props.labelKey && t(props.labelKey)}</Form.Label>
       <Typeahead
         id={`filter-${props.property}`}
         onChange={handleChange}
@@ -42,7 +47,7 @@ const FilterItemTypeAhead = (props) => {
           ? props.value.includes(o._id) : props.value === o._id))) : []}
         multiple={props.multiple}
       />
-    </FormGroup>
+    </Form.Group>
   );
 };
 

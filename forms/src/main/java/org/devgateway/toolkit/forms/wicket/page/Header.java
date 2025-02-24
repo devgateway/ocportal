@@ -85,9 +85,7 @@ public class Header extends Panel {
         super(markupId);
         Navbar navbar = new Navbar("navbar");
 
-        String logoPath = MyDotenv.getVariable("/.env","LOGO_PATH","assets/img/defaultLogo.png");
-        logger.info("Logo path: " + logoPath);
-        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, logoPath),
+        navbar.setBrandImage(new PackageResourceReference(BaseStyles.class, "assets/img/logo.png"),
                 new StringResourceModel("brandImageAltText", this, null));
         navbar.setBrandName(new StringResourceModel("brandName", this, null));
 

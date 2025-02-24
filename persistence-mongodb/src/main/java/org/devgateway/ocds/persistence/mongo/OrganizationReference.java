@@ -124,10 +124,9 @@ public class OrganizationReference implements Identifiable {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof OrganizationReference)) {
+        if (!(other instanceof OrganizationReference rhs)) {
             return false;
         }
-        OrganizationReference rhs = ((OrganizationReference) other);
         return new EqualsBuilder()
                 .append(name, rhs.name)
                 .append(id, rhs.id)

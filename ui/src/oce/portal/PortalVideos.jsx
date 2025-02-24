@@ -14,11 +14,13 @@ class PortalVideos extends CRDPage {
         />
         <div className="client-procurement-plan content row">
 
-          <div className="col-md-4 col-md-offset-5">
+          {/* Center the heading */}
+          <div className="col-md-6 mx-auto">
             <h1>{t('portalVideos:title')}</h1>
           </div>
 
-          <div className="col-md-8 col-md-offset-4 text-justify">
+          {/* Center the video sections */}
+          <div className="col-md-8 mx-auto text-justify">
             <h2>{t('portalVideos:video1')}</h2>
             <iframe
               width="640"
@@ -30,7 +32,7 @@ class PortalVideos extends CRDPage {
             />
           </div>
 
-          <div className="col-md-8 col-md-offset-4 text-justify">
+          <div className="col-md-8 mx-auto text-justify">
             <h2>{t('portalVideos:video2')}</h2>
             <iframe
               width="640"
@@ -42,7 +44,7 @@ class PortalVideos extends CRDPage {
             />
           </div>
 
-          <div className="col-md-8 col-md-offset-4 text-justify">
+          <div className="col-md-8 mx-auto text-justify">
             <h2>{t('portalVideos:video3')}</h2>
             <iframe
               width="640"
@@ -54,7 +56,7 @@ class PortalVideos extends CRDPage {
             />
           </div>
 
-          <div className="col-md-8 col-md-offset-4 text-justify">
+          <div className="col-md-8 mx-auto text-justify">
             <h2>{t('portalVideos:video4')}</h2>
             <iframe
               width="640"
@@ -66,7 +68,7 @@ class PortalVideos extends CRDPage {
             />
           </div>
 
-          <div className="col-md-8 col-md-offset-4 text-justify">
+          <div className="col-md-8 mx-auto text-justify">
             <h2>{t('portalVideos:video5')}</h2>
             <iframe
               width="640"

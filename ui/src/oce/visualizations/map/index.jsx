@@ -1,6 +1,7 @@
-import { Map, TileLayer, ZoomControl } from 'react-leaflet';
-import Control from 'react-leaflet-control';
-import React from 'react';
+import {
+  TileLayer, ZoomControl, useMap, MapContainer,
+} from 'react-leaflet';
+import React, { useEffect } from 'react';
 import L from 'leaflet';
 import { pluck } from '../../tools';
 import Cluster from './cluster';
@@ -10,6 +11,33 @@ import './style.scss';
 import backendFilterable from '../../backend-year-filterable';
 
 const swap = ([a, b]) => [b, a];
+
+const CustomControl = ({
+  position, onClick, buttonClass, children,
+}) => {
+  const map = useMap();
+
+  useEffect(() => {
+    const control = L.control({ position });
+
+    control.onAdd = () => {
+      const div = L.DomUtil.create('div', 'leaflet-control-container');
+      const button = L.DomUtil.create('button', buttonClass, div);
+      button.innerHTML = children;
+      button.onclick = onClick;
+
+      return div;
+    };
+
+    control.addTo(map);
+
+    return () => {
+      control.remove();
+    };
+  }, [map, position, onClick, buttonClass, children]);
+
+  return null;
+};
 
 class MapVisual extends backendFilterable(Visualization) {
   constructor(props) {
@@ -21,8 +49,7 @@ class MapVisual extends backendFilterable(Visualization) {
   }
 
   getMaxAmount() {
-    return Math.max(0, ...this.getData()
-      .map(pluck('amount')));
+    return Math.max(0, ...this.getData().map(pluck('amount')));
   }
 
   getTiles() {
@@ -53,6 +80,7 @@ class MapVisual extends backendFilterable(Visualization) {
   }
 
   updateLocationButtonState(buttonType) {
+    console.log('update location button state');
     this.setState({ locationType: buttonType });
     this.handleUpdate([buttonType]);
   }
@@ -67,10 +95,7 @@ class MapVisual extends backendFilterable(Visualization) {
   computeCenter() {
     const data = this.getData();
     if (data && data.length > 0) {
-      const newCenter = L.latLngBounds(data
-        .map(pluck('coords'))
-        .map(swap))
-        .getCenter();
+      const newCenter = L.latLngBounds(data.map(pluck('coords')).map(swap)).getCenter();
       const { center } = this.state;
       if (center.lat !== newCenter.lat || center.lng !== newCenter.lng) {
         this.setState({ center: { lat: newCenter.lat, lng: newCenter.lng } });
@@ -85,44 +110,32 @@ class MapVisual extends backendFilterable(Visualization) {
     const { locationType, center } = this.state;
 
     return (
-      <Map center={center} zoom={zoom} zoomControl={false} dragging={!L.Browser.mobile} tap={false}>
+      <MapContainer center={center} zoom={zoom} zoomControl={false} dragging={!L.Browser.mobile} tap={false}>
         {this.getTiles()}
         <Cluster maxAmount={this.getMaxAmount()}>
-          {this.getData()
-            .map((location) => (
-              <this.constructor.Location
-                key={location._id}
-                position={location.coords.reverse()}
-                maxAmount={this.getMaxAmount()}
-                data={location}
-                t={t}
-                filters={filters}
-                years={years}
-                months={months}
-                monthly={monthly}
-                styling={styling}
-              />
-            ))}
+          {this.getData().map((location) => (
+            <this.constructor.Location
+              key={location._id}
+              position={location.coords.reverse()}
+              maxAmount={this.getMaxAmount()}
+              data={location}
+              t={t}
+              filters={filters}
+              years={years}
+              months={months}
+              monthly={monthly}
+              styling={styling}
+            />
+          ))}
         </Cluster>
-        <Control position="topleft">
-          <button
-            onClick={() => this.updateLocationButtonState('ward')}
-            className={this.computeLocationButtonClass(locationType, 'ward')}
-          >
-            Wards
-          </button>
-        </Control>
-        <Control position="topleft">
-          <button
-            onClick={() => this.updateLocationButtonState('subcounty')}
-            className={this.computeLocationButtonClass(locationType, 'subcounty')}
-          >
-            Subcounties
-          </button>
-        </Control>
+        <CustomControl position="topleft" onClick={() => this.updateLocationButtonState('ward')} buttonClass={this.computeLocationButtonClass(locationType, 'ward')}>
+          Wards
+        </CustomControl>
+        <CustomControl position="topleft" onClick={() => this.updateLocationButtonState('subcounty')} buttonClass={this.computeLocationButtonClass(locationType, 'subcounty')}>
+          Subcounties
+        </CustomControl>
         <ZoomControl position="topright" />
-
-      </Map>
+      </MapContainer>
     );
   }
 }

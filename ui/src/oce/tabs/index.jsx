@@ -31,7 +31,7 @@ class Tab extends Visualization {
               months,
               t,
             })}
-          />
+           alt="export" />
           )}
           {exportable && (
           <img

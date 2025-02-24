@@ -26,7 +26,7 @@ import { LOGIN_URL } from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
 import { LOCALES } from '../translatable';
-import DynamicLogo from '../logo';
+import clientLOgo from '../resources/nandi-logo.png';
 
 const getIndicators = cacheFn((indicatorTypesMapping, corruptionType) => Object.keys(indicatorTypesMapping)
   .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1));
@@ -315,7 +315,7 @@ class CorruptionRiskDashboard extends React.Component {
         <header className="branding row">
           <div className="col-sm-10 logo-wrapper">
             <a className="portal-logo-wrapper" href="/portal/">
-              <DynamicLogo />
+              <img src={clientLOgo} alt="Nandi" />
               <span>{t('crd:title')}</span>
             </a>
           </div>

@@ -9,9 +9,7 @@ const DynamicLogo = () => {
   let logoSrc = ''; // Initialize logoSrc to an empty string
   if (logoImage) {
     try {
-      const imageModule = `./resources/${logoImage}`;
-      console.log('Module loaded', imageModule);
-      logoSrc = imageModule.default;
+      logoSrc = `../resources/${logoImage}`;
       console.log('Ret Image is: ', logoSrc);
     } catch (error) {
       console.error(`Image not found: ${logoImage}`, error);

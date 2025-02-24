@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormControl, FormGroup, HelpBlock } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
@@ -24,17 +24,20 @@ const FilterInput = (props) => {
   const { t } = useTranslation();
 
   return (
-    <FormGroup>
-      <FormControl
+    <Form.Group>
+      <Form.Control
         type="text"
-        value={internalValue}
+        value={internalValue || ''}
         maxLength={MAX_LENGTH}
         placeholder="Enter search term"
         onChange={handleChange}
       />
-      {internalValue && internalValue.length < MIN_LENGTH
-      && <HelpBlock>{t('filters:text:minLength').replace('$#$', MIN_LENGTH)}</HelpBlock>}
-    </FormGroup>
+      {internalValue?.length < MIN_LENGTH && (
+        <Form.Text className="text-danger" aria-live="polite">
+          {t('filters:text:minLength', { minLength: MIN_LENGTH })}
+        </Form.Text>
+      )}
+    </Form.Group>
   );
 };
 

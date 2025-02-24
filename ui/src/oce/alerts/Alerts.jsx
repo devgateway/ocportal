@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../layout/header';
 import {
-  Alert, FormControl, FormGroup, ControlLabel, HelpBlock,
-} from 'react-bootstrap';
+  Alert, Form,
+} from 'react-bootstrap'; // Updated imports
 import { Typeahead } from 'react-bootstrap-typeahead';
 import './alerts.scss';
 import PropTypes from 'prop-types';
@@ -60,7 +60,7 @@ const Alerts = (props) => {
   };
 
   const formValid = (purchaseReqId || departments.length > 0 || items.length > 0)
-    && emailValid;
+      && emailValid;
 
   const submit = () => {
     setShowFormErrors(true);
@@ -101,92 +101,92 @@ const Alerts = (props) => {
             </div>
 
             <div className="col-md-6">
-              <FormGroup validationState={getEmailValidationState()} bsSize="large">
-                <ControlLabel>{t('alerts:email')}</ControlLabel>
-                <FormControl
+              <Form.Group validationState={getEmailValidationState()} className="mb-3">
+                <Form.Label>{t('alerts:email')}</Form.Label>
+                <Form.Control
                   type="email"
                   name="email"
                   value={email}
                   placeholder="email address"
                   onChange={handleChange}
                 />
-                <FormControl.Feedback />
+                <Form.Control.Feedback />
                 {
-                  email && !emailValid && <HelpBlock>{t('alerts:invalidEmail')}</HelpBlock>
-                }
-              </FormGroup>
+                      email && !emailValid && <Form.Text className="text-danger">{t('alerts:invalidEmail')}</Form.Text>
+                  }
+              </Form.Group>
             </div>
           </div>
 
           {
-            purchaseReqId !== undefined
-              ? (
-                <div>
-                  <div className="row">
-                    <div className="col-md-12">
-                      <h4 className="sub-title">{t('alerts:alertPreferences')}</h4>
+              purchaseReqId !== undefined
+                ? (
+                  <div>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <h4 className="sub-title">{t('alerts:alertPreferences')}</h4>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="row">
-                    <div className="col-md-12">
-                      {t('alerts:alertsForTender')}
-                      {' '}
-                      <b>{purchaseReqId}</b>
+                    <div className="row">
+                      <div className="col-md-12">
+                        {t('alerts:alertsForTender')}
+                        {' '}
+                        <b>{purchaseReqId}</b>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
+                )
 
-              : (
-                <div>
-                  <h4 className="sub-title">{t('alerts:alertPreferences')}</h4>
-                  <h5 className="sub-title">{t('alerts:onNewTender')}</h5>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <ControlLabel>{t('alerts:alertsForTendersFromDepartment')}</ControlLabel>
-                      <Typeahead
-                        id="departments"
-                        onChange={(selected) => handleChange({
-                          target: {
-                            name: 'departments',
-                            value: selected,
-                          },
-                        })}
-                        options={fetchedDepartments === undefined ? [] : fetchedDepartments}
-                        clearButton
-                        placeholder={t('alerts:departmentsPlaceholder')}
-                        selected={departments}
-                        multiple
-                        isLoading={fetchedDepartments === undefined}
-                        bsSize="large"
-                        highlightOnlyResult
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <ControlLabel>{t('alerts:alertsForItemsFromDepartment')}</ControlLabel>
-                      <Typeahead
-                        id="items"
-                        onChange={(selected) => handleChange({
-                          target: {
-                            name: 'items',
-                            value: selected,
-                          },
-                        })}
-                        options={fetchedItems === undefined ? [] : fetchedItems}
-                        clearButton
-                        placeholder={t('alerts:itemsPlaceholder')}
-                        selected={items}
-                        multiple
-                        isLoading={fetchedItems === undefined}
-                        bsSize="large"
-                        highlightOnlyResult
-                      />
+                : (
+                  <div>
+                    <h4 className="sub-title">{t('alerts:alertPreferences')}</h4>
+                    <h5 className="sub-title">{t('alerts:onNewTender')}</h5>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <Form.Label>{t('alerts:alertsForTendersFromDepartment')}</Form.Label>
+                        <Typeahead
+                          id="departments"
+                          onChange={(selected) => handleChange({
+                            target: {
+                              name: 'departments',
+                              value: selected,
+                            },
+                          })}
+                          options={fetchedDepartments === undefined ? [] : fetchedDepartments}
+                          clearButton
+                          placeholder={t('alerts:departmentsPlaceholder')}
+                          selected={departments}
+                          multiple
+                          isLoading={fetchedDepartments === undefined}
+                          className="form-control-lg"
+                          highlightOnlyResult
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <Form.Label>{t('alerts:alertsForItemsFromDepartment')}</Form.Label>
+                        <Typeahead
+                          id="items"
+                          onChange={(selected) => handleChange({
+                            target: {
+                              name: 'items',
+                              value: selected,
+                            },
+                          })}
+                          options={fetchedItems === undefined ? [] : fetchedItems}
+                          clearButton
+                          placeholder={t('alerts:itemsPlaceholder')}
+                          selected={items}
+                          multiple
+                          isLoading={fetchedItems === undefined}
+                          className="form-control-lg"
+                          highlightOnlyResult
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-          }
+                )
+            }
 
           <div className="row apply-button">
             <div className="col-md-6">
@@ -201,52 +201,52 @@ const Alerts = (props) => {
           </div>
 
           {
-            showFormErrors && !formValid
-              ? (
-                <div className="row validation-message">
-                  <div className="col-md-12">
-                    <Alert bsStyle="danger">
-                      <i className="glyphicon glyphicon-exclamation-sign" />
-&nbsp;
-                      {
-                      purchaseReqId === undefined
-                        ? <span>{t('alerts:formErrorGeneral')}</span>
-                        : <span>{t('alerts:formErrorForTender')}</span>
-                    }
-                    </Alert>
+              showFormErrors && !formValid
+                ? (
+                  <div className="row validation-message">
+                    <div className="col-md-12">
+                      <Alert variant="danger">
+                        <i className="bi bi-exclamation-triangle" />
+                            &nbsp;
+                        {
+                              purchaseReqId === undefined
+                                ? <span>{t('alerts:formErrorGeneral')}</span>
+                                : <span>{t('alerts:formErrorForTender')}</span>
+                            }
+                      </Alert>
+                    </div>
                   </div>
-                </div>
-              )
-              : null
-          }
+                )
+                : null
+            }
 
           {
-            (serverResponse !== undefined)
-              ? (
-                <div className="row validation-message">
-                  <div className="col-md-12">
-                    <h4>
-                      {serverResponse.status === true
-                        ? (
-                          <Alert bsStyle="info">
-                            {t('alerts:subscribedSuccessfully:line1').replace('$#$', email)}
-                            <br />
-                            {t('alerts:subscribedSuccessfully:line2')}
-                          </Alert>
-                        )
-                        : (
-                          <Alert bsStyle="danger">
-                            {t('alerts:subscribeFailed')}
-                            <br />
-                            {serverResponse.status === false ? serverResponse.message : t('alerts:unknownError')}
-                          </Alert>
-                        )}
-                    </h4>
+              (serverResponse !== undefined)
+                ? (
+                  <div className="row validation-message">
+                    <div className="col-md-12">
+                      <h4>
+                        {serverResponse.status === true
+                          ? (
+                            <Alert variant="info">
+                              {t('alerts:subscribedSuccessfully:line1').replace('$#$', email)}
+                              <br />
+                              {t('alerts:subscribedSuccessfully:line2')}
+                            </Alert>
+                          )
+                          : (
+                            <Alert variant="danger">
+                              {t('alerts:subscribeFailed')}
+                              <br />
+                              {serverResponse.status === false ? serverResponse.message : t('alerts:unknownError')}
+                            </Alert>
+                          )}
+                      </h4>
+                    </div>
                   </div>
-                </div>
-              )
-              : null
-          }
+                )
+                : null
+            }
         </div>
       </div>
     </div>

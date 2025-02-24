@@ -9,6 +9,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.components.TooltipConfig
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -214,11 +215,11 @@ public class ListViewTenderProcessOverview extends AbstractListViewStatus<Tender
 
     @Override
     @Transactional(readOnly = true)
-    protected void populateHideableContainer(final String containerFragmentId,
-                                             final TransparentWebMarkupContainer hideableContainer,
-                                             final ListItem<TenderProcess> item, boolean expanded) {
+    public void populateHideableContainer(final String containerFragmentId,
+                                          final TransparentWebMarkupContainer hideableContainer,
+                                          final ListItem<TenderProcess> item, boolean expanded) {
 
-        hideableContainer.add(AttributeAppender.append("class", "purchase-req")); // add specific class to pr list
+        hideableContainer.add(AttributeModifier.append("class", "purchase-req")); // add specific class to pr list
 
 
         if (expanded) {

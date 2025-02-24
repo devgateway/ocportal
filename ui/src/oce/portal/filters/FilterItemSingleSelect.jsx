@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -24,15 +24,18 @@ const FilterItemSingleSelect = (props) => {
   const { itemValueKey = '_id', itemLabelKey = 'label' } = props;
 
   return (
-    <FormGroup>
-      <ControlLabel>{label}</ControlLabel>
-      <FormControl componentClass="select" placeholder="select" onChange={handleChange} value={value}>
+    <Form.Group>
+      <Form.Label>{label}</Form.Label>
+      <Form.Select onChange={handleChange} value={value}>
+        <option value="" disabled>Select an option</option>
         <option value="all">All</option>
-        {
-          data.map((item) => <option key={item[itemValueKey]} value={item[itemValueKey]}>{item[itemLabelKey]}</option>)
-        }
-      </FormControl>
-    </FormGroup>
+        {data.map((item) => (
+          <option key={item[itemValueKey]} value={item[itemValueKey]}>
+            {item[itemLabelKey]}
+          </option>
+        ))}
+      </Form.Select>
+    </Form.Group>
   );
 };
 
