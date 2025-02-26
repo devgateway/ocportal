@@ -18,6 +18,8 @@ public interface ProcurementPlanService
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear, Long exceptId);
 
+    Long countByDepartmentAndFiscalYear(Long departmentId, Long fiscalYearId, Long exceptId);
+
     Stream<ProcurementPlan> findAllStream();
 
     ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);

@@ -38,6 +38,11 @@ public class ProcurementPlanServiceImpl extends AbstractClientEntityServiceImpl<
     }
 
     @Override
+    public Long countByDepartmentAndFiscalYear(Long departmentId, Long fiscalYearId, Long exceptId) {
+        return procurementPlanRepository.countByDepartmentAndFiscalYearExceptId(departmentId, fiscalYearId, exceptId);
+    }
+
+    @Override
     public Stream<ProcurementPlan> findAllStream() {
         return procurementPlanRepository.findAllStream();
     }

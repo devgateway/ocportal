@@ -1,6 +1,8 @@
 package org.devgateway.toolkit.persistence.dao.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.AbstractStatusAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.FileMetadata;
@@ -14,10 +16,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.OneToMany;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -45,6 +43,7 @@ public abstract class AbstractClientEntity extends AbstractStatusAuditableEntity
             name = "Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @NotNull
     private Set<FileMetadata> formDocs = new HashSet<>();
 
     @ManyToOne
@@ -92,7 +91,8 @@ public abstract class AbstractClientEntity extends AbstractStatusAuditableEntity
     }
 
     public void setFormDocs(final Set<FileMetadata> formDocs) {
-        this.formDocs = formDocs;
+        this.formDocs.clear();
+        this.getFormDocs().addAll(formDocs);
     }
 
     public abstract Department getDepartment();

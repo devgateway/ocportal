@@ -21,7 +21,11 @@ public class OnePlanPerDepartmentAndFYValidator
         if (plan.getDepartment() == null || plan.getFiscalYear() == null) {
             return true;
         }
+
+        Long departmentId = plan.getDepartment().getId();
+        Long fiscalYearId = plan.getFiscalYear().getId();
         Long exceptId = plan.getId() == null ? -1L : plan.getId();
-        return service.countByDepartmentAndFiscalYear(plan.getDepartment(), plan.getFiscalYear(), exceptId) == 0;
+
+        return service.countByDepartmentAndFiscalYear(departmentId, fiscalYearId, exceptId) == 0;
     }
 }

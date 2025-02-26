@@ -26,6 +26,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -38,6 +39,7 @@ import org.apache.wicket.model.*;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
 import org.devgateway.ocds.web.util.SettingsUtils;
 import org.devgateway.toolkit.forms.WebConstants;
@@ -57,6 +59,7 @@ import org.devgateway.toolkit.forms.wicket.visitors.GenericBootstrapValidationVi
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.ListViewItem;
 import org.devgateway.toolkit.persistence.dao.form.Lockable;
+import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.validator.Severity;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.persistence.fm.service.DgFmService;
@@ -69,6 +72,9 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolation;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -412,12 +418,31 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             super(id, model);
         }
 
+        public static boolean hasField(Object obj, String fieldName) {
+            if (obj == null) {
+                return false;
+            }
+
+            Class<?> clazz = obj.getClass();
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                return true; // Field exists
+            } catch (NoSuchFieldException e) {
+                return false; // Field does not exist
+            }
+        }
+
+
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
             try {
                 // save the object and go back to the list page
-                final T saveable = editForm.getModelObject();
+                T saveable = editForm.getModelObject();
+                logger.info("Object:  "+editForm.getModel().getObject());
+
+                logger.info("Saving docs: "+((ProcurementPlan)editForm.getModel().getObject()).getFormDocs());
+                logger.info("Saving entity: {}", editForm.get("formDocs").getDefaultModel().getObject());
 
                 if (checkInBeforeSave()) {
                     checkIn(saveable);
@@ -426,7 +451,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 beforeSaveEntity(saveable);
 
                 // saves the entity and flushes the changes
-                jpaService.saveAndFlush(saveable);
+                saveable = jpaService.saveAndFlush(saveable);
+
+
                 getPageParameters().set(WebConstants.PARAM_ID, saveable.getId());
 
                 // clears session and detaches all entities that are currently
@@ -476,6 +503,9 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             }
         }
 
+
+
+
         private boolean nonRecoverableError(ConstraintViolation<?> violation) {
             return violation.getConstraintDescriptor().getPayload().contains(Severity.NonRecoverable.class);
         }
@@ -505,6 +535,21 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
         @Override
         protected void onError(final AjaxRequestTarget target) {
             // make all errors visible
+            logger.error("Form submission failed. Errors encountered:");
+            editForm.visitChildren((component, visit) -> {
+                Iterator<FeedbackMessage> messages = component.getFeedbackMessages().iterator();
+                boolean hasErrors = false;
+                while(messages.hasNext()){
+                    FeedbackMessage message = messages.next();
+                    if(message.getLevel() == FeedbackMessage.ERROR){
+                        if(!hasErrors){
+                            logger.error("Component: {}", component.getPath());
+                            hasErrors = true;
+                        }
+                        logger.error("  - Error: {}", message.getMessage());
+                    }
+                }
+            });
             final GenericBootstrapValidationVisitor genericBootstrapValidationVisitor =
                     getBootstrapValidationVisitor(target);
             editForm.visitChildren(GenericBootstrapFormComponent.class, genericBootstrapValidationVisitor);

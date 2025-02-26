@@ -27,6 +27,15 @@ public interface ProcurementPlanRepository extends AbstractClientEntityRepositor
             @Param("fiscalYear") FiscalYear fiscalYear,
             @Param("id") Long exceptId);
 
+    @Query("SELECT COUNT(p) FROM ProcurementPlan p "
+            + "WHERE p.department.id = :departmentId "
+            + "AND p.fiscalYear.id = :fiscalYearId "
+            + "AND p.id <> :id")
+    Long countByDepartmentAndFiscalYearExceptId(
+            @Param("departmentId") Long departmentId,
+            @Param("fiscalYearId") Long fiscalYearId,
+            @Param("id") Long exceptId);
+
     ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
     @Query("select p from ProcurementPlan p")

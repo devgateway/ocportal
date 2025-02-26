@@ -289,6 +289,8 @@ public class FormsWebApplication extends AuthenticatedWebApplication {
                 .add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)
                 .add(CSPDirective.FRAME_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.OBJECT_SRC, CSPDirectiveSrcValue.SELF)
+                .add(CSPDirective.OBJECT_SRC, "blob:")
                 .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.NONE);
     }
 
