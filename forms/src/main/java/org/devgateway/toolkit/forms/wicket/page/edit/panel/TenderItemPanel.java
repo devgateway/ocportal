@@ -49,7 +49,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
         @Override
         public void validate(Form<?> form) {
             final Set<PlanItem> planItems = new HashSet<>();
-            final List<TenderItem> tenderItems = TenderItemPanel.this.getModelObject();
+            List<TenderItem> tenderItems = TenderItemPanel.this.getModelObject();
 
             for (final TenderItem tenderItem : tenderItems) {
                 if (tenderItem.getPlanItem() != null && tenderItem.getPurchaseItem() != null) {
@@ -64,7 +64,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
                 }
             }
 
-            if (tenderItems.size() != 0 && tenderItems.size() != planItems.size()) {
+            if (!tenderItems.isEmpty() && tenderItems.size() != planItems.size()) {
                 final ListView<TenderItem> list = (ListView<TenderItem>) TenderItemPanel.this
                         .get("listWrapper").get("list");
                 if (list != null) {
@@ -182,7 +182,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
             super.onInitialize();
 
             // filtered the list based on form Purchase Requisition
-            final Tender parentObject = (Tender) TenderItemPanel.this.getParent().getDefaultModelObject();
+            Tender parentObject = (Tender) TenderItemPanel.this.getParent().getDefaultModelObject();
 
             final Select2ChoiceBootstrapFormComponent<PurchaseItem> purchaseItem =
                     new Select2ChoiceBootstrapFormComponent<PurchaseItem>(
@@ -210,7 +210,7 @@ public class TenderItemPanel extends ListViewSectionPanel<TenderItem, Tender> {
 
             add(planItem);
 
-            final Component description = ComponentUtil.addTextField(this, "description");
+             Component description = ComponentUtil.addTextField(this, "description");
             description.add(new StopEventPropagationBehavior());
         }
     }
