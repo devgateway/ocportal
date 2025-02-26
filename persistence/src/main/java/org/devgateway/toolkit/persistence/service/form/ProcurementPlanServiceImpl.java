@@ -11,6 +11,7 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.metamodel.SingularAttribute;
@@ -38,6 +39,7 @@ public class ProcurementPlanServiceImpl extends AbstractClientEntityServiceImpl<
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Long countByDepartmentAndFiscalYear(Long departmentId, Long fiscalYearId, Long exceptId) {
         return procurementPlanRepository.countByDepartmentAndFiscalYearExceptId(departmentId, fiscalYearId, exceptId);
     }

@@ -124,8 +124,8 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
         assertEntityIsValid(entity);
         return repository().saveAndFlush(entity);
     }
-
-    private <S extends T> void assertEntityIsValid(S entity) {
+    @Transactional
+    public  <S extends T> void assertEntityIsValid(S entity) {
         Set<ConstraintViolation<S>> violations = validator.validate(entity, Default.class, HighLevel.class);
         if (!violations.isEmpty()) {
             throw new InvalidObjectException(new HashSet<>(violations));

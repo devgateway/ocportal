@@ -17,6 +17,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.form.BootstrapForm;
 import de.agilecoders.wicket.core.util.Attributes;
 //import de.agilecoders.wicket.extensions.markup.html.;
 //import nl.dries.wicket.hibernate.dozer.DozerModel;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -160,6 +162,7 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
     private boolean hasNonRecoverableError;
 
     @SpringBean
+    @PersistenceContext
     private EntityManager entityManager;
 
     @SpringBean(required = false)
@@ -399,6 +402,11 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected void onCancel(AjaxRequestTarget target) {
     }
+    @Transactional
+    public void mergeEntity(T entity)
+    {
+        getEntityManager().merge(entity);
+    }
 
 
     /**
@@ -418,21 +426,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             super(id, model);
         }
 
-        public static boolean hasField(Object obj, String fieldName) {
-            if (obj == null) {
-                return false;
-            }
-
-            Class<?> clazz = obj.getClass();
-            try {
-                Field field = clazz.getDeclaredField(fieldName);
-                return true; // Field exists
-            } catch (NoSuchFieldException e) {
-                return false; // Field does not exist
-            }
-        }
-
-
 
         @Override
         protected void onSubmit(final AjaxRequestTarget target) {
@@ -449,7 +442,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 }
 
                 beforeSaveEntity(saveable);
-
                 // saves the entity and flushes the changes
                 saveable = jpaService.saveAndFlush(saveable);
 

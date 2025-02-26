@@ -42,8 +42,7 @@ public abstract class AbstractClientEntity extends AbstractStatusAuditableEntity
             AdministratorReport.class, InspectionReport.class, MEReport.class},
             name = "Documents")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotNull
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<FileMetadata> formDocs = new HashSet<>();
 
     @ManyToOne
@@ -92,7 +91,7 @@ public abstract class AbstractClientEntity extends AbstractStatusAuditableEntity
 
     public void setFormDocs(final Set<FileMetadata> formDocs) {
         this.formDocs.clear();
-        this.getFormDocs().addAll(formDocs);
+        this.formDocs = formDocs;
     }
 
     public abstract Department getDepartment();

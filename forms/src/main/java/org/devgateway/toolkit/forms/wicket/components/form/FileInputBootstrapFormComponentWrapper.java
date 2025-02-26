@@ -193,20 +193,12 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
             @Override
             protected void populateItem(ListItem<FileMetadata> item) {
                 // make file name clickable
-                IndicatingAjaxLink<FileMetadata> downloadLink = new IndicatingAjaxLink<>("downloadLink", item.getModel()) {
-                    private static final long serialVersionUID = 1L;
-
+                final Link<FileMetadata> downloadLink = new Link<FileMetadata>("downloadLink", item.getModel()) {
                     @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        logger.info("Item download: " + item.getModelObject());
-                        logger.info("Files model: " + filesModel);
-                        logger.info("Already uploaded: " + alreadyUploadedFilesModel.getObject());
+                    public void onClick() {
+                        final FileMetadata modelObject = getModelObject();
 
-                        FileMetadata modelObject = item.getModelObject();
-
-                        AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
-                            private static final long serialVersionUID = 1L;
-
+                        final AbstractResourceStreamWriter rstream = new AbstractResourceStreamWriter() {
                             @Override
                             public void write(final OutputStream output) throws IOException {
                                 output.write(modelObject.getContent().getBytes());
@@ -218,36 +210,18 @@ public class FileInputBootstrapFormComponentWrapper<T> extends FormComponentPane
                             }
                         };
 
-                        ResourceStreamRequestHandler handler =
+                        final ResourceStreamRequestHandler handler =
                                 new ResourceStreamRequestHandler(rstream, modelObject.getName());
                         handler.setContentDisposition(ContentDisposition.ATTACHMENT);
                         getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
                     }
-
-                    @Override
-                    public boolean isEnabledInHierarchy() {
-                        return isLinkEnabledInHierarchy(this, super.isEnabledInHierarchy());
-                    }
                 };
-
-// Add label to the link
                 downloadLink.add(new Label("downloadText", item.getModelObject().getName()));
-
-// Add tooltip behavior
                 downloadLink.add(new TooltipBehavior(new StringResourceModel("downloadUploadedFileTooltip",
                         FileInputBootstrapFormComponentWrapper.this, null), TOOLTIP_CONFIG));
-
                 item.add(downloadLink);
 
-// Keep the CustomDownloadLink if it's still needed
-                IndicatingAjaxLink<FileMetadata> download = new IndicatingAjaxLink<>("download", item.getModel()) {
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        logger.info("Custom download clicked for: " + item.getModelObject());
-                    }
-                };
+                final Link<FileMetadata> download = new CustomDownloadLink("download", item.getModel());
                 item.add(download);
 
                 IndicatingAjaxLink<Void> delete = new IndicatingAjaxLink<Void>("delete") {
