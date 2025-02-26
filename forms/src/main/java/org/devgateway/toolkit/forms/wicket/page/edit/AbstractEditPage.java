@@ -402,12 +402,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
 
     protected void onCancel(AjaxRequestTarget target) {
     }
-    @Transactional
-    public void mergeEntity(T entity)
-    {
-        getEntityManager().merge(entity);
-    }
-
 
     /**
      * Generic functionality for the save page button, this can be extended
@@ -432,10 +426,8 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
             try {
                 // save the object and go back to the list page
                 T saveable = editForm.getModelObject();
-                logger.info("Object:  "+editForm.getModel().getObject());
 
-                logger.info("Saving docs: "+((ProcurementPlan)editForm.getModel().getObject()).getFormDocs());
-                logger.info("Saving entity: {}", editForm.get("formDocs").getDefaultModel().getObject());
+                logger.info("Saving docs: {}", editForm.get("formDocs").getDefaultModel().getObject());
 
                 if (checkInBeforeSave()) {
                     checkIn(saveable);

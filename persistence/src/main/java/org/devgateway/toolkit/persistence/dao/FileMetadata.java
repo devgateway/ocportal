@@ -37,7 +37,7 @@ import jakarta.validation.constraints.NotNull;
 @Audited
 @Table(indexes = {@Index(columnList = "name")})
 public class FileMetadata extends AbstractAuditableEntity {
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, optional = false)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @org.springframework.data.annotation.Transient
     @JsonIgnore
