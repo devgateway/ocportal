@@ -3,8 +3,8 @@ package org.devgateway.toolkit.web.fm.validator;
 import org.devgateway.toolkit.web.fm.request.FmRequestParam;
 import org.springframework.util.ObjectUtils;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class FmRequestParamValidator
         implements ConstraintValidator<ValidFmRequestParam, FmRequestParam> {

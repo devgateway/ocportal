@@ -1,26 +1,8 @@
 import React from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory, {
-  PaginationProvider,
-  SizePerPageDropdownStandalone,
-  PaginationListStandalone,
-} from 'react-bootstrap-table2-paginator';
+import DataTable from 'react-data-table-component';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import fmConnect from '../../fm/fm';
-
-/* eslint-disable react/jsx-props-no-spreading */
-
-const PaginationRow = (paginationProps) => (
-  <div className="row react-bootstrap-table-pagination">
-    <div className="col-md-6 col-xs-6 col-sm-6 col-lg-6">
-      <SizePerPageDropdownStandalone {...paginationProps} />
-    </div>
-    <div className="react-bootstrap-table-pagination-list col-md-6 col-xs-6 col-sm-6 col-lg-6">
-      <PaginationListStandalone {...paginationProps} />
-    </div>
-  </div>
-);
 
 const BootstrapTableWrapper = ({
   columns,
@@ -35,42 +17,38 @@ const BootstrapTableWrapper = ({
   isFeatureVisible,
 }) => {
   const visibleColumns = columns.filter((column) => !column.fm || isFeatureVisible(column.fm));
+  const transformedColumns = visibleColumns.map((column) => ({
+    name: column.text,
+    selector: (row) => row[column.dataField], // This extracts the correct field from row data
+    cell: column.formatter ? (row) => column.formatter(row[column.dataField], row) : null, // Apply formatter if provided
+    sortable: true, // You can make columns sortable, if needed
+    className: column.classes, // Apply custom column class
+    headerClassName: column.headerClasses,
+    style: column.style, // Apply any custom styles
+  }));
   return (
-    <PaginationProvider
-      pagination={paginationFactory({
-        custom: true,
-        withFirstAndLast: true,
-        page,
-        sizePerPage: pageSize,
-        totalSize: count,
-        sizePerPageList: [20, 50, 100, 200].map((value) => ({ text: value, value })),
-      })}
-    >
-      {
-        ({ paginationProps, paginationTableProps }) => (
-          <div className="react-bs-table-container">
-            <PaginationRow {...paginationProps} />
-
-            <BootstrapTable
-              data={data}
-              striped
-              bordered={bordered}
-              remote
-              wrapperClasses={containerClass}
-              keyField="id"
-              columns={visibleColumns}
-              onTableChange={(type, { page: newPage, sizePerPage }) => {
-                onPageChange(newPage);
-                onSizePerPageList(sizePerPage);
-              }}
-              {...paginationTableProps}
-            />
-
-            <PaginationRow {...paginationProps} />
-          </div>
-        )
-      }
-    </PaginationProvider>
+    <div className={`react-data-table-container ${containerClass || ''}`}>
+      <DataTable
+        columns={transformedColumns}
+        data={data}
+        pagination
+        paginationServer
+        paginationTotalRows={count}
+        paginationDefaultPage={page}
+        paginationPerPage={pageSize}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Rows per page:',
+          rangeSeparatorText: 'of',
+          selectAllRowsItem: true,
+          selectAllRowsItemText: 'All',
+        }}
+        onChangePage={onPageChange}
+        onChangeRowsPerPage={onSizePerPageList}
+        striped
+        bordered={bordered}
+        persistTableHead
+      />
+    </div>
   );
 };
 
@@ -86,19 +64,23 @@ BootstrapTableWrapper.propTypes = {
   containerClass: PropTypes.string,
   page: PropTypes.number,
   count: PropTypes.number.isRequired,
-  data: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  })).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    }),
+  ).isRequired,
   pageSize: PropTypes.number,
   onPageChange: PropTypes.func.isRequired,
   onSizePerPageList: PropTypes.func.isRequired,
-  columns: PropTypes.arrayOf(PropTypes.shape({
-    dataField: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-    fm: PropTypes.string,
-    formatter: PropTypes.func,
-    style: PropTypes.objectOf(PropTypes.string),
-  })).isRequired,
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired, // `name` replaces `text`
+      selector: PropTypes.func.isRequired, // `selector` replaces `dataField`
+      fm: PropTypes.string,
+      format: PropTypes.func, // `format` replaces `formatter`
+      style: PropTypes.object,
+    }),
+  ).isRequired,
   isFeatureVisible: PropTypes.func.isRequired,
 };
 

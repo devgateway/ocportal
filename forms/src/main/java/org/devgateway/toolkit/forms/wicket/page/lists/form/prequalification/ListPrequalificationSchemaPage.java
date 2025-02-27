@@ -2,7 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.lists.form.prequalification;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.model.Model;
@@ -74,7 +74,7 @@ public class ListPrequalificationSchemaPage extends AbstractListStatusEntityPage
     protected BootstrapBookmarkablePageLink<Object> createImportNewPageLink(String id) {
         BootstrapBookmarkablePageLink<Object> link = new BootstrapBookmarkablePageLink<>(
                 id, ImportPrequalificationSchemaPage.class, Buttons.Type.Success);
-        link.setIconType(FontAwesomeIconType.plus_circle).setSize(Buttons.Size.Large)
+        link.setIconType(FontAwesome5IconType.plus_circle_s).setSize(Buttons.Size.Large)
                 .setLabel(new StringResourceModel("new", ListPrequalificationSchemaPage.this));
         return link;
     }

@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -51,7 +51,7 @@ public class AverageNumberOfTenderersController extends GenericOCDSController {
         public static final String YEAR = "year";
     }
 
-    @ApiOperation(value = "Calculate average number of tenderers, by year. The endpoint can be filtered"
+    @Operation(summary = "Calculate average number of tenderers, by year. The endpoint can be filtered"
             + "by year read from tender.tenderPeriod.end. "
             + "The number of tenderers are read from tender.numberOfTenderers")
 
@@ -79,10 +79,9 @@ public class AverageNumberOfTenderersController extends GenericOCDSController {
        return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Calculate average number of tenderers. The endpoint can be filtered"
+    @Operation(summary = "Calculate average number of tenderers. The endpoint can be filtered"
             + "by year read from tender.tenderPeriod.startDate. "
             + "The number of tenderers are read from tender.numberOfTenderers")
-
     @RequestMapping(value = "/api/averageNumberOfTenderers",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public List<Document> averageNumberOfTenderers(@ModelAttribute @Valid final YearFilterPagingRequest filter) {

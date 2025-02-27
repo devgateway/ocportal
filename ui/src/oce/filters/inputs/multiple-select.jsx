@@ -1,43 +1,38 @@
 import React, { useEffect } from 'react';
-import { Checkbox, ControlLabel, FormGroup } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
 import { fetch } from '../../api/Api';
 import './styles.css';
 
-const MultipleSelect = (props) => {
-  const { ep, value = [], onChange } = props;
+const MultipleSelect = ({ ep, value = [], onChange }) => {
   const [options, updateOptions] = useImmer([]);
-  const selected = new window.Set(value);
+  const selected = new Set(value);
 
   const getId = (el) => el._id;
-
-  const getLabel = getId;
+  const getLabel = (el) => el.name || el._id;
 
   useEffect(() => {
-    fetch(ep).then((data) => updateOptions(() => data.filter((el) => !!getId(el))));
+    fetch(ep)
+      .then((data) => updateOptions(() => data.filter((el) => !!getId(el))))
+      .catch((err) => console.error('Failed to fetch options:', err));
   }, [ep]);
 
   const selectAll = () => onChange(options.map(getId));
-
   const selectNone = () => onChange([]);
 
   const totalOptions = options.length;
-  const selectedCount = options.filter((option, key) => selected.has(getId(option, key))).length;
+  const selectedCount = options.filter((option) => selected.has(getId(option))).length;
 
   const { t } = useTranslation();
 
   const onToggle = (id) => {
-    if (selected.has(id)) {
-      onChange(value.filter((el) => el !== id));
-    } else {
-      onChange(value.concat(id));
-    }
+    onChange(selected.has(id) ? value.filter((el) => el !== id) : [...value, id]);
   };
 
   return (
-    <FormGroup>
-      <ControlLabel className="multiple-select-label">
+    <Form.Group controlId="multipleSelect">
+      <Form.Label className="multiple-select-label">
         Selected
         <span className="count">
           (
@@ -47,24 +42,28 @@ const MultipleSelect = (props) => {
           )
         </span>
         <div className="pull-right select-all-none">
-          <a onClick={selectAll}>
+          <button type="button" className="btn-link" onClick={selectAll}>
             {t('filters:multipleSelect:selectAll')}
-          </a>
-          &nbsp;|&nbsp;
-          <a onClick={selectNone}>
+          </button>
+            &nbsp;|&nbsp;
+          <button type="button" className="btn-link" onClick={selectNone}>
             {t('filters:multipleSelect:selectNone')}
-          </a>
+          </button>
         </div>
-      </ControlLabel>
-      {options.map((option, key) => {
-        const id = getId(option, key);
+      </Form.Label>
+      {options.map((option) => {
+        const id = getId(option);
         return (
-          <Checkbox key={id} onChange={() => onToggle(id)} checked={selected.has(id)}>
-            {getLabel(option, key)}
-          </Checkbox>
+          <Form.Check
+            type="checkbox"
+            key={id}
+            onChange={() => onToggle(id)}
+            checked={selected.has(id)}
+            label={getLabel(option)}
+          />
         );
       })}
-    </FormGroup>
+    </Form.Group>
   );
 };
 

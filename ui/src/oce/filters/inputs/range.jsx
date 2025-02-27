@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import RCRange from 'rc-slider/lib/Range';
 import 'rc-slider/assets/index.css';
 import {
-  Col, ControlLabel, FormControl, FormGroup, Row,
+  Col, Form, Row,
 } from 'react-bootstrap';
 import { useImmer } from 'use-immer';
 import { useTranslation } from 'react-i18next';
+import Slider from 'rc-slider';
 import { fetch } from '../../api/Api';
 
 const FormattedNumberInput = ({ value, onChange, ...otherProps }) => {
@@ -45,9 +45,10 @@ export const Range = ({
 
   return (
     <>
-      <FormGroup>
-        <ControlLabel>{t(titleKey)}</ControlLabel>
-        <RCRange
+      <Form.Group>
+        <Form.Label>{t(titleKey)}</Form.Label>
+        <Slider
+          range
           allowCross={false}
           min={min}
           max={max}
@@ -55,31 +56,31 @@ export const Range = ({
           value={[actualMinValue, actualMaxValue]}
           onChange={([minValue, maxValue]) => handleOnChange({ minValue, maxValue })}
         />
-      </FormGroup>
+      </Form.Group>
 
       <Row className="range-inputs">
         <Col md={4}>
-          <FormGroup>
-            <ControlLabel>{t('general:range:min')}</ControlLabel>
-            <FormControl
-              componentClass={FormattedNumberInput}
+          <Form.Group>
+            <Form.Label>{t('general:range:min')}</Form.Label>
+            <Form.Control
+              as={FormattedNumberInput}
               bsSize="sm"
               value={actualMinValue}
               onChange={(value) => handleOnChange({ minValue: value, maxValue })}
             />
-          </FormGroup>
+          </Form.Group>
         </Col>
 
         <Col md={4}>
-          <FormGroup>
-            <ControlLabel>{t('general:range:max')}</ControlLabel>
-            <FormControl
-              componentClass={FormattedNumberInput}
+          <Form.Group>
+            <Form.Label>{t('general:range:max')}</Form.Label>
+            <Form.Control
+              as={FormattedNumberInput}
               bsSize="sm"
               value={actualMaxValue}
               onChange={(value) => handleOnChange({ minValue, maxValue: value })}
             />
-          </FormGroup>
+          </Form.Group>
         </Col>
       </Row>
     </>
@@ -101,10 +102,18 @@ export const RemoteRange = ({
 
   useEffect(() => {
     fetch(ep)
-      .then(([{ [minProperty]: min, [maxProperty]: max }]) => updateState(() => ({
-        min: Math.floor(min),
-        max: Math.ceil(max),
-      })));
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const rangeData = data[0];
+          if (rangeData[minProperty] !== undefined && rangeData[maxProperty] !== undefined) {
+            updateState(() => ({
+              min: Math.floor(rangeData[minProperty]),
+              max: Math.ceil(rangeData[maxProperty]),
+            }));
+          }
+        }
+      })
+      .catch((err) => console.error('Failed to fetch range data:', err));
   }, [minProperty, maxProperty, ep]);
 
   if (state.min !== undefined && state.max !== undefined) {

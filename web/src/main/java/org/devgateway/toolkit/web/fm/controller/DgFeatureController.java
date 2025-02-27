@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public class DgFeatureController {
 
     @PostMapping(value = "/api/fm/featureProperties", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @Validated
-    @Cacheable(key = "#fmParameters.fmNames.toString() + #fmParameters.fmPrefixes.toString()")
+    @Cacheable(key = "#root.args[0].toString()")
     public List<DgFeature> featureProperties(@Valid @ModelAttribute FmRequestParam fmParameters) {
         if (!ObjectUtils.isEmpty(fmParameters.getFmNames())) {
             return fmParameters.getFmNames().stream().map(fmService::getFeature).collect(Collectors.toList());

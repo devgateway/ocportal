@@ -9,19 +9,19 @@ import {
   Route, Redirect,
 } from 'react-router-dom';
 import './style.scss';
-import OCEMakueni from './oceMakueni';
-import MakueniTenders from '../oce/makueni/tenders/makueniTenders';
-import MakueniProcurementPlans from '../oce/makueni/procurementPlan/makueniProcurementPlans';
+import OceClient from './oceClient';
+import ClientTenders from '../oce/portal/tenders/clientTenders';
+import ClientProcurementPlans from '../oce/portal/procurementPlan/clientProcurementPlans';
 import CorruptionRickDashboard from '../oce/corruption-risk';
 
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Alerts from '../oce/alerts/Alerts';
-import Docs from '../oce/makueni/Docs';
-import PublicationPolicy from '../oce/makueni/PublicationPolicy';
-import PrivacyPolicy from '../oce/makueni/PrivacyPolicy';
-import ContractsList from '../oce/makueni/ContractsList';
-import SMSHelp from '../oce/makueni/SMSHelp';
-import PortalVideos from '../oce/makueni/PortalVideos';
+import Docs from '../oce/portal/Docs';
+import PublicationPolicy from '../oce/portal/PublicationPolicy';
+import PrivacyPolicy from '../oce/portal/PrivacyPolicy';
+import ContractsList from '../oce/portal/ContractsList';
+import SMSHelp from '../oce/portal/SMSHelp';
+import PortalVideos from '../oce/portal/PortalVideos';
 
 import store from '../oce/app/store';
 
@@ -154,21 +154,21 @@ const OceSwitcherLoader = () => {
             />
           </Route>
           <Route path="/portal/tender">
-            <MakueniTenders
+            <ClientTenders
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
           <Route path="/portal/procurement-plan">
-            <MakueniProcurementPlans
+            <ClientProcurementPlans
               styling={styling}
               t={t}
               i18n={i18n}
             />
           </Route>
           <Route path="/portal/m-and-e/:selected?">
-            <OCEMakueni
+            <OceClient
               styling={styling}
               t={t}
               i18n={i18n}
@@ -189,7 +189,7 @@ const OceSwitcherLoader = () => {
             />
           </Route>
           <Route path="/portal/procurement-plan">
-            <MakueniProcurementPlans
+            <ClientProcurementPlans
               styling={styling}
               t={t}
               i18n={i18n}

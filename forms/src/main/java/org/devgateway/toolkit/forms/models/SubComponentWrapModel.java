@@ -10,7 +10,7 @@
  * Development Gateway - initial API and implementation
  *******************************************************************************/
 /**
- * 
+ *
  */
 package org.devgateway.toolkit.forms.models;
 
@@ -43,7 +43,9 @@ public class SubComponentWrapModel<T> implements IWrapModel<T> {
 
     @Override
     public void setObject(final T object) {
-        parent.setDefaultModelObject(object);
+        if (parent!=null && object!=null) {
+            parent.setDefaultModelObject(object);
+        }
     }
 
     @Override

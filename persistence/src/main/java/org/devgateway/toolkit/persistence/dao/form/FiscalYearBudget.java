@@ -14,11 +14,11 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +32,7 @@ import java.util.Collections;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"department_id", "fiscal_year_id"}))
 @OneBudgetPerDepartmentAndFY(groups = HighLevel.class, payload = Severity.NonRecoverable.class)
-public class FiscalYearBudget extends AbstractMakueniEntity {
+public class FiscalYearBudget extends AbstractClientEntity {
 
     @ExcelExport(justExport = true, useTranslation = true, name = "Fiscal Year")
     @ManyToOne(optional = false)
@@ -66,7 +66,7 @@ public class FiscalYearBudget extends AbstractMakueniEntity {
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    public Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    public Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

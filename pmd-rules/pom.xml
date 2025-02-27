@@ -4,21 +4,22 @@
 
     <artifactId>pmd-rules</artifactId>
     <packaging>jar</packaging>
+    <version>3.0.0-SNAPSHOT</version>
 
     <name>PMD Rules</name>
     <description>PMD Rules</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <pmd.version>6.21.0</pmd.version>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.portal</groupId>
+        <artifactId>portal</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>

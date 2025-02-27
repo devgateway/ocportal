@@ -5,14 +5,14 @@ import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.Contract_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author gmutuhu
  */
-public class ContractFilterState extends AbstractTenderProcessMakueniFilterState<Contract> {
+public class ContractFilterState extends AbstractTenderProcessClientFilterState<Contract> {
     protected Supplier awardee;
     @Override
     public Specification<Contract> getSpecification() {

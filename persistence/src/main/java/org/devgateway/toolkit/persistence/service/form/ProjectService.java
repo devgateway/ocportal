@@ -12,7 +12,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public interface ProjectService extends AbstractMakueniEntityService<Project>, TextSearchableService<Project> {
+public interface ProjectService extends AbstractClientEntityService<Project>, TextSearchableService<Project> {
     Long countByProcurementPlanAndProjectTitleAndIdNot(ProcurementPlan procurementPlan, String projectTitle, Long id);
 
     List<Project> findByProcurementPlan(ProcurementPlan procurementPlan);

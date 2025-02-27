@@ -1,6 +1,5 @@
 package org.devgateway.toolkit.persistence.service.category;
 
-import org.apache.poi.ss.formula.functions.Na;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear_;
 import org.devgateway.toolkit.persistence.dto.NamedDateRange;
@@ -11,14 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
-import javax.persistence.metamodel.SingularAttribute;
-import java.text.SimpleDateFormat;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author mpostelnicu
@@ -28,9 +23,6 @@ import java.util.stream.Collectors;
 public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implements FiscalYearService {
     @Autowired
     private FiscalYearRepository fiscalYearRepository;
-
-    @Resource
-    private FiscalYearService self; // Self-autowired reference to proxified bean of this class.
 
     @Override
     protected BaseJpaRepository<FiscalYear, Long> repository() {
@@ -43,7 +35,7 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
     }
 
     public List<FiscalYear> getAll() {
-        return self.findAll();
+        return findAll();
     }
 
     @Override
@@ -84,7 +76,7 @@ public class FiscalYearServiceImpl extends BaseJpaServiceImpl<FiscalYear> implem
 
     @Override
     public FiscalYear getLastFiscalYear() {
-        return self.getYearsWithData().isEmpty() ? null : self.getYearsWithData().get(0);
+        return getYearsWithData().isEmpty() ? null : getYearsWithData().get(0);
     }
 
     @Override

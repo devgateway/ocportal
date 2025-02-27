@@ -7,7 +7,7 @@ export const LOADING = 'loading';
 
 export const loadStats = createAsyncThunk(
   'stats/load',
-  () => fetch('/makueni/contractStats'),
+  () => fetch('/client/contractStats'),
   {
     condition: (arg, { getState }) => getState().stats.status === NOT_INITIALIZED,
   },

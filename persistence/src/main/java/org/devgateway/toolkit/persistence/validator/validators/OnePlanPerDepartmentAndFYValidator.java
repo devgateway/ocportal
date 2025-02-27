@@ -4,8 +4,8 @@ import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * @author Octavian Ciubotaru
@@ -21,7 +21,11 @@ public class OnePlanPerDepartmentAndFYValidator
         if (plan.getDepartment() == null || plan.getFiscalYear() == null) {
             return true;
         }
+
+        Long departmentId = plan.getDepartment().getId();
+        Long fiscalYearId = plan.getFiscalYear().getId();
         Long exceptId = plan.getId() == null ? -1L : plan.getId();
-        return service.countByDepartmentAndFiscalYear(plan.getDepartment(), plan.getFiscalYear(), exceptId) == 0;
+
+        return service.countByDepartmentAndFiscalYear(departmentId, fiscalYearId, exceptId) == 0;
     }
 }

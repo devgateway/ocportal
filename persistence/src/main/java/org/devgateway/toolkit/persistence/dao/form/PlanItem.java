@@ -15,13 +15,13 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,6 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-05
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "parent_id"), @Index(columnList = "item_id")})
@@ -58,13 +57,13 @@ public class PlanItem extends AbstractChildExpandableAuditEntity<ProcurementPlan
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String sourceOfFunds;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
-    @Size(max = 1)
+    //@Size(max = 1)
     private List<TargetGroup> targetGroup = new ArrayList<>();
 
-    @ExcelExport(useTranslation = true, name = "Target Group Value (KES)")
+    @ExcelExport(useTranslation = true, name = "AGPO Category Value (KES)")
     private BigDecimal targetGroupValue;
 
     @ExcelExport(useTranslation = true, name = "1st Quarter (KES)")

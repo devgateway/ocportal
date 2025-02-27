@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.excelchart;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.web.rest.controller.TendersByItemClassification;
 import org.devgateway.ocds.web.rest.controller.request.LangYearFilterPagingRequest;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class TendersByItemExcelController extends ExcelChartOCDSController {
     @Autowired
     private TendersByItemClassification tendersByItemClassification;
 
-    @ApiOperation(value = "Exports *Number of bids by item* dashboard in Excel format.")
+    @Operation(summary = "Exports *Number of bids by item* dashboard in Excel format.")
     @RequestMapping(value = "/api/ocds/tendersByItemExcelChart",
             method = {RequestMethod.GET, RequestMethod.POST})
     public void numberOfTendersByItemExcelChart(@ModelAttribute @Valid final LangYearFilterPagingRequest filter,

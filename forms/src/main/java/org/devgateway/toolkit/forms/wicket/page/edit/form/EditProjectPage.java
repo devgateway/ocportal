@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditProjectPage extends EditAbstractMakueniEntityPage<Project>
+public class EditProjectPage extends EditAbstractClientEntityPage<Project>
         implements ProcurementRoleAssignable {
     @SpringBean
     protected ProjectService projectService;

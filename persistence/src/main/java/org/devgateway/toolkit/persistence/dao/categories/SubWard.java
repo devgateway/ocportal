@@ -3,9 +3,9 @@ package org.devgateway.toolkit.persistence.dao.categories;
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 /**
  * @author mpostelnicu

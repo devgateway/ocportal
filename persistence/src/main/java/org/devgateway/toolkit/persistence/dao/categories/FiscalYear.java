@@ -16,9 +16,10 @@ import org.devgateway.toolkit.persistence.dao.Labelable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -26,10 +27,10 @@ import java.util.Date;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FiscalYear extends AbstractAuditableEntity implements Labelable {
 
     @NotNull
+    @Field("label")
     private String name;
 
     @NotNull

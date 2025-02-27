@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -52,7 +52,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
 
             final DBObject metaData = new BasicDBObject();
             String md5 = fileMetadata.getMd5();
-            GridFSFile existingFile = gridFsOperations.findOne(new Query(Criteria.where("md5").is(md5)
+            GridFSFile existingFile = gridFsOperations.findOne(new Query(Criteria.where("metadata.md5").is(md5)
                     .and("filename").is(fileMetadata.getName())));
             ObjectId objId;
 
@@ -61,6 +61,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
                 objId = existingFile.getObjectId();
             } else {
                 final InputStream is = ByteSource.wrap(fileMetadata.getContent().getBytes()).openStream();
+                metaData.put("md5", md5);
                 objId = gridFsOperations.store(
                         is, fileMetadata.getName(), fileMetadata.getContentType(), metaData);
                 is.close();
@@ -76,7 +77,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
     }
 
     @Override
-    public Document storeFileAndReferenceAsDocument(FileMetadata fm, String documentType) {
+    public Document reallyStoreFileAndReferenceAsDocument(FileMetadata fm, String documentType) {
         FileMetadata fileMetadata = storeFile(fm);
         if (fileMetadata == null) {
             return null;
@@ -99,7 +100,7 @@ public class MongoFileStorageServiceImpl implements MongoFileStorageService {
 
     @Override
     public Document storeFileAndReferenceAsDocument(FileMetadata fm, Document.DocumentType documentType) {
-        return storeFileAndReferenceAsDocument(fm, documentType.toString());
+        return reallyStoreFileAndReferenceAsDocument(fm, documentType.toString());
     }
 
 

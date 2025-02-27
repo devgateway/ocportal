@@ -8,7 +8,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.validation.Configuration;
+import jakarta.validation.Configuration;
 
 /**
  * Configure and expose a bean validator based on {@link HibernateValidator}.
@@ -21,6 +21,10 @@ import javax.validation.Configuration;
 public class HibernateValidatorFactoryBean extends LocalValidatorFactoryBean {
 
     @Autowired
+    public void setFmConstraintsConfigurer(FMConstraintsConfigurer fmConstraintsConfigurer) {
+        this.fmConstraintsConfigurer = fmConstraintsConfigurer;
+    }
+
     private FMConstraintsConfigurer fmConstraintsConfigurer;
 
     public HibernateValidatorFactoryBean() {

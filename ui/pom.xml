@@ -15,9 +15,9 @@
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.portal</groupId>
+        <artifactId>portal</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <build>
@@ -26,6 +26,13 @@
                 <filtering>false</filtering>
                 <directory>${project.basedir}/build</directory>
                 <targetPath>public/ui</targetPath>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/oce</directory>
+                <includes>
+                    <include>**/*.jsx</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
@@ -61,7 +68,7 @@
                     </execution>
 
                     <execution>
-                        <id>npm install</id>
+                        <id>npm install --legacy-peer-deps</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>

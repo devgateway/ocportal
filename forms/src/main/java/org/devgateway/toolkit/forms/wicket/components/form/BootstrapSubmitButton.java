@@ -10,23 +10,23 @@
  * Development Gateway - initial API and implementation
  *******************************************************************************/
 /**
- * 
+ *
  */
 package org.devgateway.toolkit.forms.wicket.components.form;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.IModel;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 
 /**
  * @author mpostelnicu
- * 
+ *
  */
-public abstract class BootstrapSubmitButton extends DgFmLaddaAjaxButton {
+public abstract class BootstrapSubmitButton extends DgFmAjaxButton {
 
     private static final long serialVersionUID = 8306451874943978003L;
 
@@ -34,15 +34,12 @@ public abstract class BootstrapSubmitButton extends DgFmLaddaAjaxButton {
      * @param id
      * @param model
      */
-    public BootstrapSubmitButton(final String id, final IModel<String> model) {
-        super(id, model, Buttons.Type.Primary);
-        setIconType(FontAwesomeIconType.save);
+    protected BootstrapSubmitButton(final String id, final IModel<String> model) {
+        super(id, model);
+        add(new AttributeAppender("class", " btn-primary "));
+        add(new IconBehavior(FontAwesome5IconType.save_r));
     }
 
-    public BootstrapSubmitButton(final String id, final Form<?> form, final IModel<String> model) {
-        super(id, model, form, Buttons.Type.Primary);
-        setIconType(FontAwesomeIconType.save);
-    }
 
     @Override
     protected abstract void onSubmit(AjaxRequestTarget target);

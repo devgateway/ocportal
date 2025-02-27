@@ -1,13 +1,13 @@
 package org.devgateway.toolkit.persistence.service.form;
 
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 
 /**
  * @author Octavian Ciubotaru
  */
 public interface TenderProcessEntityServiceResolver {
 
-    <T extends AbstractTenderProcessMakueniEntity> long countByTenderProcess(T entity);
+    <T extends AbstractTenderProcessClientEntity> long countByTenderProcess(T entity);
 
-    <T extends AbstractTenderProcessMakueniEntity> T saveAndFlush(T entity);
+    <T extends AbstractTenderProcessClientEntity> T saveAndFlush(T entity);
 }

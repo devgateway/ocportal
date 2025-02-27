@@ -8,6 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Transactional
-public interface TenderRepository extends AbstractTenderProcessMakueniEntityRepository<Tender> {
+public interface TenderRepository extends AbstractTenderProcessClientEntityRepository<Tender> {
 
 }

@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class PMCReportServiceImpl extends AbstractImplTenderProcessMakueniEntityServiceImpl<PMCReport>
+public class PMCReportServiceImpl extends AbstractImplTenderProcessClientEntityServiceImpl<PMCReport>
         implements PMCReportService {
 
     @Autowired

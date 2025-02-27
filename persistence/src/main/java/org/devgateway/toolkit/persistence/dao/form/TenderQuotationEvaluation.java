@@ -15,15 +15,15 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +35,6 @@ import java.util.List;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")},
         uniqueConstraints =
         @UniqueConstraint(columnNames = "tender_process_id"))
@@ -43,7 +42,7 @@ import java.util.List;
 @Form(featureName = "tenderQuotationEvaluationForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueTenderQuotationEvaluation.message}")
-public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntity {
+public class TenderQuotationEvaluation extends AbstractTenderProcessClientEntity {
 
     @ExcelExport(useTranslation = true, name = "Tender Opening Date")
     private Date openingDate;
@@ -90,14 +89,14 @@ public class TenderQuotationEvaluation extends AbstractTenderProcessMakueniEntit
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     public String getLabel() {
-        return "Tender Quotation Evaluation for tender process " + getTenderProcessNotNull().getLabel();
+        return "Tender Evaluation for tender process " + getTenderProcessNotNull().getLabel();
     }
 
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getProfessionalOpinion()));
     }

@@ -1,6 +1,7 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
 import org.devgateway.ocds.web.spring.SendEmailService;
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.feedback.FeedbackMessage;
 import org.devgateway.toolkit.persistence.dao.feedback.ReplyableFeedbackMessage;
@@ -12,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 
 import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
@@ -73,7 +74,7 @@ public class AlertsEmailService {
         if (SecurityUtil.getDisableEmailAlerts(adminSettingsRepository)) {
             return;
         }
-        replyableFeedbackMessage.getReplies().stream().filter(AbstractPersistable::isNew).forEach(
+        replyableFeedbackMessage.getReplies().stream().filter(CustomAbstractPersistable::isNew).forEach(
                 m -> sendFeedbackAlertEmails(replyableFeedbackMessage, m));
     }
 

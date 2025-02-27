@@ -4,6 +4,6 @@ import org.devgateway.toolkit.persistence.dao.form.AdministratorReport;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public interface AdministratorReportRepository extends AbstractImplTenderProcessMakueniEntityRepository
+public interface AdministratorReportRepository extends AbstractImplTenderProcessClientEntityRepository
         <AdministratorReport> {
 }

@@ -9,9 +9,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.util.Collection;
 
 /**
@@ -19,11 +19,10 @@ import java.util.Collection;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "administratorReportForm")
-public class AdministratorReport extends AbstractAuthImplTenderProcessMakueniEntity {
+public class AdministratorReport extends AbstractAuthImplTenderProcessClientEntity {
 
     @MaxAttachedFiles
     @JsonIgnore

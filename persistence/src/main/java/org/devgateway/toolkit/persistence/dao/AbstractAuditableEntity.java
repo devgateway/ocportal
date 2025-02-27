@@ -12,13 +12,15 @@
 package org.devgateway.toolkit.persistence.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PreUpdate;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PreUpdate;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -33,12 +35,14 @@ public abstract class AbstractAuditableEntity extends GenericPersistable
     private static final long serialVersionUID = 4031407178647451427L;
 
     @Audited
+    @org.springframework.data.annotation.Transient
     protected String createdBy;
 
     @Audited
     protected ZonedDateTime createdDate;
 
     @Audited
+    @org.springframework.data.annotation.Transient
     protected String lastModifiedBy;
 
     @Audited

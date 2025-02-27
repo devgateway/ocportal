@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -275,6 +275,6 @@ public class PMCReportOfflineServiceImpl implements PMCReportOfflineService {
                 .map(this::convertToOffline)
                 .collect(Collectors.toList());
     }
-    
+
 }
 

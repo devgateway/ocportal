@@ -22,7 +22,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/cabinetPapers")
-public class ListCabinetPaperPage extends ListAbstractMakueniEntityPage<CabinetPaper> {
+public class ListCabinetPaperPage extends ListAbstractClientEntityPage<CabinetPaper> {
 
     @SpringBean
     protected CabinetPaperService cabinetPaperService;

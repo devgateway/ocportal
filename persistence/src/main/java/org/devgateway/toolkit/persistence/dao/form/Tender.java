@@ -22,17 +22,17 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +48,6 @@ import java.util.function.Consumer;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id"),
         @Index(columnList = "tenderTitle"),
         @Index(columnList = "tenderNumber")}, uniqueConstraints =
@@ -57,8 +56,8 @@ import java.util.function.Consumer;
 @Form(featureName = "tenderForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueTender.message}")
-public class Tender extends AbstractTenderProcessMakueniEntity implements TitleAutogeneratable {
-    @ExcelExport(useTranslation = true, name = "Tender ID")
+public class Tender extends AbstractTenderProcessClientEntity implements TitleAutogeneratable {
+    @ExcelExport(useTranslation = true, name = "Tender Number")
     @Column(length = DBConstants.STD_DEFAULT_TEXT_LENGTH)
     private String tenderNumber;
 
@@ -102,7 +101,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
     @ExcelExport(useTranslation = true, name = "Tender Value (KES)")
     private BigDecimal tenderValue;
 
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     @ManyToOne
     private TargetGroup targetGroup;
 
@@ -242,7 +241,7 @@ public class Tender extends AbstractTenderProcessMakueniEntity implements TitleA
 
     @Override
     @Transactional
-    protected Collection<AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<AbstractClientEntity> getDirectChildrenEntities() {
 
         return Collections.singletonList(PersistenceUtil.getNext(getTenderProcessNotNull()
                 .getTenderQuotationEvaluation()));

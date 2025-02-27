@@ -13,14 +13,15 @@ package org.devgateway.toolkit.forms.wicket.components.form;
 
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstrapcheckbox.BootstrapCheckBoxPicker;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.form.checkbox.bootstrapcheckbox.BootstrapCheckBoxPickerConfig;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.model.IModel;
 
 /**
  * @author mpostelnicu
- * 
+ *
  */
 public class CheckBoxPickerBootstrapFormComponent
         extends GenericEnablingBootstrapFormComponent<Boolean, BootstrapCheckBoxPicker> {
@@ -52,8 +53,8 @@ public class CheckBoxPickerBootstrapFormComponent
 
         final BootstrapCheckBoxPickerConfig config = new BootstrapCheckBoxPickerConfig().withOnClass("btn-info")
                 .withOffClass("btn-warning")
-                .withOnIcon(FontAwesomeIconType.thumbs_up).withOffIcon(FontAwesomeIconType.thumbs_down)
-                .withReverse(true).withSize(BootstrapCheckBoxPickerConfig.Size.Small);
+                .withOnIcon(FontAwesome5IconType.thumbs_up_r).withOffIcon(FontAwesome5IconType.thumbs_down_r)
+                .withReverse(true);
 
         final BootstrapCheckBoxPicker checkBoxPicker = new BootstrapCheckBoxPicker("field", initFieldModel(), config);
         checkBoxPicker.add(new AjaxFormComponentUpdatingBehavior("change") {
@@ -64,6 +65,7 @@ public class CheckBoxPickerBootstrapFormComponent
                 CheckBoxPickerBootstrapFormComponent.this.onUpdate(target);
             }
         });
+        checkBoxPicker.add(new AttributeModifier("style", "transform: scale(0.8);"));
 
         return checkBoxPicker;
     }

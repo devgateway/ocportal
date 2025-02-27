@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.SetJoin;
+import jakarta.persistence.criteria.SetJoin;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

@@ -10,9 +10,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import jakarta.validation.groups.Default;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
@@ -24,8 +24,11 @@ import java.util.Set;
  * @since 2019-03-04
  */
 public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializable> implements BaseJpaService<T> {
-
     @Autowired
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
+
     private Validator validator;
 
     @Override
@@ -121,8 +124,8 @@ public abstract class BaseJpaServiceImpl<T extends GenericPersistable & Serializ
         assertEntityIsValid(entity);
         return repository().saveAndFlush(entity);
     }
-
-    private <S extends T> void assertEntityIsValid(S entity) {
+    @Transactional
+    public  <S extends T> void assertEntityIsValid(S entity) {
         Set<ConstraintViolation<S>> violations = validator.validate(entity, Default.class, HighLevel.class);
         if (!violations.isEmpty()) {
             throw new InvalidObjectException(new HashSet<>(violations));

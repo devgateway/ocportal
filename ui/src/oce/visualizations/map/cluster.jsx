@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { LayerGroup } from 'react-leaflet';
+import React, { useRef, useEffect } from 'react';
+import { LayerGroup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { toK } from '../../tools';
 import 'leaflet.markercluster/dist/leaflet.markercluster';
@@ -33,24 +34,57 @@ function clusterIcon(cluster, maxAmount) {
   });
 }
 
-class Cluster extends LayerGroup {
-  componentWillMount() {
-    super.componentWillMount();
-    this.leafletElement = L.markerClusterGroup({
-      showCoverageOnHover: false,
-      singleMarkerMode: true,
-      maxClusterRadius: 10,
-      iconCreateFunction: (cluster) => clusterIcon(cluster, this.props.maxAmount),
-    });
-  }
+const Cluster = ({ maxAmount, children }) => {
+  const map = useMap();
+  const clusterGroupRef = useRef();
 
-  componentDidUpdate() {
-    this.leafletElement.refreshClusters();
-  }
-}
+  useEffect(() => {
+    if (!clusterGroupRef.current) {
+      // Initialize the marker cluster group
+      clusterGroupRef.current = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        singleMarkerMode: true,
+        maxClusterRadius: 10,
+        iconCreateFunction: (cluster) => clusterIcon(cluster, maxAmount),
+      });
+
+      map.addLayer(clusterGroupRef.current);
+    }
+
+    // Add children to the marker cluster group
+    if (clusterGroupRef.current && children) {
+      // Add the markers or layers passed as children to the cluster group
+      const leafletElements = React.Children.map(children, (child) => {
+        // Ensure each child is a valid leaflet layer (like Marker or other layers)
+        if (child && child.props && child.props.position) {
+          return L.marker(child.props.position, { icon: clusterIcon(child, maxAmount), ...child.props });
+        }
+        return null;
+      }).filter(Boolean); // Remove null values
+
+      leafletElements.forEach((leafletElement) => {
+        clusterGroupRef.current.addLayer(leafletElement);
+      });
+    }
+
+    // Refresh clusters when maxAmount changes or children are updated
+    if (clusterGroupRef.current) {
+      clusterGroupRef.current.refreshClusters();
+    }
+
+    return () => {
+      if (clusterGroupRef.current) {
+        map.removeLayer(clusterGroupRef.current);
+      }
+    };
+  }, [map, maxAmount, children]);
+
+  return <LayerGroup>{children}</LayerGroup>;
+};
 
 Cluster.propTypes = {
   maxAmount: PropTypes.number.isRequired,
+  children: PropTypes.node,
 };
 
 export default Cluster;

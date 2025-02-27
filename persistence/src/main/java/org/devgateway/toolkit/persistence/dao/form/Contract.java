@@ -21,17 +21,17 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")},
         uniqueConstraints =
         @UniqueConstraint(columnNames = "tender_process_id"))
@@ -53,7 +52,7 @@ import java.util.stream.Collectors;
 @Form(featureName = "contractForm")
 @UniqueTenderProcessEntity(groups = HighLevel.class, payload = Severity.NonRecoverable.class,
         message = "{org.devgateway.toolkit.persistence.dao.form.UniqueContract.message}")
-public class Contract extends AbstractTenderProcessMakueniEntity {
+public class Contract extends AbstractTenderProcessClientEntity {
     @ExcelExport(useTranslation = true, name = "Contract Value")
     private BigDecimal contractValue;
 
@@ -96,7 +95,7 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     private List<ContractDocument> contractDocs = new ArrayList<>();
 
     @ManyToOne
-    @ExcelExport(justExport = true, useTranslation = true, name = "Target Group")
+    @ExcelExport(justExport = true, useTranslation = true, name = "AGPO Category")
     private TargetGroup targetGroup;
 
     @ExcelExport(useTranslation = true, name = "Contract Extension Date")
@@ -216,8 +215,8 @@ public class Contract extends AbstractTenderProcessMakueniEntity {
     @JsonIgnore
     @org.springframework.data.annotation.Transient
     @Override
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
-        ArrayList<AbstractMakueniEntity> children = new ArrayList<>();
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
+        ArrayList<AbstractClientEntity> children = new ArrayList<>();
         children.addAll(getTenderProcessNotNull().getAdministratorReports());
         children.addAll(getTenderProcessNotNull().getPmcReports());
         children.addAll(getTenderProcessNotNull().getInspectionReports());

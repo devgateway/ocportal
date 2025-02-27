@@ -2,7 +2,7 @@ import React from 'react';
 import Table from './index';
 import orgnamesFetching from '../../orgnames-fetching';
 import { pluckImm } from '../../tools';
-import ContractsList from '../../makueni/ContractsList';
+import ContractsList from '../../portal/ContractsList';
 import PropTypes from 'prop-types';
 
 class TopImplSupplier extends orgnamesFetching(Table) {

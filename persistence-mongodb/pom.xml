@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Copyright (c) 2015 Development Gateway, Inc and others.
-   
+
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the MIT License (MIT)
     which accompanies this distribution, and is available at
     https://opensource.org/licenses/MIT
-   
+
     Contributors:
     Development Gateway - initial API and implementation
  -->
@@ -23,21 +23,21 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>org.devgateway.toolkit.persistence.spring.PersistenceApplication</start-class>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <json.patch.version>1.13</json.patch.version>
         <commons-digester3.version>3.2</commons-digester3.version>
-        <reflections.version>0.9.11</reflections.version>
+        <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.portal</groupId>
+        <artifactId>portal</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -114,12 +114,21 @@
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>3.5.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jakarta-xml.version}</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <dependency>

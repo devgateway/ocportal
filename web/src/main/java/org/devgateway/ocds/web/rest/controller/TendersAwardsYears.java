@@ -4,7 +4,7 @@
 package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomGroupingOperation;
@@ -36,7 +36,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @CacheConfig(cacheNames = "tendersAwardsYears")
 public class TendersAwardsYears extends GenericOCDSController {
 
-    @ApiOperation(value = "Computes all available years from awards.date, tender.tenderPeriod.startDate")
+    @Operation(summary = "Computes all available years from awards.date, tender.tenderPeriod.startDate")
     @RequestMapping(value = "/api/tendersAwardsYears", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> tendersAwardsYears() {

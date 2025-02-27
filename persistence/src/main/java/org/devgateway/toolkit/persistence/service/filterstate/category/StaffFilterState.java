@@ -5,7 +5,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Staff;
 import org.devgateway.toolkit.persistence.dao.categories.Staff_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 

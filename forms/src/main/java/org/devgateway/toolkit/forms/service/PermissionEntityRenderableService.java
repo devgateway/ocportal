@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import org.devgateway.ocds.forms.wicket.FormSecurityUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.EditorValidatorRoleAssignable;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -24,7 +24,7 @@ public class PermissionEntityRenderableService {
         return !Sets.intersection(roles, page.getCombinedRoles()).isEmpty();
     }
 
-    public String getAllowedAccess(final EditorValidatorRoleAssignable page, AbstractMakueniEntity entity) {
+    public String getAllowedAccess(final EditorValidatorRoleAssignable page, AbstractClientEntity entity) {
         return getAllowedAccess(page, entity.isNew(), entity.getDepartment());
     }
 

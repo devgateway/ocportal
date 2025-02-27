@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -43,7 +43,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Cacheable
 public class SmallRepetitiveDirectAwardsByBuyer extends GenericOCDSController {
 
-    @ApiOperation(value = "Number of suppliers that receive two or more direct awards on similar items, by Department")
+    @Operation(summary = "Number of suppliers that receive two or more direct awards on similar items, by Department")
     @RequestMapping(value = "/api/smallRepetitiveDirectAwardsByBuyer",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> smallRepetitiveDirectAwardsByBuyer(@ModelAttribute

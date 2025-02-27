@@ -14,11 +14,13 @@ package org.devgateway.toolkit.forms.wicket.page.lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons.Size;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconBehavior;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
@@ -42,11 +44,11 @@ import org.devgateway.toolkit.forms.service.PermissionEntityRenderableService;
 import org.devgateway.toolkit.forms.wicket.components.form.AJAXDownload;
 import org.devgateway.toolkit.forms.wicket.page.RevisionsPage;
 import org.devgateway.toolkit.forms.wicket.page.edit.AbstractEditPage;
-import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractMakueniEntityPage;
+import org.devgateway.toolkit.forms.wicket.page.edit.form.EditAbstractClientEntityPage;
 import org.devgateway.toolkit.forms.wicket.providers.AbstractDataProvider;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.excel.service.ExcelGeneratorService;
 import org.devgateway.toolkit.persistence.service.BaseJpaService;
 import org.devgateway.toolkit.web.Constants;
@@ -54,7 +56,7 @@ import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -135,7 +137,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
         if (hasNewPage) {
             BootstrapBookmarkablePageLink<T> button;
             button = new BootstrapBookmarkablePageLink<>(id, editPageClass, Buttons.Type.Success);
-            button.setIconType(FontAwesomeIconType.plus_circle).setSize(Size.Large)
+            button.setIconType(FontAwesome5IconType.plus_circle_s).setSize(Size.Large)
                     .setLabel(new StringResourceModel("new", AbstractListPage.this));
             return button;
         } else {
@@ -182,14 +184,14 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
             final BootstrapBookmarkablePageLink<T> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", editPageClass, pageParameters, Buttons.Type.Info);
-            editPageLink.setIconType(FontAwesomeIconType.edit)
+            editPageLink.setIconType(FontAwesome5IconType.edit_r)
                     .setSize(Size.Small)
                     .setType(Buttons.Type.Primary)
                     .setLabel(new StringResourceModel("edit", AbstractListPage.this, null));
-            if (editPage instanceof EditAbstractMakueniEntityPage && entity instanceof AbstractMakueniEntity
+            if (editPage instanceof EditAbstractClientEntityPage && entity instanceof AbstractClientEntity
                     && SecurityConstants.Action.VIEW.equals(permissionEntityRenderableService.getAllowedAccess(
-                    (EditAbstractMakueniEntityPage<?>) editPage, (AbstractMakueniEntity) entity))) {
-                editPageLink.setIconType(FontAwesomeIconType.eye)
+                    (EditAbstractClientEntityPage<?>) editPage, (AbstractClientEntity) entity))) {
+                editPageLink.setIconType(FontAwesome5IconType.eye_r)
                         .setType(Buttons.Type.Warning)
                         .setLabel(new StringResourceModel("view", AbstractListPage.this, null));
             }
@@ -203,7 +205,7 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
 
             final BootstrapBookmarkablePageLink<Void> revisionsPageLink = new BootstrapBookmarkablePageLink<>(
                     "revisions", RevisionsPage.class, revisionsPageParameters, Buttons.Type.Info);
-            revisionsPageLink.setIconType(FontAwesomeIconType.clock_o).setSize(Size.Small)
+            revisionsPageLink.setIconType(FontAwesome5IconType.clock_s).setSize(Size.Small)
                     .setLabel(new StringResourceModel("revisions", AbstractListPage.this, null));
             add(revisionsPageLink);
             MetaDataRoleAuthorizationStrategy.authorize(
@@ -307,9 +309,8 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
             };
             add(download);
 
-            final LaddaAjaxButton excelButton = new LaddaAjaxButton("excelButton",
-                    new StringResourceModel("excelDownload", this),
-                    Buttons.Type.Warning) {
+            final AjaxButton excelButton = new AjaxButton("excelButton",
+                    new StringResourceModel("excelDownload", this)) {
                 @Override
                 protected void onSubmit(final AjaxRequestTarget target) {
                     super.onSubmit(target);
@@ -318,7 +319,10 @@ public abstract class AbstractListPage<T extends GenericPersistable & Serializab
                     download.initiate(target);
                 }
             };
-            excelButton.setIconType(FontAwesomeIconType.file_excel_o);
+            excelButton.add(new AttributeAppender("class", Buttons.Type.Warning));
+
+            excelButton.add(new IconBehavior(FontAwesome5IconType.file_excel_s));
+
             add(excelButton);
         }
     }

@@ -4,7 +4,7 @@ package org.devgateway.toolkit.persistence.validator.validators;
 import org.apache.commons.lang3.StringUtils;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptance;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotification;
@@ -35,9 +35,9 @@ import java.util.stream.Stream;
 public class TenderProcessValidator implements Validator {
 
     private Boolean submission = false;
-    private AbstractMakueniEntity validatable;
+    private AbstractClientEntity validatable;
 
-    public TenderProcessValidator(AbstractMakueniEntity validatable, Boolean submission) {
+    public TenderProcessValidator(AbstractClientEntity validatable, Boolean submission) {
         this.submission = submission;
         this.validatable = validatable;
     }
@@ -50,36 +50,36 @@ public class TenderProcessValidator implements Validator {
         return TenderProcess.class.isAssignableFrom(clazz);
     }
 
-    public static <E extends AbstractMakueniEntity> boolean existsNonDraft(E e) {
+    public static <E extends AbstractClientEntity> boolean existsNonDraft(E e) {
         return e != null && !DBConstants.Status.TERMINATED.equals(e.getStatus())
                 && !DBConstants.Status.DRAFT.equals(e.getStatus());
     }
 
-    public static <E extends AbstractMakueniEntity> Stream<E> nonDraft(Collection<E> col) {
+    public static <E extends AbstractClientEntity> Stream<E> nonDraft(Collection<E> col) {
         return col.stream().filter(TenderProcessValidator::existsNonDraft);
     }
 
-    public static <E extends AbstractMakueniEntity> Stream<E> draft(Collection<E> col) {
+    public static <E extends AbstractClientEntity> Stream<E> draft(Collection<E> col) {
         return col.stream().filter(TenderProcessValidator::existsDraft);
     }
 
-    public static <E extends AbstractMakueniEntity> Boolean existsDraft(Collection<E> col) {
+    public static <E extends AbstractClientEntity> Boolean existsDraft(Collection<E> col) {
         return col.stream().anyMatch(TenderProcessValidator::existsDraft);
     }
 
-    public static <E extends AbstractMakueniEntity> Boolean isStatusNull(Collection<E> col) {
-        return col.stream().map(AbstractMakueniEntity::getStatus).filter(Objects::isNull).count() != 0;
+    public static <E extends AbstractClientEntity> Boolean isStatusNull(Collection<E> col) {
+        return col.stream().map(AbstractClientEntity::getStatus).filter(Objects::isNull).count() != 0;
     }
 
-    public static Boolean existsDraft(AbstractMakueniEntity e) {
+    public static Boolean existsDraft(AbstractClientEntity e) {
         return e != null && DBConstants.Status.DRAFT.equals(e.getStatus());
     }
 
-    public static <E extends AbstractMakueniEntity> Boolean existsNonDraft(Collection<E> col) {
+    public static <E extends AbstractClientEntity> Boolean existsNonDraft(Collection<E> col) {
         return nonDraft(col).findFirst().isPresent();
     }
 
-    public static <E extends AbstractMakueniEntity> Boolean existsNonDraftWithNull(Collection<E> col,
+    public static <E extends AbstractClientEntity> Boolean existsNonDraftWithNull(Collection<E> col,
                                                                                    Boolean submission) {
         if (!submission) {
             return nonDraft(col).findFirst().isPresent();
@@ -92,7 +92,7 @@ public class TenderProcessValidator implements Validator {
         }
     }
 
-    public static <E extends AbstractMakueniEntity, F extends AbstractMakueniEntity> Boolean existsNonDraftPair(
+    public static <E extends AbstractClientEntity, F extends AbstractClientEntity> Boolean existsNonDraftPair(
             Collection<E> col1, Collection<F> col2) {
         return existsNonDraft(col1) && existsNonDraft(col2);
     }
@@ -177,8 +177,8 @@ public class TenderProcessValidator implements Validator {
                 .concat(" and ").concat(tmp.get(size));
     }
 
-    public List<AbstractMakueniEntity> createAllFormsList(TenderProcess tp) {
-        List<AbstractMakueniEntity> allForms = new ArrayList<>();
+    public List<AbstractClientEntity> createAllFormsList(TenderProcess tp) {
+        List<AbstractClientEntity> allForms = new ArrayList<>();
         allForms.add(tp.getProcurementPlan());
         allForms.add(tp.getProject());
         allForms.add(tp.getSinglePurchaseRequisition());
@@ -196,7 +196,7 @@ public class TenderProcessValidator implements Validator {
         return allForms;
     }
 
-    public boolean existsLowerFormsInDraft(List<AbstractMakueniEntity> allForms, AbstractMakueniEntity f) {
+    public boolean existsLowerFormsInDraft(List<AbstractClientEntity> allForms, AbstractClientEntity f) {
         int i = allForms.indexOf(f);
         for (int x = 0; x < allForms.size(); x++) {
             if (x <= i) {
@@ -209,11 +209,11 @@ public class TenderProcessValidator implements Validator {
         return false;
     }
 
-    public boolean existsDraftWithLowerFormsDraft(List<AbstractMakueniEntity> allForms, AbstractMakueniEntity f) {
+    public boolean existsDraftWithLowerFormsDraft(List<AbstractClientEntity> allForms, AbstractClientEntity f) {
         return existsDraft(f) && existsLowerFormsInDraft(allForms, f);
     }
 
-    public <E extends AbstractMakueniEntity> boolean draftLinkedPaymentVouchers(Set<PaymentVoucher> paymentVouchers,
+    public <E extends AbstractClientEntity> boolean draftLinkedPaymentVouchers(Set<PaymentVoucher> paymentVouchers,
                                                                                 Set<E> linkedSet,
                                                                                 Function<? super PaymentVoucher,
                                                                                         ? extends E>
@@ -223,7 +223,7 @@ public class TenderProcessValidator implements Validator {
     }
 
     public void reportDraft(TenderProcess tp, Errors errors) {
-        List<AbstractMakueniEntity> allForms = createAllFormsList(tp);
+        List<AbstractClientEntity> allForms = createAllFormsList(tp);
         ArrayList<String> draftForms = new ArrayList<>();
         if (existsDraftWithLowerFormsDraft(allForms, tp.getProcurementPlan())) {
             draftForms.add("Procurement Plan");

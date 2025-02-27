@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.forms.models;
 
-import nl.dries.wicket.hibernate.dozer.DozerModel;
+//import nl.dries.wicket.hibernate.dozer.DozerModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.devgateway.toolkit.forms.wicket.providers.SortableJpaServiceDataProvider;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;

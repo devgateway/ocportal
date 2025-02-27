@@ -44,9 +44,13 @@ import java.util.stream.Collectors;
 @Component
 public class FMConstraintsConfigurer {
 
-    private final Logger logger = LoggerFactory.getLogger(HibernateValidatorFactoryBean.class);
-
+    private final Logger logger = LoggerFactory.getLogger(FMConstraintsConfigurer.class);
     @Autowired
+
+    public void setConstraintInfoProvider(ConstraintInfoProvider constraintInfoProvider) {
+        this.constraintInfoProvider = constraintInfoProvider;
+    }
+
     private ConstraintInfoProvider constraintInfoProvider;
 
     /**

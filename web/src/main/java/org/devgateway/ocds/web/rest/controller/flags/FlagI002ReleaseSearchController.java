@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.flags;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.flags.FlagsConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ import java.util.List;
 public class FlagI002ReleaseSearchController extends AbstractSingleFlagReleaseSearchController {
 
     @Override
-    @ApiOperation(value = "Search releases by flag i002")
+    @Operation(summary = "Search releases by flag i002")
     @RequestMapping(value = "/api/flags/i002/releases",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public List<Document> releaseFlagSearch(@ModelAttribute @Valid YearFilterPagingRequest filter) {
@@ -31,7 +31,7 @@ public class FlagI002ReleaseSearchController extends AbstractSingleFlagReleaseSe
     }
 
     @Override
-    @ApiOperation(value = "Counts releases by flag i002")
+    @Operation(summary = "Counts releases by flag i002")
     @RequestMapping(value = "/api/flags/i002/count",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public List<Document> releaseFlagCount(@ModelAttribute @Valid YearFilterPagingRequest filter) {

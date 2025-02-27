@@ -29,8 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.ServletContext;
 import java.util.Arrays;
 import java.util.EventListener;
 import java.util.HashSet;
@@ -60,8 +60,7 @@ public class JavaMelodyConfiguration {
     public ServletListenerRegistrationBean<EventListener> monitoringSessionListener(
             final ServletContext servletContext) {
         final ServletListenerRegistrationBean<EventListener> servletListenerRegistrationBean =
-                new ServletListenerRegistrationBean<>(
-                        new SessionListener());
+                new ServletListenerRegistrationBean<>(new SessionListener());
         if (servletContext.getFilterRegistration("javamelody") != null) {
             // if webapp deployed as war in a container with MonitoringFilter and SessionListener already added by
             // web-fragment.xml,

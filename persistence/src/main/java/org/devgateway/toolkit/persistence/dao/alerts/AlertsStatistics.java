@@ -6,9 +6,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.Transient;
 
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 /**
  * @author idobre
@@ -16,7 +16,6 @@ import javax.persistence.Table;
  * <p>
  * The class encapsulates statistics of email alerts processing.
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "numberSentAlerts"), @Index(columnList = "numberErrors")})

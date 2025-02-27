@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 @Transactional
-public interface PurchaseRequisitionGroupRepository extends AbstractTenderProcessMakueniEntityRepository
+public interface PurchaseRequisitionGroupRepository extends AbstractTenderProcessClientEntityRepository
         <PurchaseRequisitionGroup> {
 
 }

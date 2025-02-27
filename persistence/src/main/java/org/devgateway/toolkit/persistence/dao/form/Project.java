@@ -14,14 +14,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,11 +35,10 @@ import java.util.function.Consumer;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"), @Index(columnList = "projectTitle")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "projectForm")
-public class Project extends AbstractMakueniEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
+public class Project extends AbstractClientEntity implements ProcurementPlanAttachable, TitleAutogeneratable {
     @ExcelExport(separateSheet = true, useTranslation = true, name = "Cabinet Papers")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
@@ -142,7 +141,7 @@ public class Project extends AbstractMakueniEntity implements ProcurementPlanAtt
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

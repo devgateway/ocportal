@@ -1,8 +1,9 @@
 package org.devgateway.toolkit.persistence.test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+
 
 import java.io.Serializable;
 
@@ -10,14 +11,14 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.junit.Test;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 
 /**
  * @author Octavian Ciubotaru
  */
 public class IdSerializationTest {
 
-    private static class DummyEntity extends AbstractPersistable<Long> implements Serializable {
+    private static class DummyEntity extends CustomAbstractPersistable<Long> implements Serializable {
     }
 
     @Test

@@ -1,0 +1,89 @@
+import CRDPage from '../corruption-risk/page';
+import Header from '../layout/header';
+import './portal.scss';
+import React from 'react';
+
+class PortalVideos extends CRDPage {
+  render() {
+    const { t } = this.props;
+    return (
+      <div className="container-fluid dashboard-default">
+        <Header
+          styling={this.props.styling}
+          selected="docs"
+        />
+        <div className="client-procurement-plan content row">
+
+          {/* Center the heading */}
+          <div className="col-md-6 mx-auto">
+            <h1>{t('portalVideos:title')}</h1>
+          </div>
+
+          {/* Center the video sections */}
+          <div className="col-md-8 mx-auto text-justify">
+            <h2>{t('portalVideos:video1')}</h2>
+            <iframe
+              width="640"
+              height="480"
+              src="https://www.youtube.com/embed/U5K1_zgKEU4"
+              frameBorder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+          <div className="col-md-8 mx-auto text-justify">
+            <h2>{t('portalVideos:video2')}</h2>
+            <iframe
+              width="640"
+              height="480"
+              src="https://www.youtube.com/embed/nq52dm4KMso"
+              frameBorder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+          <div className="col-md-8 mx-auto text-justify">
+            <h2>{t('portalVideos:video3')}</h2>
+            <iframe
+              width="640"
+              height="480"
+              src="https://www.youtube.com/embed/bUXg6QNxY1s"
+              frameBorder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+          <div className="col-md-8 mx-auto text-justify">
+            <h2>{t('portalVideos:video4')}</h2>
+            <iframe
+              width="640"
+              height="480"
+              src="https://www.youtube.com/embed/mkh5lGdfC30"
+              frameBorder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+          <div className="col-md-8 mx-auto text-justify">
+            <h2>{t('portalVideos:video5')}</h2>
+            <iframe
+              width="640"
+              height="480"
+              src="https://www.youtube.com/embed/LGSILUGkOmE"
+              frameBorder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+}
+
+export default PortalVideos;

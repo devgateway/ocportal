@@ -12,7 +12,7 @@
 package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
@@ -75,7 +75,7 @@ public class TopTenController extends GenericOCDSController {
      * @return
      */
 
-    @ApiOperation(value = "Returns the top ten largest active awards."
+    @Operation(summary = "Returns the top ten largest active awards."
             + " The amount is taken from the award.value field. The returned data will contain"
             + "the following fields: "
             + "awards.date, awards.suppliers.name, "
@@ -116,7 +116,7 @@ public class TopTenController extends GenericOCDSController {
      *
      * @return
      */
-    @ApiOperation(value = "Returns the top ten largest active tenders."
+    @Operation(summary = "Returns the top ten largest active tenders."
             + " The amount is taken from the tender.value.amount field." + " The returned data will contain"
             + "the following fields: " + "tender.tenderPeriod.endDate, tender.value.amount, "
             + "buyer.name")
@@ -145,7 +145,7 @@ public class TopTenController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "This endpoint should return the following data for the Top 10 suppliers (by award value)."
+    @Operation(summary = "This endpoint should return the following data for the Top 10 suppliers (by award value)."
             + "Returns supplier id, total awarded amount of all awarded contracts, count of awarded contracts,"
             + "Ids of the procuring entities from which they have received an award, and their count. "
             + "All filters ally here, the year filter uses the awards.date field.")

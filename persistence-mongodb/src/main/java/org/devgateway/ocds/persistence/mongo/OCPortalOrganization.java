@@ -12,7 +12,7 @@ import java.util.List;
 public class OCPortalOrganization extends Organization {
 
     @JsonProperty("targetGroup")
-    @JsonPropertyDescription("The name of the target group. Eg PWD, Women, Youth, etc.")
+    @JsonPropertyDescription("The name of the AGPO Category. Eg PWD, Women, Youth, etc.")
     @ExcelExport
     private List<String> targetGroups = new ArrayList<>();
 

@@ -6,5 +6,5 @@ import org.devgateway.toolkit.persistence.service.TextSearchableService;
 /**
  * @author mpostelnicu
  */
-public interface InspectionReportService extends AbstractImplTenderProcessMakueniEntityService<InspectionReport> {
+public interface InspectionReportService extends AbstractImplTenderProcessClientEntityService<InspectionReport> {
 }

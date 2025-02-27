@@ -2,7 +2,7 @@ package org.devgateway.ocds.web.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.Scanners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +57,14 @@ public class TranslationService {
 
     /**
      * Returns all the translation files for a specific language, sorted naturally by file name
-     * The trnaslation files have to start with @param language and end with ".json"
+     * The traslation files have to start with @param language and end with ".json"
      *
      * @param language
      * @return
      */
     private Set<String> getAllTranslationFileNamesForLanguage(String language) {
-        return new TreeSet<String>(new Reflections(TRANSLATION_PKG_NAME, new ResourcesScanner()).
-                getResources(Pattern.compile(language + "(.*).json")));
+        Reflections reflections = new Reflections(TRANSLATION_PKG_NAME, Scanners.Resources);
+        return new TreeSet<>(reflections.getResources(Pattern.compile(language + "(.*).json")));
     }
 
     /**

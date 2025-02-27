@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
@@ -64,6 +65,8 @@ public class ExcelFileImportDefaultTest {
         public <T> T getBean(Class<T> aClass) throws BeansException {
             return (T) new TestAddressRepository();
         }
+
+
 
         @Override
         public String getId() {
@@ -119,7 +122,17 @@ public class ExcelFileImportDefaultTest {
         public String[] getBeanDefinitionNames() {
             return new String[0];
         }
-        
+
+        @Override
+        public <T> ObjectProvider<T> getBeanProvider(Class<T> aClass, boolean b) {
+            return null;
+        }
+
+        @Override
+        public <T> ObjectProvider<T> getBeanProvider(ResolvableType resolvableType, boolean b) {
+            return null;
+        }
+
 
         @Override
         public String[] getBeanNamesForType(ResolvableType resolvableType) {
@@ -163,6 +176,16 @@ public class ExcelFileImportDefaultTest {
 
         @Override
         public <A extends Annotation> A findAnnotationOnBean(String s, Class<A> aClass) throws NoSuchBeanDefinitionException {
+            return null;
+        }
+
+        @Override
+        public <A extends Annotation> A findAnnotationOnBean(String s, Class<A> aClass, boolean b) throws NoSuchBeanDefinitionException {
+            return null;
+        }
+
+        @Override
+        public <A extends Annotation> Set<A> findAllAnnotationsOnBean(String beanName, Class<A> annotationType, boolean allowFactoryBeanInit) throws NoSuchBeanDefinitionException {
             return null;
         }
 

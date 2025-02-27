@@ -17,16 +17,16 @@ import org.hibernate.envers.Audited;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,14 +40,13 @@ import java.util.Set;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "department_id"), @Index(columnList = "fiscal_year_id")},
         uniqueConstraints = @UniqueConstraint(columnNames = {"department_id", "fiscal_year_id"}))
 @Document
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "procurementPlanForm")
 @OnePlanPerDepartmentAndFY(groups = HighLevel.class, payload = Severity.NonRecoverable.class)
-public class ProcurementPlan extends AbstractMakueniEntity {
+public class ProcurementPlan extends AbstractClientEntity {
     @ExcelExport(justExport = true, useTranslation = true, name = "Department")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Department department;
@@ -146,23 +145,12 @@ public class ProcurementPlan extends AbstractMakueniEntity {
         return getLabel();
     }
 
-    /**
-     * Since we no longer have projects all the time, a procurement plan becomes exportable as soon as it has
-     * some tender processes added, regardless if these are approved or not
-     *
-     * @return
-     */
-    @Override
-    @Transactional
-    public boolean isExportable() {
-        return super.isExportable() || getTenderProcesses().size() > 0;
-    }
 
     @Override
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    public Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

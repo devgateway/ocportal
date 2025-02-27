@@ -1,13 +1,16 @@
 package org.devgateway.toolkit.forms.wicket.page.user;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.page.BasePage;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.service.alerts.AlertService;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.annotation.mount.MountPath;
@@ -53,17 +56,27 @@ public class UnsubscribeEmailPage extends BasePage {
                 alertService.unsubscribeAlert(alert);
 
                 // clear "servicesCache" cache;
-                final CacheManager cm = CacheManager.getInstance();
-                final Cache servicesCache = cm.getCache("servicesCache");
+                CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+                        .withCache("servicesCache", CacheConfigurationBuilder.
+                                newCacheConfigurationBuilder(
+                                        String.class, Object.class, ResourcePoolsBuilder.heap(100))
+                                .build())
+                        .build(true);
+
+                Cache<String, Object> servicesCache = cacheManager.
+                        getCache("servicesCache", String.class, Object.class);
+
                 if (servicesCache != null) {
-                    servicesCache.removeAll();
+                    servicesCache.clear(); // Clear all entries from the cache
                 }
             }
         }
 
-        final TransparentWebMarkupContainer messageContainer = new TransparentWebMarkupContainer("messageContainer");
+        final TransparentWebMarkupContainer messageContainer =
+                new TransparentWebMarkupContainer("messageContainer");
         add(messageContainer);
-        final TransparentWebMarkupContainer errorContainer = new TransparentWebMarkupContainer("errorContainer");
+        final TransparentWebMarkupContainer errorContainer =
+                new TransparentWebMarkupContainer("errorContainer");
         add(errorContainer);
 
         errorContainer.setVisibilityAllowed(error);

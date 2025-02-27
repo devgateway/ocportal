@@ -46,6 +46,18 @@ body {
     z-index: 1001;
 }
 
+.navbar-brand img {
+    max-height: 40px;
+    width: auto;
+}
+
+form.well {
+    background-color: #f8f9fa; /* Light grey background */
+    padding: 20px;
+    border-radius: 12px; /* More rounded corners */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow for raised effect */
+    margin-top: 20px; /* Raises the form slightly */
+}
 @media only screen and (max-width: 767px){
     .mainHeader.with-navbar-fixed-top{
         position: relative;
@@ -129,6 +141,9 @@ body {
 .navbar-header .navbar-brand {
     /*height: auto;*/
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 @media (min-width: 768px){
@@ -154,8 +169,8 @@ body {
     line-height: 135%;
     margin-top: 10px;
     padding-left: 0;
-    position: absolute;
-    width: 250px;
+    width: 450px;
+    margin-left: 10px;
 }
 
 @media (max-width: 768px){

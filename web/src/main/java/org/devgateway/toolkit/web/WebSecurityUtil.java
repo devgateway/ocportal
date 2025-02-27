@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.toolkit.web;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class WebSecurityUtil {
 

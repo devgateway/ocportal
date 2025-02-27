@@ -1,5 +1,5 @@
 import React from 'react';
-import FilterItemTypeAhead from '../makueni/filters/FilterItemTypeAhead';
+import FilterItemTypeAhead from '../portal/filters/FilterItemTypeAhead';
 
 const mapper = (el) => ({ _id: el.id, label: el.name });
 

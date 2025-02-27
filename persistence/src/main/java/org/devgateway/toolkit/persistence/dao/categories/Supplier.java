@@ -13,12 +13,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.AccessType;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +41,7 @@ public class Supplier extends Category {
     @org.springframework.data.annotation.Transient
     private Set<PrequalifiedSupplier> prequalifiedSuppliers = new HashSet<>();
 
-    @ExcelExport(justExport = true, name = "Target Group")
+    @ExcelExport(justExport = true, name = "AGPO Category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany
     private List<TargetGroup> targetGroups = new ArrayList<>();

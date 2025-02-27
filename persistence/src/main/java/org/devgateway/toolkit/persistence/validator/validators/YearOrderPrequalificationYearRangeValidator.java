@@ -1,11 +1,8 @@
 package org.devgateway.toolkit.persistence.validator.validators;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationYearRange;
-import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationYearRangeService;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * @author mpostelnicu

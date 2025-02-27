@@ -1,7 +1,7 @@
 # EDIT PAGE
 - name: administratorReportForm
   enabled: yes
-  visible: yes
+  visible: no
 - name: administratorReportForm.approve
   enabled: yes
   visible: yes

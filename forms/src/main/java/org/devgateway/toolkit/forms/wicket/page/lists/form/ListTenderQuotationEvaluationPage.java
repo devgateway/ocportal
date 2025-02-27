@@ -17,7 +17,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath("/tenderQuotationEvaluationList")
-public class ListTenderQuotationEvaluationPage extends ListAbstractTenderProcessMakueniEntity
+public class ListTenderQuotationEvaluationPage extends ListAbstractTenderProcessClientEntity
         <TenderQuotationEvaluation> {
     
     @SpringBean
@@ -48,5 +48,9 @@ public class ListTenderQuotationEvaluationPage extends ListAbstractTenderProcess
     @Override
     public JpaFilterState<TenderQuotationEvaluation> newFilterState() {
         return new TenderQuotationEvaluationFilterState();
+    }
+
+    protected void autoPageTitle() {
+
     }
 }

@@ -17,10 +17,16 @@
 
                 <div class="row bottom-form-btns">
                     <div class="col-md-10">
-                        <button wicket:id="save" type="button" class="btn btn-green">[[SAVE]]</button>
-                        <button wicket:id="delete" type="button" class="btn btn-delete">[[DELETE]]</button>
+                        <span wicket:id="save"  class="btn btn-green">
+                        <span wicket:id="saveLabel">[[SAVE]]</span>
+                </span>
+                        <span wicket:id="delete" class="btn btn-delete">
+                        <span wicket:id="deleteLabel">[[DELETE]]</span>
+                </span>
                         <span wicket:id="extraButtons"></span>
-                        <button wicket:id="cancel" type="button" class="btn btn-cancel">[[CLOSE]]</button>
+                        <span wicket:id="cancel"  class="btn btn-cancel">
+                        <span wicket:id="cancelLabel">[[CLOSE]]</span>
+                </span>
                     </div>
                 </div>
                 <div wicket:id="deleteModal"></div>

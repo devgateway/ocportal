@@ -5,5 +5,5 @@ import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
 /**
  * @author mpostelnicu
  */
-public interface PaymentVoucherService extends AbstractImplTenderProcessMakueniEntityService<PaymentVoucher> {
+public interface PaymentVoucherService extends AbstractImplTenderProcessClientEntityService<PaymentVoucher> {
 }

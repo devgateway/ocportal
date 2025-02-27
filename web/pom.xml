@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2015 Development Gateway, Inc and others. All rights reserved. This program and the accompanying materials 
-	are made available under the terms of the MIT License (MIT) which accompanies this distribution, and is available at https://opensource.org/licenses/MIT 
+<!-- Copyright (c) 2015 Development Gateway, Inc and others. All rights reserved. This program and the accompanying materials
+	are made available under the terms of the MIT License (MIT) which accompanies this distribution, and is available at https://opensource.org/licenses/MIT
 	Contributors: Development Gateway - initial API and implementation -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -15,18 +15,21 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <start-class>org.devgateway.toolkit.web.spring.WebApplication</start-class>
-        <java.version>1.8</java.version>
-        <swagger.version>3.0.0</swagger.version>
+        <java.version>17</java.version>
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
-        <commons-email.version>1.5</commons-email.version>
+        <commons-email.version>1.6.0</commons-email.version>
         <json-tools.version>1.2.14</json-tools.version>
         <json-patch.version>1.13</json-patch.version>
+        <ooxml-schemas.version>1.4</ooxml-schemas.version>
+        <swagger.version>3.0.0</swagger.version>
+        <checkstyle.skip>true</checkstyle.skip>
+
     </properties>
 
     <parent>
-        <groupId>org.devgateway.makueni</groupId>
-        <artifactId>makueni</artifactId>
-        <version>${revision}</version>
+        <groupId>org.devgateway.ocportal.portal</groupId>
+        <artifactId>portal</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -35,6 +38,7 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-email</artifactId>
@@ -42,10 +46,10 @@
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.mail</groupId>
-                    <artifactId>javax.mail</artifactId>
+                    <artifactId>jakarta.mail</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>javax.activation</groupId>
+                    <groupId>jakarta.activation</groupId>
                     <artifactId>activation</artifactId>
                 </exclusion>
             </exclusions>
@@ -68,21 +72,33 @@
         </dependency>
 
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.4</version>
         </dependency>
 
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>3.10.3</version>
+            <version>3.18.3</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.java-json-tools</groupId>
             <artifactId>jackson-coreutils</artifactId>
             <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>ooxml-schemas</artifactId>
+            <version>${ooxml-schemas.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.xmlbeans</groupId>
+                    <artifactId>xmlbeans</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -123,7 +139,7 @@
             <version>0.3.2</version>
             <exclusions>
                 <exclusion>
-                    <groupId>javax.mail</groupId>
+                    <groupId>jakarta.mail</groupId>
                     <artifactId>mailapi</artifactId>
                 </exclusion>
                 <exclusion>
@@ -167,11 +183,11 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -204,7 +220,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence</artifactId>
         </dependency>
 
@@ -223,7 +239,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.devgateway.makueni</groupId>
+            <groupId>org.devgateway.ocportal.portal</groupId>
             <artifactId>persistence-mongodb</artifactId>
         </dependency>
 
@@ -240,6 +256,7 @@
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>4.18.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -264,13 +281,16 @@
             </resource>
 
             <resource>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
                 <directory>${project.basedir}</directory>
                 <includes>
                     <include>public/**</include>
                 </includes>
             </resource>
-
+            <resource>
+                <directory>public/languages</directory>
+                <targetPath>languages</targetPath>
+            </resource>
             <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
@@ -314,10 +334,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

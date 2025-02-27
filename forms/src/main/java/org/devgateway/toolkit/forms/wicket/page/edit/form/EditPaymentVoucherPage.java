@@ -10,9 +10,9 @@ import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.MEPaymentRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.providers.GenericChoiceProvider;
 import org.devgateway.toolkit.persistence.dao.DBConstants;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.PaymentVoucher;
-import org.devgateway.toolkit.persistence.service.form.AbstractMakueniEntityService;
+import org.devgateway.toolkit.persistence.service.form.AbstractClientEntityService;
 import org.devgateway.toolkit.persistence.service.form.AdministratorReportService;
 import org.devgateway.toolkit.persistence.service.form.InspectionReportService;
 import org.devgateway.toolkit.persistence.service.form.PMCReportService;
@@ -99,8 +99,8 @@ public class EditPaymentVoucherPage extends EditAbstractImplTenderProcessEntityP
         saveTerminateButton.setVisibilityAllowed(false);
     }
 
-    private <X extends AbstractImplTenderProcessMakueniEntity> GenericChoiceProvider<X>
-    submittedAndWithinTenderProcessProvider(AbstractMakueniEntityService<X> service) {
+    private <X extends AbstractImplTenderProcessClientEntity> GenericChoiceProvider<X>
+    submittedAndWithinTenderProcessProvider(AbstractClientEntityService<X> service) {
         return new GenericChoiceProvider<>(service.findAll().stream().filter(x ->
                 (x.getStatus().equals(DBConstants.Status.SUBMITTED)
                         || x.getStatus().equals(DBConstants.Status.APPROVED))

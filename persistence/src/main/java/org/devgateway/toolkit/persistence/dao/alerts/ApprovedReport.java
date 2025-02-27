@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.dao.alerts;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 
 import org.devgateway.toolkit.persistence.dao.AbstractAuditableEntity;
 import org.devgateway.toolkit.persistence.dao.form.MEReport;
@@ -13,7 +13,6 @@ import org.hibernate.envers.Audited;
 /**
  * @author Octavian Ciubotaru
  */
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Audited
 public class ApprovedReport extends AbstractAuditableEntity {

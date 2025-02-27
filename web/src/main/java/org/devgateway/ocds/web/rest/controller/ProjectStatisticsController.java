@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -52,7 +52,7 @@ public class ProjectStatisticsController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Calculates number of projects per year")
+    @Operation(summary = "Calculates number of projects per year")
     @RequestMapping(value = "/api/numberOfProjectsByYear", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> numberOfProjectsByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
@@ -78,7 +78,7 @@ public class ProjectStatisticsController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Calculates amount of project budgeted by year")
+    @Operation(summary = "Calculates amount of project budgeted by year")
     @RequestMapping(value = "/api/amountBudgetedByYear", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> amountBudgetedByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
@@ -107,7 +107,7 @@ public class ProjectStatisticsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Calculates number of contracts per year")
+    @Operation(summary = "Calculates number of contracts per year")
     @RequestMapping(value = "/api/numberOfContractsByYear", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> numberOfContractsByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {
@@ -130,7 +130,7 @@ public class ProjectStatisticsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Calculates contract amount by year")
+    @Operation(summary = "Calculates contract amount by year")
     @RequestMapping(value = "/api/amountContractedByYear", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> amountContractedByYear(@ModelAttribute @Valid final YearFilterPagingRequest filter) {

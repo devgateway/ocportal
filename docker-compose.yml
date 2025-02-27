@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+
+  app:
+    image: ${APP_IMAGE:-ocportal/admin/dev}:${TAG:-local}
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway" #required so docker connects to host interface (this is for sending emails)
+    build:
+        target: prod
+        args:
+          PROJECT_NAME: ${PROJECT_NAME:-ocportal}
+    depends_on:
+      - db
+      - mongo
+    ports:
+      - "127.0.0.1:8090:8090"
+    env_file:
+      - .env
+
+  db:
+    image: postgis/postgis:11-3.3
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  mongo:
+    image: mongo:4.2
+    restart: always
+    command: [--auth]
+    volumes:
+        - mongodata:/data/db
+    env_file:
+      - .env
+
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    volumes:
+      - /opt/pgbackups:/backups
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=ocportal
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=30
+      - BACKUP_KEEP_WEEKS=12
+      - BACKUP_KEEP_MONTHS=24
+      - HEALTHCHECK_PORT=5432
+
+volumes:
+    pgdata:
+    mongodata:

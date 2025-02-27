@@ -61,9 +61,9 @@ import org.devgateway.toolkit.persistence.dao.categories.ProcurementMethod;
 import org.devgateway.toolkit.persistence.dao.categories.ProcuringEntity;
 import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.form.AbstractAuthImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractAuthImplTenderProcessClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Bid;
@@ -89,8 +89,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 import org.springframework.data.mongodb.util.BsonUtils;
 import org.springframework.mail.MailException;
@@ -100,8 +100,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
@@ -131,9 +130,6 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     @Value("${serverURL}")
     private String serverURL;
 
-    @Resource
-    private OCPortalToOCDSConversionServiceImpl self;
-
     @Autowired
     private DgFmService fmService;
 
@@ -153,7 +149,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
 
     private StringBuffer validationErrors;
 
-    public static final String OCID_PREFIX = "ocds-muq5cl-";
+    public static final String OCID_PREFIX = "ocds-84imen-";
 
     private ImmutableMap<String, Milestone.Status> meMilestoneMap;
 
@@ -176,7 +172,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     private PersonService personService;
 
     @Autowired
-    private CustomConversions customConversions;
+    private MongoCustomConversions customConversions;
 
     @Autowired
     private MappingMongoConverter mappingMongoConverter;
@@ -494,7 +490,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         return period;
     }
 
-    public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessMakueniEntity report) {
+    public Milestone createAuthImplMilestone(AbstractAuthImplTenderProcessClientEntity report) {
         OCPortalMilestone milestone = new OCPortalMilestone();
         safeSet(milestone::setId, report::getId, this::longIdToString);
         safeSet(milestone::setTitle, () -> "Payment Authorization " + report.getId());
@@ -597,7 +593,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         return mongoFileStorageService.storeFileAndReferenceAsDocument(fm, Document.DocumentType.PROCUREMENT_PLAN);
     }
 
-    private Document storeAsDocumentProjectPlan(AbstractMakueniEntity entity) {
+    private Document storeAsDocumentProjectPlan(AbstractClientEntity entity) {
         return mongoFileStorageService.storeFileAndReferenceAsDocument(
                 entity.getFormDoc(),
                 Document.DocumentType.PROJECT_PLAN
@@ -847,6 +843,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void convertToOcdsAndSaveAllApprovedPurchaseRequisitions() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -859,7 +856,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         validationErrors = new StringBuffer();
         Set<String> ocids = tenderProcessService.findAll()
                 .stream()
-                .map(p -> self.createAndPersistRelease(p.getId()))
+                .map(p -> createAndPersistRelease(p.getId()))
                 .filter(Objects::nonNull)
                 .map(Release::getOcid)
                 .collect(Collectors.toSet());
@@ -1378,7 +1375,7 @@ public class OCPortalToOCDSConversionServiceImpl implements OCPortalToOCDSConver
         return impl;
     }
 
-    private <S extends AbstractImplTenderProcessMakueniEntity>
+    private <S extends AbstractImplTenderProcessClientEntity>
     Collection<FileMetadata> convertImplToFileMetadata(Collection<S> c) {
         return c.stream()
                 .flatMap(r -> r.getFormDocs().stream()).collect(Collectors.toList());

@@ -1,9 +1,8 @@
 package org.devgateway.toolkit.web.rest.controller.alerts.processsing;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 import org.bson.Document;
 import org.devgateway.ocds.web.spring.SendEmailService;
+import org.devgateway.toolkit.persistence.dao.CustomAbstractPersistable;
 import org.devgateway.toolkit.persistence.dao.GenericPersistable;
 import org.devgateway.toolkit.persistence.dao.alerts.Alert;
 import org.devgateway.toolkit.persistence.dao.alerts.AlertsStatistics;
@@ -12,11 +11,13 @@ import org.devgateway.toolkit.persistence.service.alerts.AlertsStatisticsService
 import org.devgateway.toolkit.persistence.service.filterstate.alerts.AlertFilterState;
 import org.devgateway.toolkit.web.rest.controller.alerts.AlertsEmailService;
 import org.devgateway.toolkit.web.rest.controller.alerts.exception.AlertsProcessingException;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheManagerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
@@ -37,13 +38,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.devgateway.toolkit.persistence.dao.DBConstants.INSTANCE_NAME;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
-
-import javax.annotation.Resource;
 
 /**
  * @author idobre
@@ -56,9 +52,6 @@ public class AlertsManagerImpl implements AlertsManager {
     private static final Integer MAX_FAIL_COUNT = 3;
 
     private static final int THREAD_COUNT = 2;
-
-    @Resource
-    private AlertsManager self;
 
     @Value("${serverURL}")
     private String serverURL;
@@ -82,7 +75,7 @@ public class AlertsManagerImpl implements AlertsManager {
     @Transactional
     public synchronized void sendAlerts() {
         final List<Long> alertIds = getAlertableUsers().stream()
-                .map(AbstractPersistable::getId)
+                .map(CustomAbstractPersistable::getId)
                 .collect(Collectors.toList());
 
         logger.info(alertIds.size() + " alerts(s) will be processed.");
@@ -92,7 +85,7 @@ public class AlertsManagerImpl implements AlertsManager {
         // create and start alerts threads
         final List<AlertsThread> threads = new ArrayList<>();
         for (int i = 0; i < lists.length; i++) {
-            final AlertsThread thread = new AlertsThread(lists[i], self);
+            final AlertsThread thread = new AlertsThread(lists[i], this);
             thread.setName("Alerts Thread #" + i);
             thread.start();
             threads.add(thread);
@@ -111,11 +104,12 @@ public class AlertsManagerImpl implements AlertsManager {
 
             alertsStatisticsService.saveAndFlush(globalStats);
 
-            // clear "servicesCache" cache;
-            final CacheManager cm = CacheManager.getInstance();
-            final Cache servicesCache = cm.getCache("servicesCache");
+            // Clear the cache using Ehcache 3.x
+            CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
+            Cache<Long, Object> servicesCache = cacheManager.getCache("servicesCache", Long.class, Object.class);
+
             if (servicesCache != null) {
-                servicesCache.removeAll();
+                servicesCache.clear(); // Clear all entries from the cache
             }
         } catch (InterruptedException e) {
             logger.error("Couldn't join all threads", e);

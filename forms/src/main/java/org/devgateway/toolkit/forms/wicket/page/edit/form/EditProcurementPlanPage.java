@@ -1,14 +1,21 @@
 package org.devgateway.toolkit.forms.wicket.page.edit.form;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponent;
+import org.devgateway.toolkit.forms.wicket.components.form.FileInputBootstrapFormComponentWrapper;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.components.util.ComponentUtil;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.PlanItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
 import org.devgateway.toolkit.forms.wicket.page.overview.status.StatusOverviewPage;
+import org.devgateway.toolkit.persistence.dao.FileMetadata;
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
@@ -16,13 +23,17 @@ import org.devgateway.toolkit.persistence.service.form.ProcurementPlanService;
 import org.devgateway.toolkit.web.security.SecurityConstants;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * @author idobre
  * @since 2019-04-02
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<ProcurementPlan>
+public class EditProcurementPlanPage extends EditAbstractClientEntityPage<ProcurementPlan>
         implements ProcurementRoleAssignable {
     @SpringBean
     protected ProcurementPlanService procurementPlanService;
@@ -56,17 +67,25 @@ public class EditProcurementPlanPage extends EditAbstractMakueniEntityPage<Procu
         this.jpaService = procurementPlanService;
     }
 
-    @Override
+
+
+        @Override
     protected void onInitialize() {
         editForm.attachFm("procurementPlanForm");
+//        editForm.setDefaultModel(new CompoundPropertyModel<>(getModel()));
         super.onInitialize();
 
         editForm.add(new GenericSleepFormComponent<>("department"));
         editForm.add(new GenericSleepFormComponent<>("fiscalYear"));
         editForm.add(new PlanItemPanel("planItems"));
 
-        final FileInputBootstrapFormComponent formDocs =
-                new FileInputBootstrapFormComponent("formDocs");
+
+            FileInputBootstrapFormComponent formDocs = new FileInputBootstrapFormComponent("formDocs",
+                    new PropertyModel<>(editForm.getModel(), "formDocs"));
+//        FileUploadPanel fileUploadPanel = new FileUploadPanel("formDocs");
+//        fileUploadPanel.setOutputMarkupId(true);
+//        formDocs.setOutputMarkupId(true);
+
         editForm.add(formDocs);
 
         ComponentUtil.addDateField(editForm, "approvedDate");

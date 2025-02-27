@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -49,7 +49,7 @@ public class TotalCancelledTendersByYearController extends GenericOCDSController
         public static final String YEAR = "year";
     }
 
-    @ApiOperation(value = "Total Cancelled tenders by year. The tender amount is read from tender.value."
+    @Operation(summary = "Total Cancelled tenders by year. The tender amount is read from tender.value."
             + "The tender status has to be 'cancelled'. The year is retrieved from tender.tenderPeriod.startDate.")
     @RequestMapping(value = "/api/totalCancelledTendersByYear", method = { RequestMethod.POST, RequestMethod.GET },
             produces = "application/json")

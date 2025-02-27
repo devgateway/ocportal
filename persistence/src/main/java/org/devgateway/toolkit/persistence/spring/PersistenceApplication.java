@@ -29,6 +29,7 @@ import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -46,7 +47,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EntityScan(basePackageClasses = {GenericPersistable.class})
 @PropertySource("classpath:/org/devgateway/toolkit/persistence/application.properties")
-@ComponentScan("org.devgateway.toolkit")
+@ComponentScan(value = "org.devgateway.toolkit", excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASPECTJ, pattern = "org.devgateway.jocds.ValidatorConfiguration"))
 @EnableConfigurationProperties({OnfonMediaProperties.class, DgFmProperties.class})
 public class PersistenceApplication {
     private static final Logger logger = LoggerFactory.getLogger(PersistenceApplication.class);

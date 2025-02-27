@@ -8,13 +8,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.DefaultFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.GroupingFilterPagingRequest;
-import org.devgateway.ocds.web.rest.controller.request.MakueniFilterPagingRequest;
+import org.devgateway.ocds.web.rest.controller.request.ClientFilterPagingRequest;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
 import org.devgateway.toolkit.persistence.mongo.aggregate.CustomSortingOperation;
 import org.devgateway.toolkit.persistence.mongo.spring.MongoUtil;
@@ -36,7 +35,7 @@ import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +49,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -667,7 +665,7 @@ public abstract class GenericOCDSController {
         filterProjectMap = Collections.unmodifiableMap(tmpMap);
     }
 
-    protected Criteria getYearFilterCriteria(final MakueniFilterPagingRequest filter, final String dateProperty) {
+    protected Criteria getYearFilterCriteria(final ClientFilterPagingRequest filter, final String dateProperty) {
         final YearFilterPagingRequest yearFilterPagingRequest = new YearFilterPagingRequest();
         yearFilterPagingRequest.setYear(filter.getYear());
         yearFilterPagingRequest.setMonth(filter.getMonth());

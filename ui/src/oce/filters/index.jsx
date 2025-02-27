@@ -4,7 +4,7 @@ import FiltersWrapper, {
   minMaxPropertyRendererCreator,
   singlePropertyRendererCreator,
   dateRendererCreator,
-} from '../makueni/filters/FiltersWrapper';
+} from '../portal/filters/FiltersWrapper';
 import ProcuringEntitySelect from './procuring-entity-select';
 import BuyerSelect from './buyer-select';
 import SupplierSelect from './supplier-select';
@@ -13,7 +13,7 @@ import ProcurementMethodRationale from './procurement-method-rationale';
 import FiscalYear from './fiscal-year';
 import TenderPrice from './tender-price';
 import AwardValue from './award-value';
-import FilterTenderDate from '../makueni/filters/FilterTenderDate';
+import FilterTenderDate from '../portal/filters/FilterTenderDate';
 
 const Filters = (props) => {
   const { t } = useTranslation();
@@ -25,12 +25,15 @@ const Filters = (props) => {
       filters: [
         {
           render: singlePropertyRendererCreator(ProcuringEntitySelect, 'procuringEntityId'),
+          fm: 'publicView.filter.procuringEntity',
         },
         {
           render: singlePropertyRendererCreator(BuyerSelect, 'buyerId'),
+          fm: 'publicView.filter.buyer',
         },
         {
           render: singlePropertyRendererCreator(SupplierSelect, 'supplierId'),
+          fm: 'publicView.filter.supplier',
         },
       ],
     },

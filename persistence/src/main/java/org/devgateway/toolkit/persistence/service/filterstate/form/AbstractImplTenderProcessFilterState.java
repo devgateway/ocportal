@@ -1,18 +1,18 @@
 package org.devgateway.toolkit.persistence.service.filterstate.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity;
-import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessMakueniEntity_;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractImplTenderProcessClientEntity_;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
 import org.devgateway.toolkit.persistence.dao.form.Contract_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractImplTenderProcessFilterState<T extends AbstractImplTenderProcessMakueniEntity>
-        extends AbstractTenderProcessMakueniFilterState<T> {
+public abstract class AbstractImplTenderProcessFilterState<T extends AbstractImplTenderProcessClientEntity>
+        extends AbstractTenderProcessClientFilterState<T> {
 
     protected Contract contract;
 
@@ -25,13 +25,13 @@ public abstract class AbstractImplTenderProcessFilterState<T extends AbstractImp
 
             if (contract != null) {
                 predicates.add(
-                        cb.equal(root.get(AbstractImplTenderProcessMakueniEntity_.contract), contract));
+                        cb.equal(root.get(AbstractImplTenderProcessClientEntity_.contract), contract));
             }
 
             if (awardee != null) {
                 predicates.add(
                         cb.equal(
-                                root.join(AbstractImplTenderProcessMakueniEntity_.contract).get(Contract_.awardee),
+                                root.join(AbstractImplTenderProcessClientEntity_.contract).get(Contract_.awardee),
                                 awardee
                         ));
             }

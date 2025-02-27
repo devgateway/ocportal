@@ -234,7 +234,7 @@ public class StatusOverviewPage extends DataEntryBasePage {
             // check if we already have a FY in the session and use that one, otherwise get the last one from DB
             sessionMetadataService.setSessionFiscalYear(fiscalYearService.getLastFiscalYear());
         }
-        fiscalYearModel = new LoadableDetachableModel<FiscalYear>() {
+        fiscalYearModel = new LoadableDetachableModel<>() {
             @Override
             protected FiscalYear load() {
                 return sessionMetadataService.getSessionFiscalYear();

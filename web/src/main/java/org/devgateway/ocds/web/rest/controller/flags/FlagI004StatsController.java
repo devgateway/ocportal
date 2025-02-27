@@ -1,6 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.flags;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.flags.FlagsConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ import java.util.List;
 public class FlagI004StatsController extends AbstractSingleFlagStatsController {
 
     @Override
-    @ApiOperation(value = "Stats for flag i004")
+    @Operation(summary = "Stats for flag i004")
     @RequestMapping(value = "/api/flags/i004/stats",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public List<Document> flagStats(@ModelAttribute @Valid YearFilterPagingRequest filter) {

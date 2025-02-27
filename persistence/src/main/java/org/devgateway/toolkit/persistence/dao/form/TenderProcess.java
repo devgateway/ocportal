@@ -18,14 +18,14 @@ import org.springframework.data.annotation.AccessType;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -41,7 +41,6 @@ import java.util.Set;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "project_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TenderProcess extends AbstractAuditableEntity implements Labelable, ProjectAttachable,
@@ -62,7 +61,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     @JsonIgnore
     private Set<Tender> tender = new HashSet<>();
 
-    @ExcelExport(separateSheet = true, name = "Tender Quotation Evaluation")
+    @ExcelExport(separateSheet = true, name = "Tender Evaluation")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tenderProcess")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -170,7 +169,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     }
 
     @Transactional(readOnly = true)
-    protected boolean hasNonDraftImplForms(Set<? extends AbstractImplTenderProcessMakueniEntity> s) {
+    protected boolean hasNonDraftImplForms(Set<? extends AbstractImplTenderProcessClientEntity> s) {
         return s.stream().anyMatch(f -> !DBConstants.Status.DRAFT.equals(f.getStatus()));
     }
 
@@ -497,7 +496,7 @@ public class TenderProcess extends AbstractAuditableEntity implements Labelable,
     }
 
     @SuppressWarnings("unchecked")
-    public <Z extends AbstractMakueniEntity> Z getProcurementEntity(Class<Z> clazz) {
+    public <Z extends AbstractClientEntity> Z getProcurementEntity(Class<Z> clazz) {
         if (clazz.equals(Project.class)) {
             return (Z) getProject();
         }

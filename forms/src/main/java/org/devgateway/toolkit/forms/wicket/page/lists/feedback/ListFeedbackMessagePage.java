@@ -2,7 +2,7 @@ package org.devgateway.toolkit.forms.wicket.page.lists.feedback;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapExternalLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.model.IModel;
@@ -56,7 +56,7 @@ public class ListFeedbackMessagePage extends AbstractListPage<ReplyableFeedbackM
                     Model.of(entity.getUrl()), Buttons.Type.Warning) {
             };
             viewLink.setLabel(new StringResourceModel("view", ListFeedbackMessagePage.this, null));
-            viewLink.setIconType(FontAwesomeIconType.eye).setSize(Buttons.Size.Small);
+            viewLink.setIconType(FontAwesome5IconType.eye_r).setSize(Buttons.Size.Small);
             add(viewLink);
 
         }

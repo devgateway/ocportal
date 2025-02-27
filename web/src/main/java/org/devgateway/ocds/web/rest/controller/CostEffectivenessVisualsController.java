@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Award;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +85,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Cost effectiveness of Awards: Displays the total amount of active awards grouped by year."
+    @Operation(summary = "Cost effectiveness of Awards: Displays the total amount of active awards grouped by year."
             + "The tender entity, for each award, has to have amount value. The year is calculated from "
             + MongoConstants.FieldNames.AWARDS_DATE)
     @RequestMapping(value = "/api/costEffectivenessAwardAmount",
@@ -150,7 +150,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Cost effectiveness of Tenders:"
+    @Operation(summary = "Cost effectiveness of Tenders:"
             + " Displays the total amount of the active tenders that have active awards, "
             + "grouped by year. Only tenders.status=active"
             + "are taken into account. The year is calculated from awards.date")
@@ -248,7 +248,7 @@ public class CostEffectivenessVisualsController extends GenericOCDSController {
         return filter.getMonthly() ? db.get(Keys.YEAR) + "-" + db.get(Keys.MONTH) : db.get(Keys.YEAR).toString();
     }
 
-    @ApiOperation(value = "Aggregated version of /api/costEffectivenessTenderAmount and "
+    @Operation(summary = "Aggregated version of /api/costEffectivenessTenderAmount and "
             + "/api/costEffectivenessAwardAmount."
             + "This endpoint aggregates the responses from the specified endpoints, per year. "
             + "Responds to the same filters.")

@@ -2,8 +2,8 @@ package org.devgateway.ocds.web.rest.controller.request;
 
 import org.devgateway.ocds.persistence.mongo.flags.ValidFlagName;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 
 /**

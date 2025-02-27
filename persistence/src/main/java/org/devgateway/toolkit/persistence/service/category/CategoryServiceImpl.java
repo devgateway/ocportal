@@ -7,7 +7,7 @@ import org.devgateway.toolkit.persistence.service.BaseJpaServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 /**
  * @author mpostelnicu
@@ -18,6 +18,11 @@ public abstract class CategoryServiceImpl<T extends Category> extends BaseJpaSer
     @Override
     public Page<T> findByLabel(final String label, final Pageable page) {
         return categoryRepository().findByLabel(label, page);
+    }
+
+    @Override
+    public T findByLabel(String label) {
+        return categoryRepository().findFirstByLabel(label);
     }
 
     public CategoryRepository<T> categoryRepository() {

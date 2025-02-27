@@ -1,47 +1,48 @@
 <!--
     Copyright (c) 2015 Development Gateway, Inc and others.
-   
+
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the MIT License (MIT)
     which accompanies this distribution, and is available at
     https://opensource.org/licenses/MIT
-   
+
     Contributors:
     Development Gateway - initial API and implementation
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.devgateway.makueni</groupId>
-    <artifactId>makueni</artifactId>
-    <version>${revision}</version>
+    <groupId>org.devgateway.ocportal.portal</groupId>
+    <artifactId>portal</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Makueni</name>
+    <name>OCPortal</name>
     <description>DG Toolkit archetype - quick and easy way to start new projects through a working template
     </description>
     <properties>
-        <revision>1.13.2-SNAPSHOT</revision>
+        <revision>3.0.0-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <liquibase.version>3.8.5</liquibase.version>
-        <spring.boot.version>2.2.13.RELEASE</spring.boot.version>
+        <java.version>17</java.version>
+        <liquibase.version>4.31.0</liquibase.version>
+        <spring.boot.version>3.4.2</spring.boot.version>
         <derby.version>10.14.2.0</derby.version>
-        <pg.version>42.2.18</pg.version>
-        <poi.version>4.0.1</poi.version>
+        <pg.version>42.5.4</pg.version>
         <embedded.postgres.version>2.10</embedded.postgres.version>
         <docker.image.prefix>devgateway/toolkit</docker.image.prefix>
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-        <commons.lang3.version>3.9</commons.lang3.version>
-        <commons.text.version>1.8</commons.text.version>
+        <commons.lang3.version>3.17.0</commons.lang3.version>
+        <commons.text.version>1.13.0</commons.text.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <poi.version>3.17</poi.version>
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-beanutils.version>1.10.0</commons-beanutils.version>
         <jminix.version>1.2.0</jminix.version>
-        <swagger.version>3.0.0</swagger.version>
-        <jdk-serializable-functional.version>1.8.6</jdk-serializable-functional.version>
-        <commons-io.version>2.6</commons-io.version>
+        <jdk-serializable-functional.version>1.9.0</jdk-serializable-functional.version>
+        <commons-io.version>2.18.0</commons-io.version>
         <maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
+        <reflections.version>0.10.2</reflections.version>
+        <jakarta-xml.version>4.0.2</jakarta-xml.version>
+        <hibernate.version>6.6.6.Final</hibernate.version>
     </properties>
 
     <modules>
@@ -99,6 +100,27 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.16.0</version>
+        </dependency>
+
+
+
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -107,27 +129,27 @@
                 <version>${pg.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>persistence</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>persistence-mongodb</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>ui</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>web</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>org.devgateway.makueni</groupId>
+                <groupId>org.devgateway.ocportal.portal</groupId>
                 <artifactId>forms</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -142,10 +164,30 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>.env</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
+                <version>3.11.2</version>
                 <configuration>
                     <source>8</source>
                 </configuration>
@@ -156,7 +198,11 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <failOnError>false</failOnError> <!-- Prevent build failure on missing Javadoc -->
+                            <show>private</show>
+                            <additionalJOptions>
+                                <additionalJOption>-Xdoclint:none</additionalJOption>
+                            </additionalJOptions>
                         </configuration>
                     </execution>
                 </executions>
@@ -177,6 +223,7 @@
                 </executions>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
+                    <propertyExpansion>checkstyle.config.path=</propertyExpansion>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
@@ -199,27 +246,21 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-            <!--
-                        <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <parallel>classes</parallel>
-                    <useUnlimitedThreads>true</useUnlimitedThreads>
-                    <threadCount>64</threadCount>
-                    <perCoreThreadCount>true</perCoreThreadCount>
-                </configuration>
-            </plugin>-->
         </plugins>
         <pluginManagement>
             <plugins>
+
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -243,7 +284,7 @@
                     </executions>
                     <dependencies>
                         <dependency>
-                            <groupId>org.devgateway.makueni</groupId>
+                            <groupId>org.devgateway.ocportal.portal</groupId>
                             <artifactId>pmd-rules</artifactId>
                             <version>${revision}</version>
                         </dependency>

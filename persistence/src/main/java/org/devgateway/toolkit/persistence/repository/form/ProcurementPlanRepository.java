@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @since 2019-04-02
  */
 @Transactional
-public interface ProcurementPlanRepository extends AbstractMakueniEntityRepository<ProcurementPlan> {
+public interface ProcurementPlanRepository extends AbstractClientEntityRepository<ProcurementPlan> {
 
     Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);
 
@@ -25,6 +25,15 @@ public interface ProcurementPlanRepository extends AbstractMakueniEntityReposito
     Long countByDepartmentAndFiscalYearExceptId(
             @Param("department") Department department,
             @Param("fiscalYear") FiscalYear fiscalYear,
+            @Param("id") Long exceptId);
+
+    @Query("SELECT COUNT(p) FROM ProcurementPlan p "
+            + "WHERE p.department.id = :departmentId "
+            + "AND p.fiscalYear.id = :fiscalYearId "
+            + "AND p.id <> :id")
+    Long countByDepartmentAndFiscalYearExceptId(
+            @Param("departmentId") Long departmentId,
+            @Param("fiscalYearId") Long fiscalYearId,
             @Param("id") Long exceptId);
 
     ProcurementPlan findByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear);

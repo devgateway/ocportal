@@ -14,7 +14,7 @@ import java.util.List;
  *
  */
 @Transactional
-public interface CabinetPaperRepository extends AbstractMakueniEntityRepository<CabinetPaper> {
+public interface CabinetPaperRepository extends AbstractClientEntityRepository<CabinetPaper> {
     
     Long countByProcurementPlanAndNameAndIdNot(ProcurementPlan procurementPlan, String name, Long id);
 

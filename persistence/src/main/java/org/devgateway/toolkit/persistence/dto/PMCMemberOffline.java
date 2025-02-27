@@ -1,8 +1,9 @@
 package org.devgateway.toolkit.persistence.dto;
 
+import jakarta.validation.constraints.NotNull;
 import org.devgateway.toolkit.persistence.validator.groups.NonDraft;
 
-import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 
 public class PMCMemberOffline implements Serializable {

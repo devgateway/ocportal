@@ -23,10 +23,10 @@ public final class DBConstants {
 
     public static final String DATE_FORMAT = "dd/MM/YYYY";
 
-    public static final String INSTANCE_NAME = "Makueni";
 
-    public static final String ANDROID_PACKAGE_NAME = "org.devgateway.makueni.pmcdc";
+    public static final String INSTANCE_NAME = "Nandi";
 
+    public static final String ANDROID_PACKAGE_NAME = "org.devgateway.elgeyo.pmcdc";
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 

@@ -9,9 +9,10 @@ import java.util.stream.Collectors;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapAjaxLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapBookmarkablePageLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeIconType;
-import de.agilecoders.wicket.extensions.markup.html.bootstrap.ladda.LaddaAjaxButton;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesome5IconType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -38,9 +39,10 @@ import org.devgateway.toolkit.forms.wicket.page.lists.GoFilterToolbar;
 import org.devgateway.toolkit.persistence.dao.Person;
 import org.devgateway.toolkit.persistence.dao.form.Lockable;
 import org.devgateway.toolkit.persistence.service.PersonService;
-import org.devgateway.toolkit.persistence.service.form.MakueniEntityServiceResolver;
+import org.devgateway.toolkit.persistence.service.form.ClientEntityServiceResolver;
 import org.devgateway.toolkit.web.security.SecurityUtil;
-import org.hibernate.proxy.HibernateProxyHelper;
+
+import static org.devgateway.toolkit.forms.wicket.page.HibernateProxyUtil.getClassWithoutInitializingProxy;
 
 /**
  * @author Octavian Ciubotaru
@@ -48,7 +50,7 @@ import org.hibernate.proxy.HibernateProxyHelper;
 public class ListLockPanel extends Panel {
 
     @SpringBean
-    private MakueniEntityServiceResolver makueniEntityServiceResolver;
+    private ClientEntityServiceResolver clientEntityServiceResolver;
 
     @SpringBean
     private PersonService personService;
@@ -67,7 +69,7 @@ public class ListLockPanel extends Panel {
                 new AjaxFallbackBootstrapDataTable<>("table", columns, dataProvider, WebConstants.PAGE_SIZE);
 
         columns.add(new LambdaColumn<>(new StringResourceModel("formType", this),
-                l -> getString(HibernateProxyHelper.getClassWithoutInitializingProxy(l).getSimpleName())));
+                l -> getString(getClassWithoutInitializingProxy(l).getSimpleName())));
 
         columns.add(new LambdaColumn<>(new StringResourceModel("formLabel", this), Lockable::getLabel));
 
@@ -91,8 +93,8 @@ public class ListLockPanel extends Panel {
         add(filterForm);
         filterForm.add(dataTable);
 
-        final LaddaAjaxButton submit = new LaddaAjaxButton("submit",
-                new Model<>("Submit"), Buttons.Type.Default) {
+        final AjaxButton submit = new AjaxButton("submit",
+                new Model<>("Submit")) {
 
             @Override
             protected void onSubmit(final AjaxRequestTarget target) {
@@ -102,6 +104,8 @@ public class ListLockPanel extends Panel {
                 target.add(dataTable);
             }
         };
+        submit.add(new AttributeAppender("class", Buttons.Type.Default));
+
         filterForm.add(submit);
         filterForm.setDefaultButton(submit);
 
@@ -156,9 +160,9 @@ public class ListLockPanel extends Panel {
         private List<? extends Lockable> getLocks() {
             if (locks == null) {
                 if (filterState.getOwner() != null) {
-                    locks = makueniEntityServiceResolver.getAllLocked(filterState.getOwner());
+                    locks = clientEntityServiceResolver.getAllLocked(filterState.getOwner());
                 } else {
-                    locks = makueniEntityServiceResolver.getAllLocked();
+                    locks = clientEntityServiceResolver.getAllLocked();
                 }
             }
             return locks;
@@ -197,13 +201,13 @@ public class ListLockPanel extends Panel {
             final PageParameters pageParameters = new PageParameters();
             pageParameters.set(WebConstants.PARAM_ID, lockable.getId());
 
-            Class<?> entityClass = HibernateProxyHelper.getClassWithoutInitializingProxy(lockable);
+            Class<?> entityClass = getClassWithoutInitializingProxy(lockable);
             String entityName = entityClass.getSimpleName();
             Class<? extends GenericWebPage<?>> pageClass = TranslateField.MAP_BEAN_WICKET_PAGE.get(entityName);
 
             final BootstrapBookmarkablePageLink<?> editPageLink =
                     new BootstrapBookmarkablePageLink<>("edit", pageClass, pageParameters, Buttons.Type.Primary);
-            editPageLink.setIconType(FontAwesomeIconType.edit)
+            editPageLink.setIconType(FontAwesome5IconType.edit_r)
                     .setSize(Buttons.Size.Small)
                     .setLabel(new ResourceModel("edit"));
 
@@ -214,11 +218,11 @@ public class ListLockPanel extends Panel {
 
                 @Override
                 public void onClick(AjaxRequestTarget target) {
-                    makueniEntityServiceResolver.unlock(lockable);
+                    clientEntityServiceResolver.unlock(lockable);
                     target.add(ListLockPanel.this);
                 }
             };
-            unlockLink.setIconType(FontAwesomeIconType.unlock);
+            unlockLink.setIconType(FontAwesome5IconType.unlock_s);
             unlockLink.setSize(Buttons.Size.Small);
             unlockLink.setLabel(new ResourceModel("unlock"));
             unlockLink.setVisibilityAllowed(!ownerIsPrincipal);

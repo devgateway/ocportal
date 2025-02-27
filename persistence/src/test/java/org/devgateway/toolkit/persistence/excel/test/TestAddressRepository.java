@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * @author idobre
@@ -68,6 +69,11 @@ public class TestAddressRepository implements BaseJpaRepository {
     }
 
     @Override
+    public void deleteAllById(Iterable iterable) {
+
+    }
+
+    @Override
     public void deleteAll(Iterable entities) {
 
     }
@@ -83,7 +89,22 @@ public class TestAddressRepository implements BaseJpaRepository {
     }
 
     @Override
+    public List saveAllAndFlush(Iterable entities) {
+        return null;
+    }
+
+    @Override
     public void deleteInBatch(Iterable entities) {
+
+    }
+
+    @Override
+    public void deleteAllInBatch(Iterable entities) {
+
+    }
+
+    @Override
+    public void deleteAllByIdInBatch(Iterable iterable) {
 
     }
 
@@ -94,6 +115,16 @@ public class TestAddressRepository implements BaseJpaRepository {
 
     @Override
     public Object getOne(Object o) {
+        return null;
+    }
+
+    @Override
+    public Object getById(Object o) {
+        return null;
+    }
+
+    @Override
+    public Object getReferenceById(Object o) {
         return null;
     }
 
@@ -143,6 +174,21 @@ public class TestAddressRepository implements BaseJpaRepository {
     }
 
     @Override
+    public boolean exists(Specification spec) {
+        return false;
+    }
+
+    @Override
+    public long delete(Specification spec) {
+        return 0;
+    }
+
+    @Override
+    public Object findBy(Specification spec, Function queryFunction) {
+        return null;
+    }
+
+    @Override
     public Optional findOne(Example example) {
         return Optional.empty();
     }
@@ -160,5 +206,10 @@ public class TestAddressRepository implements BaseJpaRepository {
     @Override
     public boolean exists(Example example) {
         return false;
+    }
+
+    @Override
+    public Object findBy(Example example, Function queryFunction) {
+        return null;
     }
 }

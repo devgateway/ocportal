@@ -5,7 +5,7 @@ import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.Tender_;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-02
  */
-public class TenderFilterState extends AbstractTenderProcessMakueniFilterState<Tender> {
+public class TenderFilterState extends AbstractTenderProcessClientFilterState<Tender> {
 
     private String tenderTitle;
 

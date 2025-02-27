@@ -3,7 +3,7 @@ package org.devgateway.toolkit.persistence.service.filterstate.form;
 import org.devgateway.toolkit.persistence.dao.form.PurchaseRequisitionGroup;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-17
  */
-public class PurchaseRequisitionGroupFilterState extends AbstractTenderProcessMakueniFilterState
+public class PurchaseRequisitionGroupFilterState extends AbstractTenderProcessClientFilterState
         <PurchaseRequisitionGroup> {
 
 

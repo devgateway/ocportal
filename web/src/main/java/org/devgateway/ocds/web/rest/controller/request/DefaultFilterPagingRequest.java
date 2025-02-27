@@ -4,11 +4,11 @@
 package org.devgateway.ocds.web.rest.controller.request;
 
 import com.google.common.collect.Sets;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.devgateway.ocds.persistence.mongo.Tender;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,111 +19,111 @@ import java.util.TreeSet;
  */
 public class DefaultFilterPagingRequest extends GenericPagingRequest {
 
-    @ApiModelProperty(value = "Full text search of of release entities")
+    @Schema(title = "Full text search of of release entities")
     private String text;
 
-    @ApiModelProperty(value = "Filter by award.status, possible values are available from the OCDS standard page"
+    @Schema(title = "Filter by award.status, possible values are available from the OCDS standard page"
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#award-status")
     private TreeSet<String> awardStatus;
 
-    @ApiModelProperty(value = "Fiscal Year")
+    @Schema(title = "Fiscal Year")
     private TreeSet<String> fiscalYear;
 
-    @ApiModelProperty(value = "Procurement Method Rationale")
+    @Schema(title = "Procurement Method Rationale")
     private TreeSet<String> procurementMethodRationale;
 
-    @ApiModelProperty(value = "Location Type, can be ward or subcounty")
+    @Schema(title = "Location Type, can be ward or subcounty")
     private TreeSet<String> locationType;
 
-    @ApiModelProperty(value = "Filter by OCID")
+    @Schema(title = "Filter by OCID")
     private TreeSet<String> ocid;
 
-    @ApiModelProperty(value = "Filter by tender.status, possible values are available from the OCDS standard page"
+    @Schema(title = "Filter by tender.status, possible values are available from the OCDS standard page"
             + "http://standard.open-contracting.org/latest/en/schema/codelists/#tender-status")
     private TreeSet<String> tenderStatus = Sets.newTreeSet(Arrays.asList(
             Tender.Status.active.toString(), Tender.Status.complete.toString(), Tender.Status.planned.toString()));
 
-    @ApiModelProperty(value = "This corresponds to the tender.items.classification._id")
+    @Schema(title = "This corresponds to the tender.items.classification._id")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> bidTypeId;
 
 
-    @ApiModelProperty(value =
+    @Schema(title =
             "This corresponds the negated bidTypeId filter, matches elements that are NOT in the TreeSet of Ids")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> notBidTypeId;
 
 
-    @ApiModelProperty(value = "This is the id of the organization/procuring entity. "
+    @Schema(title = "This is the id of the organization/procuring entity. "
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> procuringEntityId;
 
 
-    @ApiModelProperty(value = "This corresponds the negated procuringEntityId filter,"
+    @Schema(title = "This corresponds the negated procuringEntityId filter,"
             + " matches elements that are NOT in the TreeSet of Ids")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> notProcuringEntityId;
 
 
-    @ApiModelProperty(value = "This is the id of the organization/supplier entity. "
+    @Schema(title = "This is the id of the organization/supplier entity. "
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> supplierId;
 
-    @ApiModelProperty(value = "This is the id of the contractor entity. "
+    @Schema(title = "This is the id of the contractor entity. "
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> contractorId;
 
-    @ApiModelProperty(value = "This is the id of the organization/buyer entity. "
+    @Schema(title = "This is the id of the organization/buyer entity. "
             + "Corresponds to the OCDS Organization.identifier")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9\\-]*$") String> buyerId;
 
-    @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
+    @Schema(title = "This is the new bidder format from tender.tenderers._id")
     private TreeSet<String> bidderId;
 
-    @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
+    @Schema(title = "This is the new bidder format from tender.tenderers._id")
     private ArrayList<String> leftBidderIds;
 
-    @ApiModelProperty(value = "This is the new bidder format from tender.tenderers._id")
+    @Schema(title = "This is the new bidder format from tender.tenderers._id")
     private ArrayList<String> rightBidderIds;
 
-    @ApiModelProperty(value = "This will filter after tender.locations._id or contracts.locations._id")
+    @Schema(title = "This will filter after tender.locations._id or contracts.locations._id")
     private TreeSet<String> locationId = new TreeSet<>();
 
-    @ApiModelProperty(value = "This will filter after tender.procurementMethod")
+    @Schema(title = "This will filter after tender.procurementMethod")
     private TreeSet<String> procurementMethod = new TreeSet<>();
 
-    @ApiModelProperty(value = "This will filter after tender.value.amount and will specify a minimum"
+    @Schema(title = "This will filter after tender.value.amount and will specify a minimum"
             + "Use /api/tenderValueInterval to get the minimum allowed.")
     private BigDecimal minTenderValue;
 
-    @ApiModelProperty(value = "This will filter after tender.value.amount and will specify a maximum."
+    @Schema(title = "This will filter after tender.value.amount and will specify a maximum."
             + "Use /api/tenderValueInterval to get the maximum allowed.")
     private BigDecimal maxTenderValue;
 
-    @ApiModelProperty(value = "This will filter after awards.value.amount and will specify a minimum"
+    @Schema(title = "This will filter after awards.value.amount and will specify a minimum"
             + "Use /api/awardValueInterval to get the minimum allowed.")
     private BigDecimal minAwardValue;
 
-    @ApiModelProperty(value = "This will filter after awards.value.amount and will specify a maximum."
+    @Schema(title = "This will filter after awards.value.amount and will specify a maximum."
             + "Use /api/awardValueInterval to get the maximum allowed.")
     private BigDecimal maxAwardValue;
 
 
-    @ApiModelProperty(value = "This will filter releases that were flagged with a specific flag type "
+    @Schema(title = "This will filter releases that were flagged with a specific flag type "
             + ", by flags.flaggedStats.type, so it can filter by FRAUD, RIGGING, etc...")
     private TreeSet<@Pattern(regexp = "^[a-zA-Z0-9]*$") String> flagType;
 
-    @ApiModelProperty(value = "This will filter releases based on the count of the flags PER RELEASE, which is stored "
+    @Schema(title = "This will filter releases based on the count of the flags PER RELEASE, which is stored "
             + "in flags.totalFlagged. 0 (zero) is not allowed here, if you want to see all the releases where there "
             + "are no flags, just completely omit this filter.")
 
     private TreeSet<@Range(min = 1) Integer> totalFlagged;
 
-    @ApiModelProperty(value = "Filters after tender.submissionMethod='electronicSubmission', also known as"
+    @Schema(title = "Filters after tender.submissionMethod='electronicSubmission', also known as"
             + " eBids")
     private Boolean electronicSubmission;
 
-    @ApiModelProperty(value = "Only show the releases that were flagged by at least one indicator")
+    @Schema(title = "Only show the releases that were flagged by at least one indicator")
     private Boolean flagged;
 
-    @ApiModelProperty(hidden = true)
+    @Schema(hidden = true)
     private Boolean awardFiltering = false;
 
     public DefaultFilterPagingRequest awardFiltering() {

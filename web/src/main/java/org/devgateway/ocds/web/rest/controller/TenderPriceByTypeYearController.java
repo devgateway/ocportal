@@ -2,7 +2,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -41,7 +41,7 @@ public class TenderPriceByTypeYearController extends GenericOCDSController {
         public static final String PROCUREMENT_METHOD = "procurementMethod";
     }
 
-    @ApiOperation(value = "Returns the tender price by OCDS type (procurementMethod), by year. "
+    @Operation(summary = "Returns the tender price by OCDS type (procurementMethod), by year. "
             + "The OCDS type is read from tender.procurementMethod. The tender price is read from "
             + MongoConstants.FieldNames.TENDER_VALUE_AMOUNT)
     @RequestMapping(value = "/api/tenderPriceByProcurementMethod", method = {RequestMethod.POST,

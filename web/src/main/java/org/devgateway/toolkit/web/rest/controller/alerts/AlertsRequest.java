@@ -1,9 +1,9 @@
 package org.devgateway.toolkit.web.rest.controller.alerts;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -11,18 +11,18 @@ import java.util.Set;
  * @since 23/08/2019
  */
 public class AlertsRequest {
-    @ApiModelProperty(value = "Email address")
+    @Schema(title = "Email address")
     @Email(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @NotNull
     private String email;
 
-    @ApiModelProperty(value = "Purchase Requisition identifier")
+    @Schema(title = "Purchase Requisition identifier")
     private Long purchaseReqId;
 
-    @ApiModelProperty(value = "Departments identifiers")
+    @Schema(title = "Departments identifiers")
     private Set<Long> departments;
 
-    @ApiModelProperty(value = "Items identifiers")
+    @Schema(title = "Items identifiers")
     private Set<Long> items;
 
     public String getEmail() {

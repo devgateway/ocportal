@@ -26,7 +26,7 @@ import org.devgateway.toolkit.persistence.dao.categories.Subcounty;
 import org.devgateway.toolkit.persistence.dao.categories.Supplier;
 import org.devgateway.toolkit.persistence.dao.categories.TargetGroup;
 import org.devgateway.toolkit.persistence.dao.categories.Ward;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.AwardAcceptanceItem;
 import org.devgateway.toolkit.persistence.dao.form.AwardNotificationItem;
 import org.devgateway.toolkit.persistence.dao.form.Contract;
@@ -49,7 +49,7 @@ import java.util.Objects;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Contract> implements
+public class EditContractPage extends EditAbstractTenderReqClientEntityPage<Contract> implements
         ProcurementRoleAssignable {
     @SpringBean
     protected ContractService contractService;
@@ -162,7 +162,7 @@ public class EditContractPage extends EditAbstractTenderReqMakueniEntityPage<Con
     private void addSupplierInfo() {
         awardeeSelector = new Select2ChoiceBootstrapFormComponent<>("awardee",
                 new EntityListChoiceProvider<>(editForm.getModel()
-                        .map(AbstractTenderProcessMakueniEntity::getTenderProcess)
+                        .map(AbstractTenderProcessClientEntity::getTenderProcess)
                         .map(EditContractPage::getAcceptedSupplier)));
         awardeeSelector.setEnabled(!editForm.getModelObject().getTenderProcess().hasNonDraftImplForms());
         awardeeSelector.getField().add(new AwardeeAjaxComponentUpdatingBehavior());

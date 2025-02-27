@@ -8,7 +8,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.devgateway.toolkit.forms.wicket.components.form.GenericSleepFormComponent;
 import org.devgateway.toolkit.forms.wicket.page.edit.panel.ProfessionalOpinionItemPanel;
 import org.devgateway.toolkit.forms.wicket.page.edit.roleassignable.ProcurementRoleAssignable;
-import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractTenderProcessClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.devgateway.toolkit.persistence.dao.form.Tender;
 import org.devgateway.toolkit.persistence.dao.form.TenderProcess;
@@ -23,7 +23,7 @@ import org.wicketstuff.annotation.mount.MountPath;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakueniEntityPage<ProfessionalOpinion>
+public class EditProfessionalOpinionPage extends EditAbstractTenderProcessClientEntityPage<ProfessionalOpinion>
         implements ProcurementRoleAssignable {
     @SpringBean
     protected ProfessionalOpinionService professionalOpinionService;
@@ -48,7 +48,7 @@ public class EditProfessionalOpinionPage extends EditAbstractTenderProcessMakuen
 
         Fragment extraFields = new Fragment("extraReadOnlyFields", "extraReadOnlyFields", this);
         IModel<Tender> tenderModel = editForm.getModel()
-                .map(AbstractTenderProcessMakueniEntity::getTenderProcess)
+                .map(AbstractTenderProcessClientEntity::getTenderProcess)
                 .map(TenderProcess::getSingleTender);
         extraFields.add(new GenericSleepFormComponent<>("tenderNumber",
                 tenderModel.map(Tender::getTenderNumber)));

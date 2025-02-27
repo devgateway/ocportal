@@ -4,8 +4,8 @@ import org.devgateway.toolkit.persistence.dao.prequalification.PrequalificationS
 import org.devgateway.toolkit.persistence.service.prequalification.PrequalificationSchemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * @author mpostelnicu

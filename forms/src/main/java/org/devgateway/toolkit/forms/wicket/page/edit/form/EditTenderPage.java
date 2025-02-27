@@ -56,7 +56,7 @@ import java.util.Set;
  */
 @AuthorizeInstantiation(SecurityConstants.Roles.ROLE_USER)
 @MountPath
-public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<Tender>
+public class EditTenderPage extends EditAbstractTenderProcessClientEntityPage<Tender>
         implements ProcurementRoleAssignable {
 
     @SpringBean
@@ -154,7 +154,7 @@ public class EditTenderPage extends EditAbstractTenderProcessMakueniEntityPage<T
 
         editForm.add(new TenderItemPanel("tenderItems"));
 
-        final TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");
+        TextFieldBootstrapFormComponent<String> tenderLink = ComponentUtil.addTextField(editForm, "tenderLink");
         tenderLink.getField().add(WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXTAREA);
         tenderLink.getField().add(tenderDocOrTenderLinkRequiredValidator());
         tenderLink.getField().add(new UrlValidator());

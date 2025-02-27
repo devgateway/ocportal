@@ -33,7 +33,7 @@ X x;
         <expected-linenumbers>3</expected-linenumbers>
         <code><![CDATA[
 public class Foo {
-@javax.persistence.ManyToOne @org.hibernate.annotations.Cache
+@jakarta.persistence.ManyToOne @org.hibernate.annotations.Cache
 X x;
 }
     ]]></code>

@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +67,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
     private static final String FLAGGED_STATS = "flaggedStats";
 
 
-    @ApiOperation(value = "Counts the indicators flagged, and groups them by indicator type. "
+    @Operation(summary = "Counts the indicators flagged, and groups them by indicator type. "
             + "An indicator that has two types it will be counted twice, once in each group.")
     @RequestMapping(value = "/api/totalFlaggedIndicatorsByIndicatorType",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -78,7 +78,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
         return totalIndicatorsByIndicatorType(FLAGGED_STATS, filter);
     }
 
-    @ApiOperation(value = "Counts the indicators eligible, and groups them by indicator type. "
+    @Operation(summary = "Counts the indicators eligible, and groups them by indicator type. "
             + "An indicator that has two types it will be counted twice, once in each group.")
     @RequestMapping(value = "/api/totalEligibleIndicatorsByIndicatorType",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -89,7 +89,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
         return totalIndicatorsByIndicatorType(ELIGIBLE_STATS, filter);
     }
 
-    @ApiOperation(value = "Counts the indicators that are flagged, across all releases. If one "
+    @Operation(summary = "Counts the indicators that are flagged, across all releases. If one "
             + "indicator has multiple types is only counted once, so this is different from flaggedStats and "
             + "cannot be reproduced by just summing up all types in flaggedStats!")
     @RequestMapping(value = "/api/totalFlags", method = {RequestMethod.POST, RequestMethod.GET},
@@ -129,7 +129,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Counts the indicators flagged, and groups them by indicator type and by year/month. "
+    @Operation(summary = "Counts the indicators flagged, and groups them by indicator type and by year/month. "
             + "An indicator that has two types it will be counted twice, once in each group.")
     @RequestMapping(value = "/api/totalFlaggedIndicatorsByIndicatorTypeByYear",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -140,7 +140,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
         return totalIndicatorsByIndicatorTypeByYear(FLAGGED_STATS, filter);
     }
 
-    @ApiOperation(value = "Counts the indicators eligible, and groups them by indicator type and by year/month. "
+    @Operation(summary = "Counts the indicators eligible, and groups them by indicator type and by year/month. "
             + "An indicator that has two types it will be counted twice, once in each group.")
     @RequestMapping(value = "/api/totalEligibleIndicatorsByIndicatorTypeByYear",
             method = {RequestMethod.POST, RequestMethod.GET},
@@ -176,7 +176,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
        return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Counts the projects and the indicators flagged, grouped by indicator type. "
+    @Operation(summary = "Counts the projects and the indicators flagged, grouped by indicator type. "
             + "The 'count' represents the number of indicators flagged, the 'projectCount' represents the number"
             + " of projects flagged.")
     @RequestMapping(value = "/api/totalFlaggedProjectsByIndicatorTypeByYear",
@@ -186,7 +186,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
         return totalProjectsByIndicatorTypeByYear(FLAGGED_STATS, filter);
     }
 
-    @ApiOperation(value = "Counts the projects and the indicators eligible, grouped by indicator type. "
+    @Operation(summary = "Counts the projects and the indicators eligible, grouped by indicator type. "
             + "The 'count' represents the number of indicators eligible, the 'projectCount' represents the number"
             + " of projects eligible.")
     @RequestMapping(value = "/api/totalEligibleProjectsByIndicatorTypeByYear",
@@ -224,7 +224,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
     }
 
 
-    @ApiOperation(value = "Count total projects by year/month.")
+    @Operation(summary = "Count total projects by year/month.")
     @RequestMapping(value = "/api/totalProjectsByYear",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> totalProjectsByYear(final YearFilterPagingRequest filter) {
@@ -261,7 +261,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
                 && (month == null || month.equals(o.get(Keys.MONTH)))).collect(Collectors.toList());
     }
 
-    @ApiOperation(value = "Percent of total projects flagged (denominator is total projects)")
+    @Operation(summary = "Percent of total projects flagged (denominator is total projects)")
     @RequestMapping(value = "/api/percentTotalProjectsFlaggedByYear",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> percentTotalProjectsFlaggedByYear(final YearFilterPagingRequest filter) {
@@ -287,7 +287,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
         return totalFlaggedProjects;
     }
 
-    @ApiOperation(value = "Percent of total projects eligible (denominator is total projects)")
+    @Operation(summary = "Percent of total projects eligible (denominator is total projects)")
     @RequestMapping(value = "/api/percentTotalProjectsEligibleByYear",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> percentTotalProjectsEligibleByYear(final YearFilterPagingRequest filter) {
@@ -311,7 +311,7 @@ public class CorruptionRiskDashboardIndicatorsStatsController extends GenericOCD
     }
 
 
-    @ApiOperation(value = "Percent of eligible projects flagged (denominator is number of eligible projects)")
+    @Operation(summary = "Percent of eligible projects flagged (denominator is number of eligible projects)")
     @RequestMapping(value = "/api/percentOfEligibleProjectsFlaggedByYear",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
     public List<Document> percentOfEligibleProjectsFlaggedByYear(final YearFilterPagingRequest filter) {

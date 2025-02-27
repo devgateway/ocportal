@@ -5,7 +5,7 @@ import org.devgateway.toolkit.persistence.dao.form.PMCReport;
 import org.devgateway.toolkit.persistence.dto.PMCReportOffline;
 import org.devgateway.toolkit.persistence.service.PersonService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 public interface PMCReportOfflineService {

@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -46,8 +46,8 @@ public class ShareProcurementsAwardedAGPO extends GenericOCDSController {
 
     public static final String NON_AGPO = "Non-AGPO";
 
-    @ApiOperation(value = "Percent awarded for each target group by following the formula: (sum=(Contract value for "
-            + "procurements won by each target group))/sum(Total contracted value of all awards))*100")
+    @Operation(summary = "Percent awarded for each AGPO Category by following the formula: (sum=(Contract value for "
+            + "procurements won by each AGPO Category))/sum(Total contracted value of all awards))*100")
     @RequestMapping(value = "/api/shareProcurementsAwardedAgpo",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
 

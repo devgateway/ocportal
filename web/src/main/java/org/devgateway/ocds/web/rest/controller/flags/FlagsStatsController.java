@@ -1,9 +1,6 @@
 package org.devgateway.ocds.web.rest.controller.flags;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
-
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.flags.FlagsConstants;
 import org.devgateway.ocds.web.rest.controller.request.FlagsWithFilterRequest;
@@ -14,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @author Octavian Ciubotaru
@@ -26,7 +26,7 @@ import java.util.Map;
 @Cacheable
 public class FlagsStatsController extends AbstractFlagStatsController {
 
-    @ApiOperation(value = "Stats for flags")
+    @Operation(summary = "Stats for flags")
     @RequestMapping(value = "/api/flags/stats",
             method = { RequestMethod.POST, RequestMethod.GET }, produces = "application/json")
     public Map<String, List<Document>> flagStats(@ModelAttribute @Valid FlagsWithFilterRequest filter) {

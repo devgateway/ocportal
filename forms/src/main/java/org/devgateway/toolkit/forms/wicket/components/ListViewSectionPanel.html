@@ -49,8 +49,9 @@
                                 <button wicket:id="edit" type="button" class="btn btn-primary pull-right">[[Edit]]</button>
                             </div>
                             <div class="col-md-12">
-                                <button wicket:id="remove" type="button" class="btn btn-red pull-right">[[Remove]]
-                                </button>
+                                <span wicket:id="remove" type="button" class="btn btn-red pull-right">
+                                    DELETE
+                                </span>
                             </div>
                             <div wicket:id="removeButtonNotificationPanel" class="col-md-12"></div>
                         </div>
@@ -66,8 +67,9 @@
         <div wicket:id="addButtonNotificationPanel" class="col-md-12"></div>
 
         <div class="col-md-12">
-            <button wicket:id="newButton" class="btn btn-blue pull-left" type="button">[[+ ADD another element]]
-            </button>
+            <span wicket:id="newButton" class="btn btn-primary pull-left">
+                    <span wicket:id="addButtonLabel">[[+ ADD another element]]</span>
+            </span>
         </div>
     </div>
 </wicket:panel>

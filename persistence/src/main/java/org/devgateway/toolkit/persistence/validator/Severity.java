@@ -1,6 +1,6 @@
 package org.devgateway.toolkit.persistence.validator;
 
-import javax.validation.Payload;
+import jakarta.validation.Payload;
 
 /**
  * @author Octavian Ciubotaru

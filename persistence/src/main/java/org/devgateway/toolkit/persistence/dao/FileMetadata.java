@@ -17,14 +17,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author idobre
@@ -36,7 +36,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Audited
 @Table(indexes = {@Index(columnList = "name")})
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileMetadata extends AbstractAuditableEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, optional = false)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

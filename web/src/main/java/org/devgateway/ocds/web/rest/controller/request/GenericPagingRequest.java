@@ -3,10 +3,10 @@
  */
 package org.devgateway.ocds.web.rest.controller.request;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 
 /**
  * @author mpostelnicu
@@ -25,12 +25,12 @@ public class GenericPagingRequest {
     public static final int MIN_MONTH = 1;
 
     @Min(0)
-    @ApiModelProperty(value = "This is the page number to be displayed. "
+    @Schema(title = "This is the page number to be displayed. "
             + "If unspecified it starts with the first page which is page 0")
     protected Integer pageNumber;
 
     @Range(min = 1, max = MAX_PAGE_SIZE)
-    @ApiModelProperty(value = "This defines how many elements to display on each page. It defaults to "
+    @Schema(title = "This defines how many elements to display on each page. It defaults to "
             + DEFAULT_PAGE_SIZE + " .You can have a maximum of " + MAX_PAGE_SIZE + " elements on each page."
             + "Larger values are not allowed because they can crash your browser.")
     protected Integer pageSize;

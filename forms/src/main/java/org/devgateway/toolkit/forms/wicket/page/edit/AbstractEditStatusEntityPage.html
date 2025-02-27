@@ -74,12 +74,25 @@
     <wicket:fragment wicket:id="entityButtons">
         <div wicket:id="terminateModal"></div>
         <span wicket:id="extraStatusEntityButtons"></span>
-        <button wicket:id="saveSubmit" type="button" class="btn btn-info btn-form-action">[[Save]]</button>
-        <button wicket:id="saveContinue" type="button" class="btn btn-info btn-form-action btn-save-as-draft" style="display: none;">[[Save & Continue]]</button>
-        <button wicket:id="submitAndNext" type="button" class="btn btn-info btn-form-action">[[Save & Next]]</button>
-        <button wicket:id="approve" type="button" class="btn btn-success btn-form-action">[[Save & Approve]]</button>
-        <button wicket:id="revertToDraft" type="button" class="btn btn-warning btn-form-action">[[Save & Validate]]</button>
-        <button wicket:id="terminate" type="button" class="btn btn-danger btn-form-action">[[Terminate]]</button>
+
+        <span wicket:id="saveSubmit" class="btn btn-info btn-form-action">
+                        <span wicket:id="saveSubmitLabel">[[Save]]</span>
+                </span>
+        <span wicket:id="saveContinue" type="button" class="btn btn-info btn-form-action btn-save-as-draft" style="display: none;">
+            <span wicket:id="saveDraftContinueLabel">[[Save & Continue]]</span>
+        </span>
+        <span wicket:id="submitAndNext" type="button" class="btn btn-info btn-form-action">
+            <span wicket:id="submitAndNextLabel">[[Save & Next]]</span>
+        </span>
+        <span wicket:id="approve" type="button" class="btn btn-success btn-form-action">
+            <span wicket:id="saveApproveLabel">[[Submit & Approve]]</span>
+        </span>
+        <span wicket:id="revertToDraft" type="button" class="btn btn-warning btn-form-action">
+            <span wicket:id="revertToDraftPageLabel">[[Save & Validate]]</span>
+        </span>
+        <span wicket:id="terminate" type="button" class="btn btn-danger btn-form-action">
+            <span wicket:id="saveTerminateLabel">[[Terminate]]</span>
+        </span>
     </wicket:fragment>
 
     <wicket:fragment wicket:id="noButtons"></wicket:fragment>

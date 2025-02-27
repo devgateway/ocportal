@@ -1,6 +1,6 @@
 package org.devgateway.toolkit.persistence.fm;
 
-import javax.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.Attribute;
 import java.util.Objects;
 
 /**

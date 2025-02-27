@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller.selector;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.GenericOCDSController;
@@ -38,7 +38,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 @CacheConfig(cacheNames = "fiscalYearsJson")
 public class FiscalYearSearchController extends GenericOCDSController {
 
-    @ApiOperation(value = "Display the available fiscal years. "
+    @Operation(summary = "Display the available fiscal years. "
             + "These are taken from planning.fiscalYear")
     @RequestMapping(value = "/api/ocds/fiscalYear/all", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")

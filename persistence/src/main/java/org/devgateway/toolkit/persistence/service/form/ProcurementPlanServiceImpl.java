@@ -11,9 +11,10 @@ import org.devgateway.toolkit.persistence.repository.norepository.BaseJpaReposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.stream.Stream;
 
 /**
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
  */
 @Service
 @Transactional
-public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl<ProcurementPlan>
+public class ProcurementPlanServiceImpl extends AbstractClientEntityServiceImpl<ProcurementPlan>
         implements ProcurementPlanService {
     @Autowired
     private ProcurementPlanRepository procurementPlanRepository;
@@ -35,6 +36,12 @@ public class ProcurementPlanServiceImpl extends AbstractMakueniEntityServiceImpl
     @Override
     public Long countByDepartmentAndFiscalYear(Department department, FiscalYear fiscalYear, Long exceptId) {
         return procurementPlanRepository.countByDepartmentAndFiscalYearExceptId(department, fiscalYear, exceptId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Long countByDepartmentAndFiscalYear(Long departmentId, Long fiscalYearId, Long exceptId) {
+        return procurementPlanRepository.countByDepartmentAndFiscalYearExceptId(departmentId, fiscalYearId, exceptId);
     }
 
     @Override

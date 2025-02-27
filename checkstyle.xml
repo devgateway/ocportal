@@ -122,7 +122,7 @@
         <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="SuppressionFilter">
-        <property name="file" value="checkstyle-suppressions.xml"/>
+        <property name="file" value="${checkstyle.config.path}checkstyle-suppressions.xml"/>
         <property name="optional" value="false"/>
     </module>
 </module>

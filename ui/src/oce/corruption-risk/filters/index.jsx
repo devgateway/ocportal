@@ -6,8 +6,8 @@ import {
   dateRendererCreator,
   minMaxPropertyRendererCreator,
   singlePropertyRendererCreator,
-} from '../../makueni/filters/FiltersWrapper';
-import FilterTenderDate from '../../makueni/filters/FilterTenderDate';
+} from '../../portal/filters/FiltersWrapper';
+import FilterTenderDate from '../../portal/filters/FilterTenderDate';
 import FilterBox from './box';
 import ProcurementMethod from '../../filters/procurement-method';
 import ProcurementMethodRationale from '../../filters/procurement-method-rationale';

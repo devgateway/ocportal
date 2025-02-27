@@ -2,7 +2,7 @@ package org.devgateway.toolkit.persistence.service.form;
 
 import org.devgateway.toolkit.persistence.dao.categories.Department;
 import org.devgateway.toolkit.persistence.dao.categories.FiscalYear;
-import org.devgateway.toolkit.persistence.dao.form.AbstractMakueniEntity;
+import org.devgateway.toolkit.persistence.dao.form.AbstractClientEntity;
 import org.devgateway.toolkit.persistence.dao.form.ProcurementPlan;
 import org.devgateway.toolkit.persistence.dao.form.Project;
 import org.devgateway.toolkit.persistence.dao.form.Statusable;
@@ -29,7 +29,7 @@ public interface TenderProcessService extends BaseJpaService<TenderProcess> {
 
     BindingResult validate(TenderProcess tp);
 
-    BindingResult validate(TenderProcess tp, AbstractMakueniEntity e);
+    BindingResult validate(TenderProcess tp, AbstractClientEntity e);
 
     Long countByFiscalYear(FiscalYear fiscalYear);
 
@@ -49,6 +49,6 @@ public interface TenderProcessService extends BaseJpaService<TenderProcess> {
      */
     Statusable getPreviousStatusable(TenderProcess tp, Class<?> currentClazz);
 
-    AbstractMakueniEntity getNextStatusable(TenderProcess tp, Class<?> currentClazz);
+    AbstractClientEntity getNextStatusable(TenderProcess tp, Class<?> currentClazz);
 }
 

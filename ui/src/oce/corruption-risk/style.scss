@@ -821,6 +821,7 @@ $borderColor: #eeeeee;
             &:hover {
                 .crd-popup {
                     display: block;
+                    z-index: 9999;
                     top: auto;
                     bottom: $extend;
                     left: 50%;

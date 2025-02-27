@@ -33,7 +33,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -182,8 +182,8 @@ public class ReleaseFlaggingService {
                 releaseFlagI184Processor,
                 releaseFlagI016Processor,
                 releaseFlagI045Processor,
-                releaseFlagI182Processor,
-                releaseFlagI083Processor
+                releaseFlagI182Processor
+                //releaseFlagI083Processor this flag is not working properly and is disabled
         ));
 //        processAndSaveFlagsForAllReleases(this::logMessage);
     }

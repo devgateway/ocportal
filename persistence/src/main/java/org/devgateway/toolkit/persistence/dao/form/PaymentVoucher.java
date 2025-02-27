@@ -10,12 +10,12 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,11 +29,10 @@ import java.util.stream.Stream;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "tender_process_id")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "paymentVoucherForm")
-public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
+public class PaymentVoucher extends AbstractImplTenderProcessClientEntity {
 
     @ExcelExport(useTranslation = true)
     private BigDecimal totalAmount;
@@ -59,7 +58,7 @@ public class PaymentVoucher extends AbstractImplTenderProcessMakueniEntity {
     private Set<FileMetadata> completionCertificate = new HashSet<>();
 
     @Override
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

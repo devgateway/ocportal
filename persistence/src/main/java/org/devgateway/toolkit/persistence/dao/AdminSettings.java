@@ -4,7 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 /**
  * @author idobre
@@ -12,7 +12,6 @@ import javax.persistence.Entity;
  */
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AdminSettings extends AbstractAuditableEntity {
     private static final long serialVersionUID = -1051140524022133178L;
 

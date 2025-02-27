@@ -34,7 +34,7 @@ List<X> xList;
         <code><![CDATA[
 public class Foo {
 @org.hibernate.annotations.Cache
-@javax.persistence.OneToMany
+@jakarta.persistence.OneToMany
 java.util.List<X> xList;
 }
     ]]></code>

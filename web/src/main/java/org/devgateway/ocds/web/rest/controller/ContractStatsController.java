@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.devgateway.ocds.web.rest.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.Contract;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.devgateway.ocds.persistence.mongo.constants.MongoConstants.FieldNames.CONTRACTS;
@@ -53,7 +53,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @RestController
 public class ContractStatsController extends GenericOCDSController {
 
-    @ApiOperation(value = "List of contract names with PMC recommendation to not pay")
+    @Operation(summary = "List of contract names with PMC recommendation to not pay")
     @RequestMapping(value = "/api/pmcNotAuthContractNames", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> pmcNotAuthContractNames(
@@ -88,7 +88,7 @@ public class ContractStatsController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Top 10 Suppliers with PMC recommendation to not pay")
+    @Operation(summary = "Top 10 Suppliers with PMC recommendation to not pay")
     @RequestMapping(value = "/api/topSuppliersPmcNotAuthContracts", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> topSuppliersPmcNotAuthContracts(
@@ -121,7 +121,7 @@ public class ContractStatsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "List of contract names with MEReports with delay property")
+    @Operation(summary = "List of contract names with MEReports with delay property")
     @RequestMapping(value = "/api/delayedContractNames", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> delayedContractNames(
@@ -154,7 +154,7 @@ public class ContractStatsController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Top 10 Suppliers who do not complete contracts on expected end date")
+    @Operation(summary = "Top 10 Suppliers who do not complete contracts on expected end date")
     @RequestMapping(value = "/api/topSuppliersDelayedContracts", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> topSuppliersDelayedContracts(
@@ -187,7 +187,7 @@ public class ContractStatsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Top 10 Suppliers with inspection report to not pay")
+    @Operation(summary = "Top 10 Suppliers with inspection report to not pay")
     @RequestMapping(value = "/api/topSuppliersInspectionNoPay", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> topSuppliersInspectionReportNotPay(
@@ -223,7 +223,7 @@ public class ContractStatsController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Cancelled / Terminated Contracts")
+    @Operation(summary = "Cancelled / Terminated Contracts")
     @RequestMapping(value = "/api/cancelledContracts", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> cancelledContracts(
@@ -247,7 +247,7 @@ public class ContractStatsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "List of contract names with Inspection Report to not pay")
+    @Operation(summary = "List of contract names with Inspection Report to not pay")
     @RequestMapping(value = "/api/inspectionNoPayContractNames", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> inspectionNoPayContractNames(
@@ -281,7 +281,7 @@ public class ContractStatsController extends GenericOCDSController {
     }
 
 
-    @ApiOperation(value = "Number of Contracts with PMC recommendation to not pay")
+    @Operation(summary = "Number of Contracts with PMC recommendation to not pay")
     @RequestMapping(value = "/api/pmcNotAuthContracts", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> pmcNotAuthContracts(
@@ -322,7 +322,7 @@ public class ContractStatsController extends GenericOCDSController {
         return releaseAgg(agg);
     }
 
-    @ApiOperation(value = "Number of contracts not completed on expected end date")
+    @Operation(summary = "Number of contracts not completed on expected end date")
     @RequestMapping(value = "/api/delayedContracts", method = {RequestMethod.POST,
             RequestMethod.GET}, produces = "application/json")
     public List<Document> delayedContracts(

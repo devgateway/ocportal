@@ -13,7 +13,7 @@ package org.devgateway.ocds.web.rest.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.bson.Document;
 import org.devgateway.ocds.persistence.mongo.constants.MongoConstants;
 import org.devgateway.ocds.web.rest.controller.request.YearFilterPagingRequest;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -57,7 +57,7 @@ public class CountPlansTendersAwardsController extends GenericOCDSController {
      *
      * @return
      */
-    @ApiOperation(value = "Count the tenders and group the results by year. The year is calculated from "
+    @Operation(summary = "Count the tenders and group the results by year. The year is calculated from "
             + "tender.tenderPeriod.startDate.")
     @RequestMapping(value = "/api/countTendersByYear",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")
@@ -89,7 +89,7 @@ public class CountPlansTendersAwardsController extends GenericOCDSController {
      *
      * @return
      */
-    @ApiOperation(value = "Count the awards and group the results by year. "
+    @Operation(summary = "Count the awards and group the results by year. "
             + "The year is calculated from the awards.date field.")
     @RequestMapping(value = "/api/countAwardsByYear",
             method = {RequestMethod.POST, RequestMethod.GET}, produces = "application/json")

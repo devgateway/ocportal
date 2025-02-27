@@ -14,13 +14,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -30,13 +30,12 @@ import java.util.Collections;
 
 @Entity
 @Audited
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(indexes = {@Index(columnList = "procurement_plan_id"),
         @Index(columnList = "number"),
         @Index(columnList = "name")})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Form(featureName = "cabinetPaperForm")
-public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPlanAttachable {
+public class CabinetPaper extends AbstractClientEntity implements ProcurementPlanAttachable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "procurement_plan_id")
@@ -100,7 +99,7 @@ public class CabinetPaper extends AbstractMakueniEntity implements ProcurementPl
     @Transactional
     @JsonIgnore
     @org.springframework.data.annotation.Transient
-    protected Collection<? extends AbstractMakueniEntity> getDirectChildrenEntities() {
+    protected Collection<? extends AbstractClientEntity> getDirectChildrenEntities() {
         return Collections.emptyList();
     }
 

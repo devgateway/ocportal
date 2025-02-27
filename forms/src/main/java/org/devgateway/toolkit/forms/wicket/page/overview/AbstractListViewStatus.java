@@ -64,9 +64,9 @@ public abstract class AbstractListViewStatus<T> extends CompoundSectionPanel<Lis
                                 super.onComponentTag(tag);
 
                                 if (isExpanded(item)) {
-                                    Attributes.addClass(tag, "in");
+                                    Attributes.addClass(tag, "show");
                                 } else {
-                                    Attributes.removeClass(tag, "in");
+                                    Attributes.removeClass(tag, "show");
                                 }
                             }
 

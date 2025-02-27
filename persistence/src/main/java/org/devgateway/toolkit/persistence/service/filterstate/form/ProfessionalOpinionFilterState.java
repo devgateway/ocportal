@@ -3,7 +3,7 @@ package org.devgateway.toolkit.persistence.service.filterstate.form;
 import org.devgateway.toolkit.persistence.dao.form.ProfessionalOpinion;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @author idobre
  * @since 2019-04-24
  */
-public class ProfessionalOpinionFilterState extends AbstractTenderProcessMakueniFilterState<ProfessionalOpinion> {
+public class ProfessionalOpinionFilterState extends AbstractTenderProcessClientFilterState<ProfessionalOpinion> {
     @Override
     public Specification<ProfessionalOpinion> getSpecification() {
         return (root, query, cb) -> {

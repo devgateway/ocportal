@@ -1,5 +1,5 @@
 import {
-  FormControl, FormGroup, ControlLabel, HelpBlock, InputGroup,
+  Form, InputGroup,
 } from 'react-bootstrap';
 import React from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -126,11 +126,11 @@ class FeedbackMessageForm extends React.PureComponent {
   renderForm() {
     return (
       <div className="col-md-6">
-        <FormGroup validationState={this.validateEmail()}>
-          <ControlLabel>Email</ControlLabel>
+        <Form.Group validationState={this.validateEmail()}>
+          <Form.Label>Email</Form.Label>
           <InputGroup>
-            <InputGroup.Addon>@</InputGroup.Addon>
-            <FormControl
+            <InputGroup.Text>@</InputGroup.Text>
+            <Form.Control
               type="email"
               name="email"
               maxLength={255}
@@ -139,33 +139,33 @@ class FeedbackMessageForm extends React.PureComponent {
               onChange={this.handleChange.bind(this)}
             />
           </InputGroup>
-          <FormControl.Feedback />
+          <Form.Control.Feedback />
           {
             this.state.emailValid
               ? null
-              : <HelpBlock>Email is invalid</HelpBlock>
+              : <Form.Text className="text-danger">Email is invalid</Form.Text>
           }
-        </FormGroup>
+        </Form.Group>
 
-        <FormGroup validationState={this.validateTxt(this.state.name)}>
-          <ControlLabel>Name</ControlLabel>
-          <FormControl
+        <Form.Group validationState={this.validateTxt(this.state.name)}>
+          <Form.Label>Name</Form.Label>
+          <Form.Control
             name="name"
             maxLength={255}
             value={this.state.name}
             placeholder="Name"
             onChange={this.handleChange.bind(this)}
           />
-          <FormControl.Feedback />
+          <Form.Control.Feedback />
           {
             this.state.changeNeverFired || this.state.name ? null
-              : <HelpBlock>Please add a name</HelpBlock>
+              : <Form.Text className="text-danger">Please add a name</Form.Text>
           }
-        </FormGroup>
+        </Form.Group>
 
-        <FormGroup validationState={this.validateTxt(this.state.comment)}>
-          <ControlLabel>Comment</ControlLabel>
-          <FormControl
+        <Form.Group validationState={this.validateTxt(this.state.comment)}>
+          <Form.Label>Comment</Form.Label>
+          <Form.Control
             required
             as="textarea"
             name="comment"
@@ -175,12 +175,12 @@ class FeedbackMessageForm extends React.PureComponent {
             placeholder="Comment"
             onChange={this.handleChange.bind(this)}
           />
-          <FormControl.Feedback />
+          <Form.Control.Feedback />
           {
             this.state.changeNeverFired || this.state.comment ? null
-              : <HelpBlock>Please add a comment</HelpBlock>
+              : <Form.Text className="text-danger">Please add a comment</Form.Text>
           }
-        </FormGroup>
+        </Form.Group>
         <ReCAPTCHA
           ref="recaptcha"
           sitekey="6LfRjM8UAAAAAABlMlrHAsC5Sgm0YjzlfRmppcVp"

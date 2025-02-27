@@ -1,7 +1,7 @@
 package org.devgateway.toolkit.persistence.jpa;
 
-import javax.persistence.OneToMany;
-import javax.persistence.metamodel.Attribute;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.metamodel.Attribute;
 import java.lang.reflect.Field;
 
 /**

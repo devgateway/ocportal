@@ -29,11 +29,11 @@ var blockUI = function (message) {
 };
 
 (function () {
-    blockUI('Please wait...');
+    blockUI('Please Wait...');
 
     // block UI while page is loading
     $(document).ready(function() {
-        $(window).load(function() {
+        $(window).on('load',function() {
             $.unblockUI();
         });
     });

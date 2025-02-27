@@ -1,5 +1,5 @@
 import React from 'react';
-import FilterItemSingleSelect from '../makueni/filters/FilterItemSingleSelect';
+import FilterItemSingleSelect from '../portal/filters/FilterItemSingleSelect';
 
 const ProcuringEntitySelect = (props) => (
   <FilterItemSingleSelect
