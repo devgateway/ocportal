@@ -427,7 +427,6 @@ public abstract class AbstractEditPage<T extends GenericPersistable & Serializab
                 // save the object and go back to the list page
                 T saveable = editForm.getModelObject();
 
-                logger.info("Saving docs: {}", editForm.get("formDocs").getDefaultModel().getObject());
 
                 if (checkInBeforeSave()) {
                     checkIn(saveable);
