@@ -26,7 +26,7 @@ import { LOGIN_URL } from './constants';
 import './style.scss';
 import Sidebar from './sidebar';
 import { LOCALES } from '../translatable';
-import clientLOgo from '../resources/nandi-logo.png';
+import clientLOgo from '../resources/logo.png';
 
 const getIndicators = cacheFn((indicatorTypesMapping, corruptionType) => Object.keys(indicatorTypesMapping)
   .filter((key) => indicatorTypesMapping[key].types.indexOf(corruptionType) > -1));

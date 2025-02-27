@@ -14,7 +14,7 @@ import { LOADED, loadStats, selectStats } from './statsSlice';
 import reportWebVitals, { sendToGoogleAnalytics } from '../../reportWebVitals';
 import { getGaId } from '../api/Api';
 import fmConnect from '../fm/fm';
-import clientLOgo from '../resources/nandi-logo.png';
+import clientLOgo from '../resources/logo.png';
 
 const initGA = (gaId) => {
   ReactGA.initialize(gaId);
