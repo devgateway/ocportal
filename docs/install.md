@@ -96,12 +96,12 @@ $ systemctl enable ocportal
 $ systemctl start ocportal
 ```
 ## 2. Hosting using docker
-### Installation requirements
-Docker -> Installation instructions [here](https://docs.docker.com/engine/installation/).
+
+### Docker -> Installation instructions [here](https://docs.docker.com/engine/installation/).
 
 ### Docker-compose :
 Docker compose comes preinstalled with Docker Desktop for Windows and Mac OS.
-In linux-based systems, Docker compose can be installed using the following command:
+In linux-based systems(e.g Ubuntu), Docker compose can be installed using the following command:
 
 ```
 $ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
