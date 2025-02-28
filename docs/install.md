@@ -56,7 +56,7 @@ Storage: 350 GB
 Network: Public IP address, ports 80 and 443
 
 ### Prerequisites:
-Open JDK 8
+JDK 17
 PostgreSQL 11 with PostGIS 2.4 extension
 MongoDB 4.2
 
