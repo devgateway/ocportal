@@ -5,12 +5,49 @@ permalink: /install/
 ---
 
 # Installation instructions
-### Initial Config setup
-
+### Step 1: Install
+### Step 2: Configure nginx
+________________________________________________________________
+# Install
 There are two ways of installing the application.
-1. Hosting on Bare metal
-2. Hosting using docker
-## 1. Installation on Bare metal
+1. Hosting using docker (Recommended)
+2. Hosting on Bare metal
+
+## 1. Hosting using docker
+
+### Install Docker -> Installation instructions [here](https://docs.docker.com/engine/installation/).
+
+### Docker-compose :
+Docker compose comes preinstalled with Docker Desktop for Windows and Mac OS.
+In linux-based systems(e.g Ubuntu), Docker compose can be installed using the following command:
+
+```
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+```  
+Verify docker and docker-compose installation:
+
+```
+$ docker --version
+$ docker-compose --version
+```
+Clone the repository:
+
+```
+$ git clone https://github.com/DevGateway/ocportal.git
+```
+Navigate to the oc-portal directory:
+
+``` 
+$ cd ocportal
+```
+Run the docker compose command:
+
+```
+$ docker-compose up --build -d
+```
+
+## 2. Installation on Bare metal
 ### Hosting requirements:
 Operating System: GNU Linux/Unix
 CPU: 4 cores, 64 bit
@@ -94,39 +131,6 @@ Use ocportal.service from [Annex 1](#annex-1) and copy it to /etc/systemd/system
 ```
 $ systemctl enable ocportal
 $ systemctl start ocportal
-```
-## 2. Hosting using docker
-
-### Docker -> Installation instructions [here](https://docs.docker.com/engine/installation/).
-
-### Docker-compose :
-Docker compose comes preinstalled with Docker Desktop for Windows and Mac OS.
-In linux-based systems(e.g Ubuntu), Docker compose can be installed using the following command:
-
-```
-$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-$ sudo chmod +x /usr/local/bin/docker-compose
-```
-Verify docker and docker-compose installation:
-
-```
-$ docker --version
-$ docker-compose --version
-```
-Clone the repository:
-
-```
-$ git clone https://github.com/DevGateway/ocportal.git
-```
-Navigate to the oc-portal directory:
-
-``` 
-$ cd ocportal
-```
-Run the docker compose command:
-
-```
-$ docker-compose up --build -d
 ```
 
 
