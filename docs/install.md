@@ -5,8 +5,45 @@ permalink: /install/
 ---
 
 # Installation instructions
+### Step 1: Install
+### Step 2: Configure nginx
+________________________________________________________________
+# Install
+There are two ways of installing the application.
+1. Hosting using docker (Recommended)
+2. Hosting on Bare metal
 
+## 1. Hosting using docker
 
+### Install Docker -> Installation instructions [here](https://docs.docker.com/engine/installation/).
+
+### Docker Compose :
+Docker compose comes preinstalled with Docker Desktop for Windows and Mac OS.
+In linux-based systems(e.g Ubuntu), make sure Docker Compose Plugin is installed https://docs.docker.com/compose/install/linux/
+
+Verify docker and Docker Compose installation:
+
+```
+$ docker --version
+$ docker compose version
+```
+Clone the repository:
+
+```
+$ git clone https://github.com/DevGateway/ocportal.git
+```
+Navigate to the oc-portal directory:
+
+``` 
+$ cd ocportal
+```
+Run the docker compose command:
+
+```
+$ docker compose up --build -d
+```
+
+## 2. Installation on Bare metal
 ### Hosting requirements:
 Operating System: GNU Linux/Unix
 CPU: 4 cores, 64 bit
@@ -15,9 +52,9 @@ Storage: 350 GB
 Network: Public IP address, ports 80 and 443
 
 ### Prerequisites:
-Open JDK 8
+JDK 17
 PostgreSQL 11 with PostGIS 2.4 extension
-MongoDB 4.2
+MongoDB 8.0
 
 ### Deliverables:
 Main application: ocportal.jar
@@ -40,8 +77,7 @@ host	all         	all         	127.0.0.1/32        	trust
 ```
 
 ### MongoDB
-Please install MongoDB 4.2 Community Edition based using the instructions here
-https://docs.mongodb.com/v4.2/installation/#mongodb-community-edition-installation-tutorials
+Please install MongoDB 8.0 Community Edition based using the instructions [here](https://docs.mongodb.com/v8.0/installation/#mongodb-community-edition-installation-tutorials)
 
 ### Application Settings:
 
@@ -92,7 +128,8 @@ $ systemctl enable ocportal
 $ systemctl start ocportal
 ```
 
-### Nginx
+
+## Nginx Configuration
 
 Web requests to the applications are dispatched by Nginx 1.14 webserver, running on Debian GNU/Linux Stable (Buster) AMD64.
 
