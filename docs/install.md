@@ -17,19 +17,15 @@ There are two ways of installing the application.
 
 ### Install Docker -> Installation instructions [here](https://docs.docker.com/engine/installation/).
 
-### Docker-compose :
+### Docker Compose :
 Docker compose comes preinstalled with Docker Desktop for Windows and Mac OS.
-In linux-based systems(e.g Ubuntu), Docker compose can be installed using the following command:
+In linux-based systems(e.g Ubuntu), make sure Docker Compose Plugin is installed https://docs.docker.com/compose/install/linux/
 
-```
-$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-$ sudo chmod +x /usr/local/bin/docker-compose
-```  
-Verify docker and docker-compose installation:
+Verify docker and Docker Compose installation:
 
 ```
 $ docker --version
-$ docker-compose --version
+$ docker compose version
 ```
 Clone the repository:
 
@@ -44,7 +40,7 @@ $ cd ocportal
 Run the docker compose command:
 
 ```
-$ docker-compose up --build -d
+$ docker compose up --build -d
 ```
 
 ## 2. Installation on Bare metal
