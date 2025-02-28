@@ -58,7 +58,7 @@ Network: Public IP address, ports 80 and 443
 ### Prerequisites:
 JDK 17
 PostgreSQL 11 with PostGIS 2.4 extension
-MongoDB 4.2
+MongoDB 8.0
 
 ### Deliverables:
 Main application: ocportal.jar
@@ -81,8 +81,7 @@ host	all         	all         	127.0.0.1/32        	trust
 ```
 
 ### MongoDB
-Please install MongoDB 4.2 Community Edition based using the instructions here
-https://docs.mongodb.com/v4.2/installation/#mongodb-community-edition-installation-tutorials
+Please install MongoDB 8.0 Community Edition based using the instructions [here](https://docs.mongodb.com/v8.0/installation/#mongodb-community-edition-installation-tutorials)
 
 ### Application Settings:
 
