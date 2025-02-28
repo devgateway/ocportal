@@ -28,7 +28,7 @@ services:
       - .env
 
   mongo:
-    image: mongo:4.2
+    image: mongo:8.0
     restart: always
     command: [--auth]
     volumes:
