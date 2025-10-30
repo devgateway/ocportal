@@ -30,6 +30,7 @@ COMMON_JAVA_ARGS="$(tr '\n' ' ' <<-EOF
   -Dspring.datasource.password=$POSTGRES_PASSWORD
   -DJava.awt.headless=true
   -XX:+UseG1GC
+  -XX:-UseContainerSupport
   -Dspring.data.mongodb.uri=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@mongo:27017/ocportal?authSource=admin
   -Dspring.datasource.url=jdbc:postgresql://db/ocportal
   -Dgoogle.recaptcha.secret=$RECAPTCHA_SECRET

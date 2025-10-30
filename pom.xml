@@ -86,6 +86,11 @@
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
+            <id>clojars</id>
+            <name>Clojure Libraries</name>
+            <url>https://repo.clojars.org/</url>
+        </repository>
+        <repository>
             <id>devgateway-open-source</id>
             <name>devgateway-open-source</name>
             <url>https://artifactory.dgdev.org/artifactory/devgateway-open-source/</url>
