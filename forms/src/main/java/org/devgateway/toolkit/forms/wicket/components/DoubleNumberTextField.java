@@ -4,16 +4,15 @@ import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.IModel;
 
 /**
- * A TextField for decimal numbers extending Wicket's NumberTextField<Double>
+ * A TextField for double numbers extending Wicket's NumberTextField<Double>
  *
  * @author mpostelnicu
  */
-public class DecimalTextField extends NumberTextField<Double> {
+public class DoubleNumberTextField extends NumberTextField<Double> {
 
     private static final long serialVersionUID = 1L;
 
-    public DecimalTextField(String id, IModel<Double> model) {
+    public DoubleNumberTextField(String id, IModel<Double> model) {
         super(id, model, Double.class);
     }
-
 }
