@@ -18,14 +18,14 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.devgateway.toolkit.forms.WebConstants;
-import org.devgateway.toolkit.forms.wicket.components.DecimalTextField;
+import org.devgateway.toolkit.forms.wicket.components.DoubleNumberTextField;
 
 /**
  * @author mpostelnicu
  * A form component dedicated to decimals that require large (above 3 which is wicket default) number of digits.
  *
  */
-public class DecimalTextFieldBootstrapFormComponent extends GenericBootstrapFormComponent<Double, DecimalTextField> {
+public class DecimalTextFieldBootstrapFormComponent extends GenericBootstrapFormComponent<Double, DoubleNumberTextField> {
 
     private static final StringValidator VALIDATOR =
             WebConstants.StringValidators.MAXIMUM_LENGTH_VALIDATOR_ONE_LINE_TEXT;
@@ -47,8 +47,8 @@ public class DecimalTextFieldBootstrapFormComponent extends GenericBootstrapForm
     }
 
     @Override
-    protected DecimalTextField inputField(final String id, final IModel<Double> model) {
-        return new DecimalTextField(id, initFieldModel()) {
+    protected DoubleNumberTextField inputField(final String id, final IModel<Double> model) {
+        return new DoubleNumberTextField(id, initFieldModel()) {
             @Override
             public boolean isRequired() {
                 return isFmMandatory(super::isRequired);
